@@ -1,6 +1,6 @@
 <?php
 
-use App\Kernel;
+use DWenzel\AppDataCollector\Kernel;
 use Symfony\Component\Debug\Debug;
 use Symfony\Component\HttpFoundation\Request;
 
