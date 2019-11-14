@@ -126,6 +126,10 @@ class InstanceManagerTest extends TestCase
         $criteria = ['uuid' => $uuid];
 
         $this->instanceRepository->expects($this->once())
+            ->method('count')
+            ->with($criteria)
+            ->willReturn(1);
+        $this->instanceRepository->expects($this->once())
             ->method('findOneBy')
             ->with($criteria)
             ->willReturn($instance);
@@ -138,5 +142,22 @@ class InstanceManagerTest extends TestCase
 
     }
 
+    public function testForgetThrowsExceptionForMisssingInstance()
+    {
+        $this->expectExceptionCode(1573766261);
+        $uuid = Uuid::uuid4()->toString();
+        $demand = new InstanceDemand();
+        $demand->setIdentifier($uuid);
+
+        $criteria = ['uuid' => $uuid];
+
+        $this->instanceRepository->expects($this->once())
+            ->method('count')
+            ->with($criteria)
+            ->willReturn(0);
+
+        $this->subject->forget($demand);
+
+    }
 
 }

@@ -6,6 +6,7 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
+use DWenzel\DataCollector\Entity\EntityInterface;
 use DWenzel\DataCollector\Entity\Instance;
 
 /**
@@ -16,35 +17,11 @@ use DWenzel\DataCollector\Entity\Instance;
  */
 class InstanceRepository extends ServiceEntityRepository
 {
+    use DemandedRepositoryTrait;
+
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Instance::class);
-    }
-
-    /**
-     * Add instance
-     *
-     * @param Instance $instance
-     * @throws ORMException
-     * @throws OptimisticLockException
-     */
-    public function add(Instance $instance)
-    {
-        $this->getEntityManager()->persist($instance);
-        $this->getEntityManager()->flush();
-    }
-
-    /**
-     * Remove instance
-     *
-     * @param Instance $instance
-     * @throws ORMException
-     * @throws OptimisticLockException
-     */
-    public function remove(Instance $instance)
-    {
-        $this->getEntityManager()->remove($instance);
-        $this->getEntityManager()->flush();
     }
 
 

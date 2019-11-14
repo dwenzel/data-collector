@@ -82,8 +82,7 @@ class InstanceManager implements InstanceManagerInterface
     /**
      * @inheritDoc
      */
-    public
-    function has(string $uuid): bool
+    public function has(string $uuid): bool
     {
         return (bool)$this->instanceRepository->count(
             ['uuid' => $uuid]
@@ -93,8 +92,7 @@ class InstanceManager implements InstanceManagerInterface
     /**
      * @inheritDoc
      */
-    public
-    function deactivate(InstanceDemand $instanceDemand): void
+    public function deactivate(InstanceDemand $instanceDemand): void
     {
         // TODO: Implement deactivate() method.
     }
@@ -102,8 +100,7 @@ class InstanceManager implements InstanceManagerInterface
     /**
      * @inheritDoc
      */
-    public
-    function activate(InstanceDemand $instanceDemand): void
+    public function activate(InstanceDemand $instanceDemand): void
     {
         // TODO: Implement activate() method.
     }
@@ -115,10 +112,17 @@ class InstanceManager implements InstanceManagerInterface
     {
         $identifier = $instanceDemand->getIdentifier();
 
+        if (!$this->has($identifier)) {
+            throw new InvalidUuidException(
+                sprintf(
+                    'Can not forget instance with UUID %s. There is no such instance registered',
+                    $identifier),
+                1573766261
+            );
+        }
         $criteria = ['uuid' => $identifier];
 
-        if ($instance = $this->instanceRepository->findOneBy($criteria))
-        {
+        if ($instance = $this->instanceRepository->findOneBy($criteria)) {
             $this->instanceRepository->remove($instance);
         }
     }

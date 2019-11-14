@@ -3,6 +3,8 @@ Application Data Collector
 
 Collects data from application instances and stores them into a database.
 
+The instances must provide API endpoints for data collection.
+
 ## Prerequisites
 
 * PHP
@@ -48,7 +50,15 @@ php bin/console  data-collector:instance:register -h
 not yet implemented
 
 ### Remove Instance
-not yet implemented
+* remove instance by uuid:
+```bash
+php bin/console  data-collector:instance:forget 54381ab6-b581-45cd-9813-82e0da5fe5e5
+```
+
+* display command reference:
+```bash
+php bin/console  data-collector:instance:forget -h
+```
 
 ### Update Instance
 not yet implemented
@@ -71,4 +81,26 @@ not yet implemented
 | name       | string | required | Name of the API              |
 | version    | string | required | Version. Register an API for each version|
 | description| string | optional |                              |
+
+
+## Contribution
+
+Feedback and suggestions are highly welcome. Please file an issue on [github](https://github.com/dwenzel/data-collector/issues).
+
+Contributed code must be covered by unit or functional tests.
+
+### Tests
+
+* load test data
+
+```bash
+ php bin/console doctrine:fixtures:load
+```
+
+* perform tests
+```bash
+ php vendor/bin/phpunit -c phpunit.xml.dist
+```
+
+Please open pull requests on github for features and fixes.
 

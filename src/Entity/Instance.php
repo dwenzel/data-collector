@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity(repositoryClass="DWenzel\DataCollector\Repository\InstanceRepository")
  */
-class Instance
+class Instance implements EntityInterface
 {
     const ROLE_UNKNOWN = 'unknown';
 

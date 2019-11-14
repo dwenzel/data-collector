@@ -13,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @ORM\Entity(repositoryClass="DWenzel\DataCollector\Repository\ApiRepository")
  */
-class Api
+class Api implements EntityInterface
 {
     /**
      * @ORM\Id()
