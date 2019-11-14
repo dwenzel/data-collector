@@ -1,0 +1,74 @@
+Application Data Collector
+=========================
+
+Collects data from application instances and stores them into a database.
+
+## Prerequisites
+
+* PHP
+* composer
+
+
+## Installation
+
+```bash
+git clone git@github.com:dwenzel/data-collector.git
+cd data-collector
+composer install 
+php bin/console  doctrine:database:create
+php bin/console  doctrine:migrations:migrate
+```
+
+## Usage
+
+### Add instance 
+
+* register instance 'Mimir' by name:
+```bash
+php bin/console  data-collector:instance:register Mimir
+```
+A uuid will be created during registration. This identifier can be used 
+with other instances of the Data Collector and to retrieve collected data.
+
+* register instance 'Loki' by uuid and name:
+```bash
+php bin/console  data-collector:instance:register Loki --identifier=54381ab6-b581-45cd-9813-82e0da5fe5e5
+```
+* register instance 'Yggdrasil' by name with identifier and role:
+```bash
+php bin/console  data-collector:instance:register Yggdrasil Staging --identifier=8b348664-b187-472f-94d2-c88330829708
+```
+
+* display command reference:
+```bash
+php bin/console  data-collector:instance:register -h
+```
+
+### List Instances
+not yet implemented
+
+### Remove Instance
+not yet implemented
+
+### Update Instance
+not yet implemented
+
+## Entities
+
+### Instance
+| property   | type   |          | description                  |
+|:-----------|:-------|:---------|:-----------------------------|
+| identifier | uuid   | required | universal unique identifier. |
+| name       | string | required | Instance name for display    |
+| role       | string | optional | Description of role. E.g. `production` or `testing`|
+
+### Api
+
+| property   | type   |          | description                  |
+|:-----------|:-------|:---------|:-----------------------------|
+| identifier | string | required | Unique identifier            |
+| vendor     | string | required | Vendor name of API           |
+| name       | string | required | Name of the API              |
+| version    | string | required | Version. Register an API for each version|
+| description| string | optional |                              |
+
