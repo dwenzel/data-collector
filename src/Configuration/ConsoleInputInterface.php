@@ -1,14 +1,11 @@
 <?php
 
-namespace DWenzel\DataCollector\Configuration\Argument;
-
-use DWenzel\DataCollector\Traits\Mode;
-use Symfony\Component\Console\Input\InputArgument;
+namespace DWenzel\DataCollector\Configuration;
 
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2019 Dirk Wenzel <wenzel@cps-it.de>
+ *  (c) 2019 Dirk Wenzel
  *  All rights reserved
  *
  * The GNU General Public License can be found at
@@ -21,15 +18,36 @@ use Symfony\Component\Console\Input\InputArgument;
  * GNU General Public License for more details.
  * This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
-class NameArgument extends InputArgument implements ArgumentInterface
-{
-    use Mode;
-    const NAME = 'name';
-    const DESCRIPTION = 'Name of the instance. Will be displayed.';
-    const MODE = InputArgument::REQUIRED;
 
-    public function __construct(string $name = self::NAME, int $mode = self::MODE, string $description = self::DESCRIPTION, $default = null)
-    {
-        parent::__construct($name, $mode, $description, $default);
-    }
+/**
+ * Interface ConsoleInputInterface
+ */
+interface ConsoleInputInterface
+{
+
+    /**
+     * Returns the description
+     *
+     * @return string
+     */
+    public function getDescription();
+
+    /**
+     * Returns the default value.
+     *
+     * @return static|string[]|int|bool|null The default value
+     */
+    public function getDefault();
+
+    /**
+     * Returns the mode
+     *
+     * @return int
+     */
+    public function getMode();
+
+    /**
+     * @return string
+     */
+    public function getName();
 }

@@ -1,14 +1,13 @@
 <?php
 
-namespace DWenzel\DataCollector\Configuration\Argument;
+namespace DWenzel\DataCollector\Configuration\Option;
 
-use DWenzel\DataCollector\Traits\Mode;
-use Symfony\Component\Console\Input\InputArgument;
+use DWenzel\DataCollector\Configuration\ConsoleInputInterface;
 
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2019 Dirk Wenzel <wenzel@cps-it.de>
+ *  (c) 2019 Dirk Wenzel
  *  All rights reserved
  *
  * The GNU General Public License can be found at
@@ -21,15 +20,18 @@ use Symfony\Component\Console\Input\InputArgument;
  * GNU General Public License for more details.
  * This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
-class NameArgument extends InputArgument implements ArgumentInterface
-{
-    use Mode;
-    const NAME = 'name';
-    const DESCRIPTION = 'Name of the instance. Will be displayed.';
-    const MODE = InputArgument::REQUIRED;
 
-    public function __construct(string $name = self::NAME, int $mode = self::MODE, string $description = self::DESCRIPTION, $default = null)
-    {
-        parent::__construct($name, $mode, $description, $default);
-    }
+/**
+ * Interface OptionInterface
+ */
+interface OptionInterface extends ConsoleInputInterface
+{
+    /**
+     * Get the shortcut for the option
+     *
+     * May return multiple values separated by |
+     *
+     * @return string
+     */
+    public function getShortCut();
 }

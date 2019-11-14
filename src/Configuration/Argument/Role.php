@@ -2,10 +2,13 @@
 
 namespace DWenzel\DataCollector\Configuration\Argument;
 
+use DWenzel\DataCollector\Traits\Mode;
+use Symfony\Component\Console\Input\InputArgument;
+
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2019 Dirk Wenzel <wenzel@cps-it.de>
+ *  (c) 2019 Dirk Wenzel
  *  All rights reserved
  *
  * The GNU General Public License can be found at
@@ -18,10 +21,24 @@ namespace DWenzel\DataCollector\Configuration\Argument;
  * GNU General Public License for more details.
  * This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
-trait ArgumentBuilderTrait
-{
 
-    public function __construct(string $name = self::NAME, int $mode = self::MODE, string $description = self::DESCRIPTION, $default = null)
+/**
+ * Class Role
+ */
+class Role extends InputArgument implements ArgumentInterface
+{
+    use Mode;
+
+    const NAME = 'role';
+    const DESCRIPTION = 'Role of instance e.g. `production`, `staging`, `testing` ';
+    const MODE = InputArgument::OPTIONAL;
+
+    public function __construct(
+        string $name = self::NAME,
+        int $mode = self::MODE,
+        string $description = self::DESCRIPTION,
+        $default = null
+    )
     {
         parent::__construct($name, $mode, $description, $default);
     }

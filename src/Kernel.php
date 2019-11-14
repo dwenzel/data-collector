@@ -1,6 +1,6 @@
 <?php
 
-namespace DWenzel\AppDataCollector;
+namespace DWenzel\DataCollector;
 
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
 use Symfony\Component\Config\Loader\LoaderInterface;

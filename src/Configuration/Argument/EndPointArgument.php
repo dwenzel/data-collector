@@ -23,8 +23,13 @@ use Symfony\Component\Console\Input\InputArgument;
  ***************************************************************/
 class EndPointArgument extends  InputArgument implements ArgumentInterface
 {
-    use  ArgumentBuilderTrait, Mode;
+    use Mode;
     const NAME = 'endpoint';
     const DESCRIPTION = 'End point which should be called';
     const MODE = InputArgument::REQUIRED;
+
+    public function __construct(string $name = self::NAME, int $mode = self::MODE, string $description = self::DESCRIPTION, $default = null)
+    {
+        parent::__construct($name, $mode, $description, $default);
+    }
 }

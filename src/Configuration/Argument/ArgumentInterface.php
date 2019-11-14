@@ -2,6 +2,9 @@
 
 namespace DWenzel\DataCollector\Configuration\Argument;
 
+use DWenzel\DataCollector\Configuration\ConsoleInputInterface;
+use Symfony\Component\Console\Input\InputInterface;
+
 /***************************************************************
  *  Copyright notice
  *
@@ -18,25 +21,7 @@ namespace DWenzel\DataCollector\Configuration\Argument;
  * GNU General Public License for more details.
  * This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
-interface ArgumentInterface
+interface ArgumentInterface extends ConsoleInputInterface
 {
-    /**
-     * @return string
-     */
-    public function getName();
 
-    /**
-     * @return int
-     */
-    public function getMode();
-
-    /**
-     * @return string
-     */
-    public function getDescription();
-
-    /**
-     * @return mixed
-     */
-    public function getDefault();
 }

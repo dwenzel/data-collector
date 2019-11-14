@@ -40,7 +40,7 @@ trait RegisterArgumentsTrait
      */
     abstract public function addArgument($name, $mode = null, $description = '', $default = null);
 
-    protected function registerArguments(): void
+    protected function registerArguments(): self
     {
         foreach ($this->getArguments() as $class) {
             /** @var ArgumentInterface $argument */
@@ -52,6 +52,8 @@ trait RegisterArgumentsTrait
                 $argument->getDefault()
             );
         }
+
+        return $this;
     }
 
 }
