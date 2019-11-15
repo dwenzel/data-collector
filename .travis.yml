@@ -1,0 +1,35 @@
+language: php
+
+sudo: false
+
+matrix:
+  fast_finish: true
+  include:
+    - php: 7.2
+    - php: 7.3
+env:
+  global:
+    - CC_TEST_REPORTER_ID: d3719b289927b05bd9152291beb62d8e25d9e66f347011cbe9d7922885f29b60
+    - secure: S8QheEMVpSRsPPIhYQZ4tUCTbxpM7csZ0GydJaPY8p/FAEnZLiH6xcsiTGKOljva5HDelCdBvunaWtUO/+CdKIgsdbQGbqc1aWmG6gr+ShQk4X3KzeAA91AFmkJOR6Jv69lUTm6Uo9AKs1JtuVZsOa1aoOmfApohqFuXsRBNXlg=
+jdk:
+  - oraclejdk8
+
+addons:
+  sonarcloud:
+    organisation: dwenzel-github
+
+cache:
+  directories:
+    - $HOME/.composer/cache
+    - $HOME/.sonar/cache
+
+before_script:
+  - composer i
+  - php bin/console  doctrine:database:create
+  - php bin/console  doctrine:database:migrate -n
+
+script:
+  - >
+    echo;
+    echo "Running unit tests";
+    vendor/bin/phpunit --colors -c phpunit.xml.dist
