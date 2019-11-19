@@ -1,16 +1,17 @@
 <?php
 
-namespace DWenzel\DataCollector\Command\Instance;
+namespace DWenzel\DataCollector\Command\Api;
 
+use DWenzel\DataCollector\Command\AbstractCommand;
 use DWenzel\DataCollector\Command\RegisterArgumentsTrait;
 use DWenzel\DataCollector\Command\RegisterOptionsTrait;
 use DWenzel\DataCollector\Configuration\Argument\NameArgument;
 use DWenzel\DataCollector\Configuration\Argument\Role;
 use DWenzel\DataCollector\Configuration\Option\IdentifierOption;
 use DWenzel\DataCollector\Exception\InvalidUuidException;
-use DWenzel\DataCollector\Factory\Dto\InstanceDemandFactory;
-use DWenzel\DataCollector\Repository\InstanceRepository;
-use DWenzel\DataCollector\Service\InstanceManagerInterface;
+use DWenzel\DataCollector\Factory\Dto\ApiDemandFactory;
+use DWenzel\DataCollector\Repository\ApiRepository;
+use DWenzel\DataCollector\Service\ApiManagerInterface;
 use Exception;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\DescriptorHelper;
@@ -34,24 +35,27 @@ use Symfony\Component\Console\Output\OutputInterface;
  * GNU General Public License for more details.
  * This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
-class ListCommand extends AbstractInstanceCommand
+class ListCommand extends AbstractCommand
 {
-    const COMMAND_DESCRIPTION = 'List instances';
-    const COMMAND_HELP = 'List all registered instances.';
-    const DEFAULT_COMMAND_NAME = 'data-collector:instance:list';
-    const LIST_HEADERS = ['id', 'UUID', 'Name', 'Role', 'Status'];
+    const COMMAND_DESCRIPTION = 'List APIs';
+    const COMMAND_HELP = 'List all registered APIs.';
+    const DEFAULT_COMMAND_NAME = 'data-collector:api:list';
+    const LIST_HEADERS = ['id', 'Vendor', 'Name', 'Version', 'Identifier'];
+
+    const ARGUMENTS = [];
+    const OPTIONS = [];
 
     /**
-     * @var InstanceRepository
+     * @var ApiRepository
      */
-    protected $instanceRepository;
+    protected $apiRepository;
 
     protected static $defaultName = self::DEFAULT_COMMAND_NAME;
 
-    public function __construct(InstanceRepository $instanceRepository)
+    public function __construct(ApiRepository $ApiRepository)
     {
         parent::__construct();
-        $this->instanceRepository = $instanceRepository;
+        $this->apiRepository = $ApiRepository;
     }
 
     /**
@@ -63,18 +67,19 @@ class ListCommand extends AbstractInstanceCommand
     {
         $messages = [];
         try {
-            $instances = $this->instanceRepository->findAll();
+            $apis = $this->apiRepository->findAll();
             $table = new Table($output);
             $table->setHeaders(
                 static::LIST_HEADERS
             );
-            foreach ($instances as $instance) {
+            foreach ($apis as $api) {
                 $table->addRow(
                     [
-                        $instance->getId(),
-                        $instance->getUuid(),
-                        $instance->getName(),
-                        $instance->getRole()
+                        $api->getId(),
+                        $api->getVendor(),
+                        $api->getName(),
+                        $api->getVersion(),
+                        $api->getIdentifier()
                     ]
                 );
             }

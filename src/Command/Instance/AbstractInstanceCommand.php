@@ -3,7 +3,8 @@
 namespace DWenzel\DataCollector\Command\Instance;
 
 
-use DWenzel\DataCollector\Command\ForgetInstanceCommand;
+use DWenzel\DataCollector\Command\AbstractCommand;
+use DWenzel\DataCollector\Command\Instance\ForgetCommand;
 use DWenzel\DataCollector\Command\RegisterArgumentsTrait;
 use DWenzel\DataCollector\Command\RegisterOptionsTrait;
 use DWenzel\DataCollector\Factory\Dto\InstanceDemandFactory;
@@ -31,54 +32,12 @@ use Symfony\Component\Console\Input\InputInterface;
 /**
  * Class AbstractInstanceCommand
  */
-abstract class AbstractInstanceCommand extends Command
+abstract class AbstractInstanceCommand extends AbstractCommand
 {
-    use RegisterArgumentsTrait, RegisterOptionsTrait;
-
-    public const COMMAND_DESCRIPTION = '';
-    public const COMMAND_HELP = '';
-    public const COMMAND_NAME = '';
-    public const OPTIONS = [];
-    public const ARGUMENTS = [];
-    public const ERROR_TEMPLATE = <<<EOT
- <error>%s</error>
-EOT;
-
     /**
      * @var InstanceManagerInterface
      */
     protected $instanceManager;
-
-    /**
-     * Returns a list of argument classes
-     *
-     * @return iterable
-     */
-    protected function getArguments(): iterable
-    {
-        return static::ARGUMENTS;
-    }
-
-    /**
-     * Returns a list of option classes
-     *
-     * @return iterable
-     */
-    protected function getOptions(): iterable
-    {
-        return static::OPTIONS;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    protected function configure()
-    {
-        $this->setDescription(static::COMMAND_DESCRIPTION)
-            ->setHelp(static::COMMAND_HELP)
-            ->registerArguments()
-            ->registerOptions();
-    }
 
     /**
      * @param InputInterface $input
@@ -86,10 +45,9 @@ EOT;
      */
     protected function createDemandFromInput(InputInterface $input): \DWenzel\DataCollector\Entity\Dto\InstanceDemand
     {
-        $arguments = $input->getArguments() ? $input->getArguments() : [];
-        $options = $input->getOptions() ? $input->getOptions() : [];
+        $settings = $this->getSettingsFromInput($input);
 
-        $settings = array_merge($arguments, $options);
         return InstanceDemandFactory::fromSettings($settings);
     }
+
 }

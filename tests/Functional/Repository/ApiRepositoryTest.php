@@ -6,6 +6,7 @@ use Doctrine\ORM\EntityManager;
 use DWenzel\DataCollector\DataFixtures\DataCollectorFixtures;
 use DWenzel\DataCollector\Entity\Api;
 use DWenzel\DataCollector\Entity\Instance;
+use DWenzel\DataCollector\Repository\ApiRepository;
 use DWenzel\DataCollector\Repository\InstanceRepository;
 use Ramsey\Uuid\Uuid;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;

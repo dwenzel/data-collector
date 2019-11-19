@@ -19,7 +19,7 @@ namespace DWenzel\DataCollector\Tests\Unit\Command;
  * This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-use DWenzel\DataCollector\Command\RegisterInstanceCommand;
+use DWenzel\DataCollector\Command\Instance\RegisterCommand;
 use DWenzel\DataCollector\Entity\Instance;
 use DWenzel\DataCollector\Exception\InvalidUuidException;
 use DWenzel\DataCollector\Service\InstanceManagerInterface;
@@ -34,7 +34,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 class RegisterInstanceCommandTest extends TestCase
 {
     /**
-     * @var RegisterInstanceCommand
+     * @var RegisterCommand
      */
     protected $subject;
 
@@ -47,13 +47,13 @@ class RegisterInstanceCommandTest extends TestCase
     {
         $this->instanceManager = $this->getMockBuilder(InstanceManagerInterface::class)
             ->getMockForAbstractClass();
-        $this->subject = new RegisterInstanceCommand(null, $this->instanceManager);
+        $this->subject = new RegisterCommand(null, $this->instanceManager);
     }
 
     public function testConstructorSetsDescription()
     {
         $this->assertSame(
-            RegisterInstanceCommand::COMMAND_DESCRIPTION,
+            RegisterCommand::COMMAND_DESCRIPTION,
             $this->subject->getDescription()
         );
     }
@@ -61,14 +61,14 @@ class RegisterInstanceCommandTest extends TestCase
     public function testConstructorSetsHelp()
     {
         $this->assertSame(
-            RegisterInstanceCommand::COMMAND_HELP,
+            RegisterCommand::COMMAND_HELP,
             $this->subject->getHelp()
         );
     }
 
     public function testConstructorRegistersArguments()
     {
-        $argumentClasses = RegisterInstanceCommand::ARGUMENTS;
+        $argumentClasses = RegisterCommand::ARGUMENTS;
 
         foreach ($argumentClasses as $class) {
             if (defined($class . '::NAME')) {
@@ -83,7 +83,7 @@ class RegisterInstanceCommandTest extends TestCase
 
     public function testConstructorRegistersOptions()
     {
-        $optionClasses = RegisterInstanceCommand::OPTIONS;
+        $optionClasses = RegisterCommand::OPTIONS;
 
         foreach ($optionClasses as $class) {
             if (defined($class . '::NAME')) {
@@ -111,7 +111,7 @@ class RegisterInstanceCommandTest extends TestCase
             ->setName($name);
 
         $expectedMessages = [
-            sprintf(RegisterInstanceCommand::INSTANT_REGISTERED_MESSAGE,
+            sprintf(RegisterCommand::INSTANT_REGISTERED_MESSAGE,
                 $uuid,
                 $name,
                 $role
@@ -159,7 +159,7 @@ class RegisterInstanceCommandTest extends TestCase
 
         $expectedMessages = [
           sprintf(
-              RegisterInstanceCommand::ERROR_TEMPLATE,
+              RegisterCommand::ERROR_TEMPLATE,
               $exceptionMessage
           )
         ];

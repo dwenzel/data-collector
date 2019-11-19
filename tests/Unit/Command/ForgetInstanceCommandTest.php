@@ -19,7 +19,7 @@ namespace DWenzel\DataCollector\Tests\Unit\Command;
  * This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-use DWenzel\DataCollector\Command\ForgetInstanceCommand;
+use DWenzel\DataCollector\Command\Instance\ForgetCommand;
 use DWenzel\DataCollector\Entity\Instance;
 use DWenzel\DataCollector\Exception\InvalidUuidException;
 use DWenzel\DataCollector\Service\InstanceManagerInterface;
@@ -34,7 +34,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 class ForgetInstanceCommandTest extends TestCase
 {
     /**
-     * @var ForgetInstanceCommand
+     * @var ForgetCommand
      */
     protected $subject;
 
@@ -47,13 +47,13 @@ class ForgetInstanceCommandTest extends TestCase
     {
         $this->instanceManager = $this->getMockBuilder(InstanceManagerInterface::class)
             ->getMockForAbstractClass();
-        $this->subject = new ForgetInstanceCommand(null, $this->instanceManager);
+        $this->subject = new ForgetCommand($this->instanceManager);
     }
 
     public function testConstructorSetsDescription()
     {
         $this->assertSame(
-            ForgetInstanceCommand::COMMAND_DESCRIPTION,
+            ForgetCommand::COMMAND_DESCRIPTION,
             $this->subject->getDescription()
         );
     }
@@ -61,14 +61,14 @@ class ForgetInstanceCommandTest extends TestCase
     public function testConstructorSetsHelp()
     {
         $this->assertSame(
-            ForgetInstanceCommand::COMMAND_HELP,
+            ForgetCommand::COMMAND_HELP,
             $this->subject->getHelp()
         );
     }
 
     public function testConstructorForgetsArguments()
     {
-        $argumentClasses = ForgetInstanceCommand::ARGUMENTS;
+        $argumentClasses = ForgetCommand::ARGUMENTS;
 
         foreach ($argumentClasses as $class) {
             if (defined($class . '::NAME')) {
@@ -83,7 +83,7 @@ class ForgetInstanceCommandTest extends TestCase
 
     public function testConstructorRegistersOptions()
     {
-        $optionClasses = ForgetInstanceCommand::OPTIONS;
+        $optionClasses = ForgetCommand::OPTIONS;
 
         if (empty($optionClasses)) {
             $this->assertEmpty(
@@ -112,7 +112,7 @@ class ForgetInstanceCommandTest extends TestCase
         $instance->setUuid($uuid);
 
         $expectedMessages = [
-            sprintf(ForgetInstanceCommand::INSTANCE_REMOVED_MESSAGE,
+            sprintf(ForgetCommand::INSTANCE_REMOVED_MESSAGE,
                 $uuid
             )
         ];
@@ -133,6 +133,9 @@ class ForgetInstanceCommandTest extends TestCase
         $this->subject->run($input, $output);
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testRunReturnsErrorMessageFromException()
     {
 
@@ -142,6 +145,7 @@ class ForgetInstanceCommandTest extends TestCase
             'identifier' => $uuid,
         ];
 
+        /** @var InputInterface|MockObject $input */
         $input = $this->getMockBuilder(InputInterface::class)
             ->getMockForAbstractClass();
         $input->expects($this->atLeastOnce())
@@ -157,7 +161,7 @@ class ForgetInstanceCommandTest extends TestCase
 
         $expectedMessages = [
           sprintf(
-              ForgetInstanceCommand::ERROR_TEMPLATE,
+              ForgetCommand::ERROR_TEMPLATE,
               $exceptionMessage
           )
         ];

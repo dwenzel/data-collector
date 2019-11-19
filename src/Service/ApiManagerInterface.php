@@ -2,15 +2,10 @@
 
 namespace DWenzel\DataCollector\Service;
 
-use Doctrine\DBAL\Types\GuidType;
-use DWenzel\DataCollector\Entity\Dto\InstanceDemand;
-use DWenzel\DataCollector\Entity\Instance;
-use DWenzel\DataCollector\Exception\InvalidUuidException;
-
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2019 Dirk Wenzel
+ *  (c) 2019 Dirk Wenzel <wenzel@cps-it.de>
  *  All rights reserved
  *
  * The GNU General Public License can be found at
@@ -23,10 +18,7 @@ use DWenzel\DataCollector\Exception\InvalidUuidException;
  * GNU General Public License for more details.
  * This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
-
-/**
- * Interface InstanceManagerInterface
- */
-interface InstanceManagerInterface extends ManagerInterface
+interface ApiManagerInterface extends ManagerInterface
 {
+
 }

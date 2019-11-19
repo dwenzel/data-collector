@@ -2,15 +2,14 @@
 
 namespace DWenzel\DataCollector\Service;
 
-use Doctrine\ORM\Mapping\Entity;
+use DWenzel\DataCollector\Entity\Api;
+use DWenzel\DataCollector\Entity\Dto\ApiDemand;
 use DWenzel\DataCollector\Entity\Dto\DemandInterface;
 use DWenzel\DataCollector\Entity\Dto\InstanceDemand;
 use DWenzel\DataCollector\Entity\EntityInterface;
-use DWenzel\DataCollector\Entity\Instance;
 use DWenzel\DataCollector\Exception\InvalidUuidException;
-use DWenzel\DataCollector\Repository\InstanceRepository;
+use DWenzel\DataCollector\Repository\ApiRepository;
 use InvalidArgumentException;
-use Ramsey\Uuid\Uuid;
 
 /***************************************************************
  *  Copyright notice
@@ -32,17 +31,17 @@ use Ramsey\Uuid\Uuid;
 /**
  * Class InstanceManager
  */
-class InstanceManager implements InstanceManagerInterface
+class ApiManager implements ApiManagerInterface
 {
 
     /**
-     * @var InstanceRepository
+     * @var ApiRepository
      */
-    protected $instanceRepository;
+    protected $apiRepository;
 
-    public function __construct(InstanceRepository $instanceRepository)
+    public function __construct(ApiRepository $apiRepository)
     {
-        $this->instanceRepository = $instanceRepository;
+        $this->apiRepository = $apiRepository;
     }
 
     /**
@@ -54,7 +53,7 @@ class InstanceManager implements InstanceManagerInterface
      */
     public function register(DemandInterface $demand): EntityInterface
     {
-        if (!$demand instanceof InstanceDemand) {
+        if (!$demand instanceof ApiDemand) {
             throw new InvalidArgumentException(
                 sprintf(
                     'Can not register instance from demand object of type %s.',
@@ -63,44 +62,34 @@ class InstanceManager implements InstanceManagerInterface
                 1574174581
             );
         }
+
         $identifier = $demand->getIdentifier();
         if (!empty($identifier)
             && $this->has($demand->getIdentifier())) {
             throw new InvalidUuidException(
-                sprintf('An instance with the identifier "%s" is already registered.', $identifier),
-                1573677985
+                sprintf('An api with the identifier "%s" is already registered.', $identifier),
+                1574174591
             );
         }
 
-        if (empty($identifier)) {
-            $identifier = Uuid::uuid4()->toString();
-            $demand->setIdentifier($identifier);
-        }
+        $api = new Api();
+        $api->setName($demand->getName())
+            ->setVendor($demand->getVendor())
+            ->setVersion($demand->getVersion())
+            ->setIdentifier($demand->getIdentifier());
 
-        if (!Uuid::isValid($identifier)) {
-            throw  new InvalidUuidException(
-                sprintf('The identifier "%s" is is not a valid Universal Unique ID', $identifier),
-                1573690590
-            );
-        }
+        $this->apiRepository->add($api);
 
-        $instance = new Instance();
-        $instance->setName($demand->getName())
-            ->setRole($demand->getRole())
-            ->setUuid($demand->getIdentifier());
-
-        $this->instanceRepository->add($instance);
-
-        return $instance;
+        return $api;
     }
 
     /**
      * @inheritDoc
      */
-    public function has(string $identifier): bool
+    public function has(string $uuid): bool
     {
-        return (bool)$this->instanceRepository->count(
-            ['uuid' => $identifier]
+        return (bool)$this->apiRepository->count(
+            ['identifier' => $uuid]
         );
     }
 
@@ -113,26 +102,26 @@ class InstanceManager implements InstanceManagerInterface
      */
     public function forget(DemandInterface $demand): void
     {
-        if (!$demand instanceof InstanceDemand) {
+        if (!$demand instanceof ApiDemand) {
             throw new InvalidArgumentException(
                 sprintf('Can not process demand object of type %s .', get_class($demand)),
                 1574174753
             );
         }
-        $identifier = $demand->getIdentifier();
 
+        $identifier = $demand->getIdentifier();
         if (!$this->has($identifier)) {
             throw new InvalidUuidException(
                 sprintf(
-                    'Can not forget instance with UUID %s. There is no such instance registered',
+                    'Can not forget API with identifier %s. There is no such API registered',
                     $identifier),
-                1573766261
+                1574175113
             );
         }
-        $criteria = ['uuid' => $identifier];
+        $criteria = ['identifier' => $identifier];
 
-        if ($instance = $this->instanceRepository->findOneBy($criteria)) {
-            $this->instanceRepository->remove($instance);
+        if ($instance = $this->apiRepository->findOneBy($criteria)) {
+            $this->apiRepository->remove($instance);
         }
     }
 

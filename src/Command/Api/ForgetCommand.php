@@ -1,9 +1,13 @@
 <?php
 
-namespace DWenzel\DataCollector\Command;
+namespace DWenzel\DataCollector\Command\Api;
 
+use DWenzel\DataCollector\Command\AbstractCommand;
+use DWenzel\DataCollector\Command\Instance;
 use DWenzel\DataCollector\Configuration\Argument\IdentifierArgument;
-use DWenzel\DataCollector\Service\InstanceManagerInterface;
+use DWenzel\DataCollector\Entity\Dto\ApiDemand;
+use DWenzel\DataCollector\Factory\Dto\ApiDemandFactory;
+use DWenzel\DataCollector\Service\ApiManagerInterface;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -23,12 +27,17 @@ use Symfony\Component\Console\Output\OutputInterface;
  * GNU General Public License for more details.
  * This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
-class ForgetInstanceCommand extends Instance\AbstractInstanceCommand
+class ForgetCommand extends AbstractCommand
 {
-    const COMMAND_DESCRIPTION = 'Removes an instance.';
-    const COMMAND_HELP = 'After removal of an instance its data are not collected any longer.
+    const COMMAND_DESCRIPTION = 'Removes an api.';
+    const COMMAND_HELP = 'After removal of an api its data are not collected any longer.
     Provide a UUID (universal unique identifier) and optionally force execution.';
-    const DEFAULT_COMMAND_NAME = 'data-collector:instance:forget';
+    const DEFAULT_COMMAND_NAME = 'data-collector:api:forget';
+
+    /**
+     * @var ApiManagerInterface
+     */
+    protected $apiManager;
 
     /**
      * Command Arguments
@@ -41,8 +50,8 @@ class ForgetInstanceCommand extends Instance\AbstractInstanceCommand
  <error>%s</error>
 EOT;
 
-    const INSTANCE_REMOVED_MESSAGE = <<<IRM
-Instance has been forgotten:
+    const API_REMOVED_MESSAGE = <<<IRM
+Api has been forgotten:
    <info>UUID</info>:   %s
 
    <info>You may re-add it using its UUID</info>.    
@@ -51,10 +60,12 @@ IRM;
 
     protected static $defaultName = self::DEFAULT_COMMAND_NAME;
 
-    public function __construct(string $name = null, InstanceManagerInterface $instanceManager)
+    public function __construct(
+        ApiManagerInterface $apiManager
+    )
     {
-        parent::__construct($name);
-        $this->instanceManager = $instanceManager;
+        parent::__construct();
+        $this->apiManager = $apiManager;
     }
 
     /**
@@ -69,9 +80,9 @@ IRM;
 
         $messages = [];
         try {
-            $this->instanceManager->forget($demand);
+            $this->apiManager->forget($demand);
             $messages[] = sprintf(
-                static::INSTANCE_REMOVED_MESSAGE,
+                static::API_REMOVED_MESSAGE,
                 $demand->getIdentifier()
             );
         } catch (\Exception $exception) {
@@ -81,4 +92,14 @@ IRM;
         $output->writeln($messages);
     }
 
+    /**
+     * @param InputInterface $input
+     * @return ApiDemand
+     */
+    protected function createDemandFromInput(InputInterface $input): ApiDemand
+    {
+        $settings = $this->getSettingsFromInput($input);
+
+        return ApiDemandFactory::fromSettings($settings);
+    }
 }

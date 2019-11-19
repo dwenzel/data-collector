@@ -1,7 +1,9 @@
 <?php
 
-namespace DWenzel\DataCollector\Command;
+namespace DWenzel\DataCollector\Command\Instance;
 
+use DWenzel\DataCollector\Command\RegisterArgumentsTrait;
+use DWenzel\DataCollector\Command\RegisterOptionsTrait;
 use DWenzel\DataCollector\Configuration\Argument\NameArgument;
 use DWenzel\DataCollector\Configuration\Argument\Role;
 use DWenzel\DataCollector\Configuration\Option\IdentifierOption;
@@ -28,7 +30,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  * GNU General Public License for more details.
  * This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
-class RegisterInstanceCommand extends Command
+class RegisterCommand extends Command
 {
     use RegisterArgumentsTrait, RegisterOptionsTrait;
 

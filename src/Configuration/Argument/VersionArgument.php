@@ -1,16 +1,14 @@
 <?php
 
-namespace DWenzel\DataCollector\Service;
+namespace DWenzel\DataCollector\Configuration\Argument;
 
-use Doctrine\DBAL\Types\GuidType;
-use DWenzel\DataCollector\Entity\Dto\InstanceDemand;
-use DWenzel\DataCollector\Entity\Instance;
-use DWenzel\DataCollector\Exception\InvalidUuidException;
+use DWenzel\DataCollector\Traits\Mode;
+use Symfony\Component\Console\Input\InputArgument;
 
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2019 Dirk Wenzel
+ *  (c) 2019 Dirk Wenzel <wenzel@cps-it.de>
  *  All rights reserved
  *
  * The GNU General Public License can be found at
@@ -23,10 +21,17 @@ use DWenzel\DataCollector\Exception\InvalidUuidException;
  * GNU General Public License for more details.
  * This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
-
-/**
- * Interface InstanceManagerInterface
- */
-interface InstanceManagerInterface extends ManagerInterface
+class VersionArgument extends InputArgument implements ArgumentInterface
 {
+    use Mode;
+    const NAME = 'version';
+    const DESCRIPTION = 'Version of the API.';
+    const MODE = InputArgument::REQUIRED;
+
+    public function __construct(string $name = self::NAME, int $mode = self::MODE, string $description = self::DESCRIPTION, $default = null)
+    {
+        parent::__construct($name, $mode, $description, $default);
+    }
+
+
 }

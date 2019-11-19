@@ -3,9 +3,9 @@
 namespace DWenzel\DataCollector\Factory\Dto;
 
 use DWenzel\DataCollector\Configuration\Argument\NameArgument;
-use DWenzel\DataCollector\Configuration\Argument\Role;
+use DWenzel\DataCollector\Configuration\Argument\VersionArgument;
 use DWenzel\DataCollector\Configuration\Option\IdentifierOption;
-use DWenzel\DataCollector\Entity\Dto\InstanceDemand;
+use DWenzel\DataCollector\Entity\Dto\ApiDemand;
 
 /***************************************************************
  *  Copyright notice
@@ -25,28 +25,27 @@ use DWenzel\DataCollector\Entity\Dto\InstanceDemand;
  ***************************************************************/
 
 /**
- * Class InstanceDemandFactory
+ * Class ApiDemandFactory
  */
-class InstanceDemandFactory implements DemandFactoryInterface
+class ApiDemandFactory
 {
     /**
      * @param array $settings
-     * @return InstanceDemand
+     * @return ApiDemand
      */
-    public static function fromSettings(array $settings): InstanceDemand
+    public static function fromSettings(array $settings): ApiDemand
     {
-        $demand = new InstanceDemand();
+        $demand = new ApiDemand();
         if (!empty($settings[NameArgument::NAME])) {
             $demand->setName($settings[NameArgument::NAME]);
         }
         if (!empty($settings[IdentifierOption::NAME])) {
             $demand->setIdentifier($settings[IdentifierOption::NAME]);
         }
-        if (!empty($settings[Role::NAME])) {
-            $demand->setRole($settings[Role::NAME]);
+        if (!empty($settings[VersionArgument::NAME])) {
+            $demand->setVersion($settings[VersionArgument::NAME]);
         }
 
         return $demand;
     }
-
 }

@@ -3,7 +3,8 @@
 <!-- https://phpunit.readthedocs.io/en/latest/configuration.html -->
 <phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:noNamespaceSchemaLocation="vendor/phpunit/phpunit/phpunit.xsd"
-         backupGlobals="false"
+         failOnRisky="true"
+         failOnWarning="true"
          colors="true"
          bootstrap="config/bootstrap.php"
 >
@@ -27,7 +28,7 @@
         <extension class="DAMA\DoctrineTestBundle\PHPUnit\PHPUnitExtension"/>
     </extensions>
     <testsuites>
-        <testsuite name="App Data Collector Test Suite">
+        <testsuite name="Data Collector Test Suite">
             <directory>tests</directory>
         </testsuite>
     </testsuites>
@@ -38,6 +39,8 @@
             <exclude>
                 <directory>src/DataFixtures</directory>
                 <directory>src/Migrations</directory>
+                <directory>./tests</directory>
+                <directory>./vendor</directory>
             </exclude>
         </whitelist>
     </filter>

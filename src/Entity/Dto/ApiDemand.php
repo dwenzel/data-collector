@@ -20,9 +20,9 @@ namespace DWenzel\DataCollector\Entity\Dto;
  ***************************************************************/
 
 /**
- * Class InstanceDemand
+ * Class ApiDemand
  */
-class InstanceDemand implements DemandInterface
+class ApiDemand implements DemandInterface
 {
     /**
      * Uuids to search for
@@ -45,7 +45,7 @@ class InstanceDemand implements DemandInterface
     /**
      * @var string
      */
-    private $role = '';
+    private $vendor = '';
 
     /**
      * @var bool $active
@@ -55,7 +55,7 @@ class InstanceDemand implements DemandInterface
     /**
      * @var string Comma separated list of roles
      */
-    private $roles = '';
+    private $version = '';
 
     /**
      * @return string
@@ -67,7 +67,7 @@ class InstanceDemand implements DemandInterface
 
     /**
      * @param string $uuids
-     * @return InstanceDemand
+     * @return ApiDemand
      */
     public function setUuids(string $uuids): self
     {
@@ -86,7 +86,7 @@ class InstanceDemand implements DemandInterface
 
     /**
      * @param string $name
-     * @return InstanceDemand
+     * @return ApiDemand
      */
     public function setName(string $name): self
     {
@@ -105,7 +105,7 @@ class InstanceDemand implements DemandInterface
 
     /**
      * @param bool $active
-     * @return InstanceDemand
+     * @return ApiDemand
      */
     public function setActive(bool $active): self
     {
@@ -117,18 +117,18 @@ class InstanceDemand implements DemandInterface
     /**
      * @return string
      */
-    public function getRoles(): string
+    public function getVersion(): string
     {
-        return $this->roles;
+        return $this->version;
     }
 
     /**
-     * @param string $roles
-     * @return InstanceDemand
+     * @param string $version
+     * @return ApiDemand
      */
-    public function setRoles(string $roles): self
+    public function setVersion(string $version): self
     {
-        $this->roles = $roles;
+        $this->version = $version;
 
         return $this;
     }
@@ -143,7 +143,7 @@ class InstanceDemand implements DemandInterface
 
     /**
      * @param string $identifier A single uuid
-     * @return InstanceDemand
+     * @return ApiDemand
      */
     public function setIdentifier(string $identifier): self
     {
@@ -155,18 +155,18 @@ class InstanceDemand implements DemandInterface
     /**
      * @return string
      */
-    public function getRole(): string
+    public function getVendor(): string
     {
-        return $this->role;
+        return $this->vendor;
     }
 
     /**
-     * @param string $role
-     * @return InstanceDemand
+     * @param string $vendor
+     * @return ApiDemand
      */
-    public function setRole(string $role): self
+    public function setVendor(string $vendor): self
     {
-        $this->role = $role;
+        $this->vendor = $vendor;
 
         return $this;
     }

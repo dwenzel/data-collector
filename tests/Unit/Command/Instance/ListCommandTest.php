@@ -24,8 +24,6 @@ use DWenzel\DataCollector\Repository\InstanceRepository;
 use DWenzel\DataCollector\Service\InstanceManagerInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * Class ForgetInstanceCommandTest
@@ -55,7 +53,7 @@ class ListCommandTest extends TestCase
         $this->instanceRepository = $this->getMockBuilder(InstanceRepository::class)
             ->disableOriginalConstructor()
             ->getMock();
-        $this->subject = new ListCommand(null, $this->instanceManager, $this->instanceRepository);
+        $this->subject = new ListCommand($this->instanceRepository);
     }
 
     public function testConstructorSetsDescription()
