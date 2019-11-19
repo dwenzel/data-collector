@@ -36,6 +36,11 @@ with other instances of the Data Collector and to retrieve collected data.
 ```bash
 php bin/console  data-collector:instance:register Loki --identifier=54381ab6-b581-45cd-9813-82e0da5fe5e5
 ```
+
+* register instance 'Loki' by uuid and name using shortcut `i`:
+```bash
+php bin/console  data-collector:instance:register Loki -i 54381ab6-b581-45cd-9813-82e0da5fe5e5
+```
 * register instance 'Yggdrasil' by name with identifier and role:
 ```bash
 php bin/console  data-collector:instance:register Yggdrasil Staging --identifier=8b348664-b187-472f-94d2-c88330829708
@@ -47,7 +52,16 @@ php bin/console  data-collector:instance:register -h
 ```
 
 ### List Instances
-not yet implemented
+
+* List all instances
+```bash
+php bin/console  data-collector:instance:list
+```
+
+* display command reference
+```bash
+php bin/console  data-collector:instance:list -h
+```
 
 ### Remove Instance
 * remove instance by uuid:
@@ -62,6 +76,33 @@ php bin/console  data-collector:instance:forget -h
 
 ### Update Instance
 not yet implemented
+
+### Add API
+not yet implemented
+
+### List APIs
+* List all APIs
+```bash
+php bin/console  data-collector:api:list
+```
+
+* display command reference
+```bash
+php bin/console  data-collector:api:list -h
+```
+
+### Remove Instance
+* remove API by identifier:
+```bash
+php bin/console  data-collector:api:forget foo/bar/2.0.0
+```
+
+* display command reference:
+```bash
+php bin/console  data-collector:api:forget -h
+```
+
+
 
 ## Entities
 

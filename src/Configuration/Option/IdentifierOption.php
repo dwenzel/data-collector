@@ -30,7 +30,7 @@ class IdentifierOption extends InputOption implements OptionInterface
     use Mode;
 
     const NAME = 'identifier';
-    const SHORTCUT = 'id';
+    const SHORTCUT = 'i';
     const DESCRIPTION = 'Universal unique id of instance. Uniqueness is tested against amongst
      known instances. If an instance is already known, registration will be rejected. 
      If empty a new id will be generated and displayed';

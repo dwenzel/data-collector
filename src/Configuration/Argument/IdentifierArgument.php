@@ -25,7 +25,7 @@ class IdentifierArgument extends InputArgument implements ArgumentInterface
 {
     use Mode;
     const NAME = 'identifier';
-    const DESCRIPTION = 'Universal Unique Identifier of the instance (UUID).';
+    const DESCRIPTION = 'Unique Identifier';
     const MODE = InputArgument::REQUIRED;
 
     public function __construct(string $name = self::NAME, int $mode = self::MODE, string $description = self::DESCRIPTION, $default = null)
