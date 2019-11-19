@@ -4,6 +4,8 @@ namespace DWenzel\DataCollector\Command\Instance;
 
 
 use DWenzel\DataCollector\Command\ForgetInstanceCommand;
+use DWenzel\DataCollector\Command\RegisterArgumentsTrait;
+use DWenzel\DataCollector\Command\RegisterOptionsTrait;
 use DWenzel\DataCollector\Factory\Dto\InstanceDemandFactory;
 use DWenzel\DataCollector\Service\InstanceManagerInterface;
 use Symfony\Component\Console\Command\Command;
@@ -31,9 +33,17 @@ use Symfony\Component\Console\Input\InputInterface;
  */
 abstract class AbstractInstanceCommand extends Command
 {
-    public const OPTIONS = [
+    use RegisterArgumentsTrait, RegisterOptionsTrait;
 
-    ];
+    public const COMMAND_DESCRIPTION = '';
+    public const COMMAND_HELP = '';
+    public const COMMAND_NAME = '';
+    public const OPTIONS = [];
+    public const ARGUMENTS = [];
+    public const ERROR_TEMPLATE = <<<EOT
+ <error>%s</error>
+EOT;
+
     /**
      * @var InstanceManagerInterface
      */
@@ -80,7 +90,6 @@ abstract class AbstractInstanceCommand extends Command
         $options = $input->getOptions() ? $input->getOptions() : [];
 
         $settings = array_merge($arguments, $options);
-        $demand = InstanceDemandFactory::fromSettings($settings);
-        return $demand;
+        return InstanceDemandFactory::fromSettings($settings);
     }
 }

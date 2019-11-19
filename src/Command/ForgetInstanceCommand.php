@@ -25,8 +25,6 @@ use Symfony\Component\Console\Output\OutputInterface;
  ***************************************************************/
 class ForgetInstanceCommand extends Instance\AbstractInstanceCommand
 {
-    use RegisterArgumentsTrait, RegisterOptionsTrait;
-
     const COMMAND_DESCRIPTION = 'Removes an instance.';
     const COMMAND_HELP = 'After removal of an instance its data are not collected any longer.
     Provide a UUID (universal unique identifier) and optionally force execution.';
