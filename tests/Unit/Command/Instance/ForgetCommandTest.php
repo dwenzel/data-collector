@@ -1,6 +1,6 @@
 <?php
 
-namespace DWenzel\DataCollector\Tests\Unit\Command;
+namespace DWenzel\DataCollector\Tests\Unit\Command\Instance;
 
 /***************************************************************
  *  Copyright notice
@@ -29,9 +29,9 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Class ForgetInstanceCommandTest
+ * Class ForgetCommandTest
  */
-class ForgetInstanceCommandTest extends TestCase
+class ForgetCommandTest extends TestCase
 {
     /**
      * @var ForgetCommand
@@ -160,10 +160,10 @@ class ForgetInstanceCommandTest extends TestCase
             ->willThrowException($exception);
 
         $expectedMessages = [
-          sprintf(
-              ForgetCommand::ERROR_TEMPLATE,
-              $exceptionMessage
-          )
+            sprintf(
+                ForgetCommand::ERROR_TEMPLATE,
+                $exceptionMessage
+            )
         ];
         $output->expects($this->once())
             ->method('writeln')

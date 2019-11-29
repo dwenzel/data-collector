@@ -21,22 +21,15 @@ use Symfony\Component\Console\Input\InputArgument;
  * GNU General Public License for more details.
  * This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
-class VersionArgument extends InputArgument implements ArgumentInterface
+class VendorArgument extends InputArgument implements ArgumentInterface
 {
     use Mode;
-    /**
-     * Name of the argument.
-     * Note: we cannot use 'version' here since this name
-     * would collide with an argument of the console command.
-     */
-    const NAME = 'release';
-    const DESCRIPTION = 'Version of the API.';
+    const NAME = 'vendor';
+    const DESCRIPTION = 'Vendor name.';
     const MODE = InputArgument::REQUIRED;
 
     public function __construct(string $name = self::NAME, int $mode = self::MODE, string $description = self::DESCRIPTION, $default = null)
     {
         parent::__construct($name, $mode, $description, $default);
     }
-
-
 }

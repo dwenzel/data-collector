@@ -2,6 +2,9 @@
 
 namespace DWenzel\DataCollector\Tests\Unit\Service;
 
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
+use DWenzel\DataCollector\Entity\Dto\DemandInterface;
 use DWenzel\DataCollector\Entity\Dto\InstanceDemand;
 use DWenzel\DataCollector\Entity\Instance;
 use DWenzel\DataCollector\Exception\InvalidUuidException;
@@ -52,7 +55,7 @@ class InstanceManagerTest extends TestCase
         $this->subject = new InstanceManager($this->instanceRepository);
     }
 
-    public function testHasReturnsFalseForNonExistingInstance()
+    public function testHasReturnsFalseForNonExistingInstance(): void
     {
         $uuid = '12345';
         $criteria = ['uuid' => $uuid];
@@ -66,7 +69,12 @@ class InstanceManagerTest extends TestCase
         );
     }
 
-    public function testRegisterThrowsExceptionForExistingInstance()
+    /**
+     * @throws InvalidUuidException
+     * @throws ORMException
+     * @throws OptimisticLockException
+     */
+    public function testRegisterThrowsExceptionForExistingInstance(): void
     {
         $existingUuid = 'foo';
         $criteria = ['uuid' => $existingUuid];
@@ -84,7 +92,12 @@ class InstanceManagerTest extends TestCase
         $this->subject->register($demand);
     }
 
-    public function testRegisterThrowsExceptionForInvalidIdentifier()
+    /**
+     * @throws InvalidUuidException
+     * @throws ORMException
+     * @throws OptimisticLockException
+     */
+    public function testRegisterThrowsExceptionForInvalidIdentifier(): void
     {
         $invalidUuid = 'foo';
         $criteria = ['uuid' => $invalidUuid];
@@ -102,7 +115,12 @@ class InstanceManagerTest extends TestCase
         $this->subject->register($demand);
     }
 
-    public function testRegisterGeneratesUuidIfIdentifierIsEmpty()
+    /**
+     * @throws InvalidUuidException
+     * @throws ORMException
+     * @throws OptimisticLockException
+     */
+    public function testRegisterGeneratesUuidIfIdentifierIsEmpty(): void
     {
         $demand = new InstanceDemand();
 
@@ -115,7 +133,13 @@ class InstanceManagerTest extends TestCase
         $this->subject->register($demand);
     }
 
-    public function testForgetRemovesInstanceFromRepository()
+    /**
+     * @throws InvalidUuidException
+     * @throws ORMException
+     * @throws OptimisticLockException
+     * @throws \Exception
+     */
+    public function testForgetRemovesInstanceFromRepository(): void
     {
         $uuid = Uuid::uuid4()->toString();
         $demand = new InstanceDemand();
@@ -142,7 +166,13 @@ class InstanceManagerTest extends TestCase
 
     }
 
-    public function testForgetThrowsExceptionForMisssingInstance()
+    /**
+     * @throws InvalidUuidException
+     * @throws ORMException
+     * @throws OptimisticLockException
+     * @throws \Exception
+     */
+    public function testForgetThrowsExceptionForMissingInstance(): void
     {
         $this->expectExceptionCode(1573766261);
         $uuid = Uuid::uuid4()->toString();
@@ -160,4 +190,23 @@ class InstanceManagerTest extends TestCase
 
     }
 
+    /**
+     * @throws InvalidUuidException
+     * @throws ORMException
+     * @throws OptimisticLockException
+     */
+    public function testRegisterThrowsExceptionForInvalidDemandObject(): void
+    {
+        $demand = $this->getMockForAbstractClass(DemandInterface::class);
+        $this->expectExceptionCode(1574174581);
+
+        $this->subject->register($demand);
+    }
+
+    public function testForgetThrowsExceptionForInvalidDemandObject(): void
+    {
+        $demand = $this->getMockForAbstractClass(DemandInterface::class);
+        $this->expectExceptionCode(1574174753);
+        $this->subject->forget($demand);
+    }
 }

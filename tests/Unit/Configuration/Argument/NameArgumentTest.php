@@ -3,7 +3,7 @@
 namespace DWenzel\DataCollector\Tests\Unit\Configuration\Argument;
 
 use DWenzel\DataCollector\Configuration\Argument\ArgumentInterface;
-use DWenzel\DataCollector\Configuration\Argument\NameArgument;
+use DWenzel\DataCollector\Configuration\Argument\InstanceNameArgument;
 use PHPUnit\Framework\TestCase;
 
 /***************************************************************
@@ -25,13 +25,13 @@ use PHPUnit\Framework\TestCase;
 class NameArgumentTest extends TestCase
 {
     /**
-     * @var NameArgument
+     * @var InstanceNameArgument
      */
     protected $subject;
 
     public function setUp(): void
     {
-        $this->subject = new NameArgument();
+        $this->subject = new InstanceNameArgument();
     }
 
     public function testSubjectImplementsArgumentInterface()
@@ -45,7 +45,7 @@ class NameArgumentTest extends TestCase
     public function testGetNameReturnsClassConstant()
     {
         $this->assertSame(
-            NameArgument::NAME,
+            InstanceNameArgument::NAME,
             $this->subject->getName()
         );
     }
@@ -53,7 +53,7 @@ class NameArgumentTest extends TestCase
     public function testGetDescriptionReturnsClassConstant()
     {
         $this->assertSame(
-            NameArgument::DESCRIPTION,
+            InstanceNameArgument::DESCRIPTION,
             $this->subject->getDescription()
         );
     }
@@ -61,7 +61,7 @@ class NameArgumentTest extends TestCase
     public function testGetModeReturnsClassConstant()
     {
         $this->assertSame(
-            NameArgument::MODE,
+            InstanceNameArgument::MODE,
             $this->subject->getMode()
         );
     }
@@ -69,10 +69,10 @@ class NameArgumentTest extends TestCase
     public function testConstructorSetsDefault()
     {
         $default = 'foo';
-        $this->subject = new NameArgument(
-            NameArgument::NAME,
-            NameArgument::OPTIONAL,
-            NameArgument::DESCRIPTION,
+        $this->subject = new InstanceNameArgument(
+            InstanceNameArgument::NAME,
+            InstanceNameArgument::OPTIONAL,
+            InstanceNameArgument::DESCRIPTION,
             $default
         );
 

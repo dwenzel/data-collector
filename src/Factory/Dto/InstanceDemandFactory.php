@@ -2,7 +2,7 @@
 
 namespace DWenzel\DataCollector\Factory\Dto;
 
-use DWenzel\DataCollector\Configuration\Argument\NameArgument;
+use DWenzel\DataCollector\Configuration\Argument\InstanceNameArgument;
 use DWenzel\DataCollector\Configuration\Argument\Role;
 use DWenzel\DataCollector\Configuration\Option\IdentifierOption;
 use DWenzel\DataCollector\Entity\Dto\InstanceDemand;
@@ -36,8 +36,8 @@ class InstanceDemandFactory implements DemandFactoryInterface
     public static function fromSettings(array $settings): InstanceDemand
     {
         $demand = new InstanceDemand();
-        if (!empty($settings[NameArgument::NAME])) {
-            $demand->setName($settings[NameArgument::NAME]);
+        if (!empty($settings[InstanceNameArgument::NAME])) {
+            $demand->setName($settings[InstanceNameArgument::NAME]);
         }
         if (!empty($settings[IdentifierOption::NAME])) {
             $demand->setIdentifier($settings[IdentifierOption::NAME]);

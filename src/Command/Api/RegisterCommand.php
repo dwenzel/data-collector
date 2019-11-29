@@ -1,15 +1,20 @@
 <?php
 
-namespace DWenzel\DataCollector\Command\Instance;
+namespace DWenzel\DataCollector\Command\Api;
 
+use DWenzel\DataCollector\Command\AbstractCommand;
 use DWenzel\DataCollector\Command\RegisterArgumentsTrait;
 use DWenzel\DataCollector\Command\RegisterOptionsTrait;
+use DWenzel\DataCollector\Configuration\Argument\ApiNameArgument;
 use DWenzel\DataCollector\Configuration\Argument\InstanceNameArgument;
 use DWenzel\DataCollector\Configuration\Argument\Role;
+use DWenzel\DataCollector\Configuration\Argument\VendorArgument;
+use DWenzel\DataCollector\Configuration\Argument\VersionArgument;
 use DWenzel\DataCollector\Configuration\Option\IdentifierOption;
+use DWenzel\DataCollector\Entity\Api;
 use DWenzel\DataCollector\Exception\InvalidUuidException;
-use DWenzel\DataCollector\Factory\Dto\InstanceDemandFactory;
-use DWenzel\DataCollector\Service\InstanceManagerInterface;
+use DWenzel\DataCollector\Factory\Dto\ApiDemandFactory;
+use DWenzel\DataCollector\Service\ApiManagerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -30,21 +35,20 @@ use Symfony\Component\Console\Output\OutputInterface;
  * GNU General Public License for more details.
  * This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
-class RegisterCommand extends Command
+class RegisterCommand extends AbstractCommand
 {
-    use RegisterArgumentsTrait, RegisterOptionsTrait;
-
-    const COMMAND_DESCRIPTION = 'Registers an application instance from which data should be collected';
-    const COMMAND_HELP = 'An instance must be registered before data can be collected.
-    Provide at least a name and optionally a UUID (universal unique identifier) and role.';
-    const DEFAULT_COMMAND_NAME = 'data-collector:instance:register';
+    const COMMAND_DESCRIPTION = 'Registers an application api from which data should be collected';
+    const COMMAND_HELP = 'An api must be registered before data can be collected.
+    Provide a vendor name, name and version. Optionally provide an identifier (universal unique identifier) and description.';
+    const DEFAULT_COMMAND_NAME = 'data-collector:api:register';
 
     /**
      * Command Arguments
      */
     const ARGUMENTS = [
-        InstanceNameArgument::class,
-        Role::class
+        ApiNameArgument::class,
+        VendorArgument::class,
+        VersionArgument::class
     ];
 
     const OPTIONS = [
@@ -54,37 +58,27 @@ class RegisterCommand extends Command
  <error>%s</error>
 EOT;
 
-    const INSTANT_REGISTERED_MESSAGE = <<<IRM
-Instance has been registered successfully:
-   <info>UUID</info>:   %s
+    const API_REGISTERED_MESSAGE = <<<ARM
+Api has been registered successfully:
    <info>Name</info>:   %s
-   <info>Role</info>:   %s
+   <info>Vendor</info>:   %s
+   <info>Version</info>:   %s
+   <info>Identifier</info>:   %s
 
-   <info>Make sure to keep the UUID for reference</info>.    
-IRM;
+   <info>Make sure to keep the identifier (UUID) for reference</info>.    
+ARM;
 
 
     protected static $defaultName = self::DEFAULT_COMMAND_NAME;
     /**
-     * @var InstanceManagerInterface
+     * @var ApiManagerInterface
      */
-    protected $instanceManager;
+    protected $apiManager;
 
-    public function __construct(string $name = null, InstanceManagerInterface $instanceManager)
+    public function __construct(string $name = null, ApiManagerInterface $apiManager)
     {
         parent::__construct($name);
-        $this->instanceManager = $instanceManager;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    protected function configure()
-    {
-        $this->setDescription(static::COMMAND_DESCRIPTION)
-            ->setHelp(static::COMMAND_HELP)
-            ->registerArguments()
-            ->registerOptions();
+        $this->apiManager = $apiManager;
     }
 
     /**
@@ -98,42 +92,24 @@ IRM;
         $options = $input->getOptions()? $input->getOptions(): [];
 
         $settings = array_merge($arguments, $options);
-        $demand = InstanceDemandFactory::fromSettings($settings);
+        $demand = ApiDemandFactory::fromSettings($settings);
         // validate Arguments
 
         $messages = [];
         try {
-            $instance = $this->instanceManager->register($demand);
+            /** @var Api $api */
+            $api = $this->apiManager->register($demand);
             $messages[] = sprintf(
-                static::INSTANT_REGISTERED_MESSAGE,
-                $instance->getUuid(),
-                $instance->getName(),
-                $instance->getRole()
+                static::API_REGISTERED_MESSAGE,
+                $api->getName(),
+                $api->getVendor(),
+                $api->getVersion(),
+                $api->getIdentifier()
             );
         } catch (InvalidUuidException $exception) {
             $messages[] = sprintf(static::ERROR_TEMPLATE, $exception->getMessage());
         }
 
         $output->writeln($messages);
-    }
-
-    /**
-     * Returns a list of argument classes
-     *
-     * @return iterable
-     */
-    protected function getArguments(): iterable
-    {
-        return static::ARGUMENTS;
-    }
-
-    /**
-     * Returns a list of option classes
-     *
-     * @return iterable
-     */
-    protected function getOptions(): iterable
-    {
-        return static::OPTIONS;
     }
 }

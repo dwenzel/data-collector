@@ -4,7 +4,7 @@ namespace DWenzel\DataCollector\Command\Instance;
 
 use DWenzel\DataCollector\Command\RegisterArgumentsTrait;
 use DWenzel\DataCollector\Command\RegisterOptionsTrait;
-use DWenzel\DataCollector\Configuration\Argument\NameArgument;
+use DWenzel\DataCollector\Configuration\Argument\InstanceNameArgument;
 use DWenzel\DataCollector\Configuration\Argument\Role;
 use DWenzel\DataCollector\Configuration\Option\IdentifierOption;
 use DWenzel\DataCollector\Exception\InvalidUuidException;

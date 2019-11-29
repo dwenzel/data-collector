@@ -5,11 +5,11 @@ namespace DWenzel\DataCollector\Service;
 use DWenzel\DataCollector\Entity\Api;
 use DWenzel\DataCollector\Entity\Dto\ApiDemand;
 use DWenzel\DataCollector\Entity\Dto\DemandInterface;
-use DWenzel\DataCollector\Entity\Dto\InstanceDemand;
 use DWenzel\DataCollector\Entity\EntityInterface;
 use DWenzel\DataCollector\Exception\InvalidUuidException;
 use DWenzel\DataCollector\Repository\ApiRepository;
 use InvalidArgumentException;
+use Ramsey\Uuid\Uuid;
 
 /***************************************************************
  *  Copyright notice
@@ -50,6 +50,7 @@ class ApiManager implements ApiManagerInterface
      * @throws InvalidUuidException
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws \Exception
      */
     public function register(DemandInterface $demand): EntityInterface
     {
@@ -70,6 +71,11 @@ class ApiManager implements ApiManagerInterface
                 sprintf('An api with the identifier "%s" is already registered.', $identifier),
                 1574174591
             );
+        }
+
+        if (empty($identifier)) {
+            $identifier = Uuid::uuid4()->toString();
+            $demand->setIdentifier($identifier);
         }
 
         $api = new Api();

@@ -2,11 +2,15 @@
 
 namespace DWenzel\DataCollector\Tests\Unit\Service;
 
-use DWenzel\DataCollector\Entity\Dto\ApiDemand;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use DWenzel\DataCollector\Entity\Api;
+use DWenzel\DataCollector\Entity\Dto\ApiDemand;
+use DWenzel\DataCollector\Entity\Dto\DemandInterface;
 use DWenzel\DataCollector\Exception\InvalidUuidException;
 use DWenzel\DataCollector\Repository\ApiRepository;
 use DWenzel\DataCollector\Service\ApiManager;
+use Exception;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Ramsey\Uuid\Uuid;
@@ -52,7 +56,7 @@ class ApiManagerTest extends TestCase
         $this->subject = new ApiManager($this->apiRepository);
     }
 
-    public function testHasReturnsFalseForNonExistingApi()
+    public function testHasReturnsFalseForNonExistingApi(): void
     {
         $uuid = '12345';
         $criteria = ['identifier' => $uuid];
@@ -68,10 +72,10 @@ class ApiManagerTest extends TestCase
 
     /**
      * @throws InvalidUuidException
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
-    public function testRegisterThrowsExceptionForExistingApi()
+    public function testRegisterThrowsExceptionForExistingApi(): void
     {
         $existingUuid = 'foo';
         $criteria = ['identifier' => $existingUuid];
@@ -91,10 +95,10 @@ class ApiManagerTest extends TestCase
 
     /**
      * @throws InvalidUuidException
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
-    public function testRegisterGeneratesUuidIfIdentifierIsEmpty()
+    public function testRegisterGeneratesUuidIfIdentifierIsEmpty(): void
     {
         $demand = new ApiDemand();
 
@@ -109,11 +113,11 @@ class ApiManagerTest extends TestCase
 
     /**
      * @throws InvalidUuidException
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
-     * @throws \Exception
+     * @throws ORMException
+     * @throws OptimisticLockException
+     * @throws Exception
      */
-    public function testForgetRemovesApiFromRepository()
+    public function testForgetRemovesApiFromRepository(): void
     {
         $uuid = Uuid::uuid4()->toString();
         $demand = new ApiDemand();
@@ -142,11 +146,11 @@ class ApiManagerTest extends TestCase
 
     /**
      * @throws InvalidUuidException
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
-     * @throws \Exception
+     * @throws ORMException
+     * @throws OptimisticLockException
+     * @throws Exception
      */
-    public function testForgetThrowsExceptionForMisssingApi()
+    public function testForgetThrowsExceptionForMissingApi(): void
     {
         $this->expectExceptionCode(1574175113);
         $uuid = Uuid::uuid4()->toString();
@@ -164,4 +168,29 @@ class ApiManagerTest extends TestCase
 
     }
 
+    /**
+     * @throws InvalidUuidException
+     * @throws ORMException
+     * @throws OptimisticLockException
+     */
+    public function testRegisterThrowsExceptionForInvalidDemandObject(): void
+    {
+        $demand = $this->getMockForAbstractClass(DemandInterface::class);
+
+        $this->expectExceptionCode(1574174581);
+        $this->subject->register($demand);
+    }
+
+    /**
+     * @throws InvalidUuidException
+     * @throws ORMException
+     * @throws OptimisticLockException
+     */
+    public function testForgetThrowsExceptionForInvalidDemandObject(): void
+    {
+        $demand = $this->getMockForAbstractClass(DemandInterface::class);
+
+        $this->expectExceptionCode(1574174753);
+        $this->subject->forget($demand);
+    }
 }

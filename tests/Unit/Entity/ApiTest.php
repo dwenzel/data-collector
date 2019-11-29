@@ -3,6 +3,7 @@
 namespace DWenzel\DataCollector\Tests\Unit\Entity;
 
 use DWenzel\DataCollector\Entity\Api;
+use DWenzel\DataCollector\Entity\Endpoint;
 use PHPUnit\Framework\TestCase;
 
 class ApiTest extends TestCase
@@ -17,14 +18,14 @@ class ApiTest extends TestCase
         $this->subject = new Api();
     }
 
-    public function testGetIdInitiallyReturnsNull()
+    public function testGetIdInitiallyReturnsNull(): void
     {
         $this->assertNull(
             $this->subject->getId()
         );
     }
-    
-    public function testVendorCanBeSet()
+
+    public function testVendorCanBeSet(): void
     {
         $vendor = 'foo';
         $this->subject->setVendor($vendor);
@@ -33,8 +34,8 @@ class ApiTest extends TestCase
             $this->subject->getVendor()
         );
     }
-    
-    public function testNameCanBeSet()
+
+    public function testNameCanBeSet(): void
     {
         $name = 'foo';
         $this->subject->setName($name);
@@ -44,7 +45,7 @@ class ApiTest extends TestCase
         );
     }
 
-    public function testVersionCanBeSet()
+    public function testVersionCanBeSet(): void
     {
         $version = 'foo';
         $this->subject->setVersion($version);
@@ -54,7 +55,7 @@ class ApiTest extends TestCase
         );
     }
 
-    public function testIdentifierCanBeSet()
+    public function testIdentifierCanBeSet(): void
     {
         $identifier = 'foo';
         $this->subject->setIdentifier($identifier);
@@ -64,7 +65,7 @@ class ApiTest extends TestCase
         );
     }
 
-    public function testDescriptionCanBeSet()
+    public function testDescriptionCanBeSet(): void
     {
         $description = 'foo';
         $this->subject->setDescription($description);
@@ -73,5 +74,61 @@ class ApiTest extends TestCase
             $this->subject->getDescription()
         );
     }
+
+    public function testGetEndpointsInitiallyReturnsEmptyCollection(): void
+    {
+        $this->assertEmpty(
+            $this->subject->getEndpoints()
+        );
+    }
+
+    public function testEndpointCanBeAdded(): void
+    {
+        $endpoint = $this->createMock(Endpoint::class);
+        $this->subject->addEndpoint($endpoint);
+
+        $this->assertContains(
+            $endpoint,
+            $this->subject->getEndpoints()
+        );
+    }
+
+    public function testAddingEndpointSetsApi(): void
+    {
+        $endpoint = $this->createMock(Endpoint::class);
+
+        $endpoint->expects($this->once())
+            ->method('setApi')
+            ->with($this->subject);
+
+        $this->subject->addEndpoint($endpoint);
+    }
+
+    public function testEndpointCanBeRemoved(): void
+    {
+        $endpoint = $this->createMock(Endpoint::class);
+        $this->subject->addEndpoint($endpoint);
+
+        $this->subject->removeEndpoint($endpoint);
+        $this->assertNotContains(
+            $endpoint,
+            $this->subject->getEndpoints()
+        );
+    }
+
+    public function testRemovingEndpointUnsetsApi(): void
+    {
+        $endpoint = new Endpoint();
+        $this->subject->addEndpoint($endpoint);
+
+        $this->assertSame(
+            $this->subject,
+            $endpoint->getApi()
+        );
+
+        $this->subject->removeEndpoint($endpoint);
+        $this->assertEmpty($endpoint->getApi());
+    }
+
 
 }

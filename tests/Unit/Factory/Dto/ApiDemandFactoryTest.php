@@ -2,7 +2,8 @@
 
 namespace DWenzel\DataCollector\Tests\Unit\Factory\Dto;
 
-use DWenzel\DataCollector\Configuration\Argument\NameArgument;
+use DWenzel\DataCollector\Configuration\Argument\ApiNameArgument;
+use DWenzel\DataCollector\Configuration\Argument\VendorArgument;
 use DWenzel\DataCollector\Configuration\Argument\VersionArgument;
 use DWenzel\DataCollector\Configuration\Option\IdentifierOption;
 use DWenzel\DataCollector\Factory\Dto\ApiDemandFactory;
@@ -35,7 +36,7 @@ class ApiDemandFactoryTest extends TestCase
     {
         $value = 'bar';
         $settings = [
-            NameArgument::NAME => $value,
+            ApiNameArgument::NAME => $value,
         ];
 
         $demand = ApiDemandFactory::fromSettings($settings);
@@ -61,7 +62,7 @@ class ApiDemandFactoryTest extends TestCase
         );
     }
 
-    public function testFromSettingsSetsRole()
+    public function testFromSettingsSetsVersion()
     {
         $value = 'bar';
         $settings = [
@@ -73,6 +74,20 @@ class ApiDemandFactoryTest extends TestCase
         $this->assertSame(
             $value,
             $demand->getVersion()
+        );
+    }
+    public function testFromSettingsSetsVendor()
+    {
+        $value = 'bar';
+        $settings = [
+            VendorArgument::NAME => $value,
+        ];
+
+        $demand = ApiDemandFactory::fromSettings($settings);
+
+        $this->assertSame(
+            $value,
+            $demand->getVendor()
         );
     }
 }

@@ -59,4 +59,9 @@ trait DemandedRepositoryTrait
         $this->getEntityManager()->persist($entity);
         $this->getEntityManager()->flush();
     }
+
+    public function update(EntityInterface $entity)
+    {
+        $this->add($entity);
+    }
 }

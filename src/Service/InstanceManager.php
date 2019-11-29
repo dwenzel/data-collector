@@ -51,6 +51,7 @@ class InstanceManager implements InstanceManagerInterface
      * @throws InvalidUuidException
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws \Exception
      */
     public function register(DemandInterface $demand): EntityInterface
     {

@@ -2,7 +2,9 @@
 
 namespace DWenzel\DataCollector\Factory\Dto;
 
-use DWenzel\DataCollector\Configuration\Argument\NameArgument;
+use DWenzel\DataCollector\Configuration\Argument\ApiNameArgument;
+use DWenzel\DataCollector\Configuration\Argument\InstanceNameArgument;
+use DWenzel\DataCollector\Configuration\Argument\VendorArgument;
 use DWenzel\DataCollector\Configuration\Argument\VersionArgument;
 use DWenzel\DataCollector\Configuration\Option\IdentifierOption;
 use DWenzel\DataCollector\Entity\Dto\ApiDemand;
@@ -36,14 +38,17 @@ class ApiDemandFactory
     public static function fromSettings(array $settings): ApiDemand
     {
         $demand = new ApiDemand();
-        if (!empty($settings[NameArgument::NAME])) {
-            $demand->setName($settings[NameArgument::NAME]);
+        if (!empty($settings[ApiNameArgument::NAME])) {
+            $demand->setName($settings[ApiNameArgument::NAME]);
         }
         if (!empty($settings[IdentifierOption::NAME])) {
             $demand->setIdentifier($settings[IdentifierOption::NAME]);
         }
         if (!empty($settings[VersionArgument::NAME])) {
             $demand->setVersion($settings[VersionArgument::NAME]);
+        }
+        if (!empty($settings[VendorArgument::NAME])) {
+            $demand->setVendor($settings[VendorArgument::NAME]);
         }
 
         return $demand;

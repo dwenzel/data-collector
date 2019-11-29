@@ -2,6 +2,8 @@
 
 namespace DWenzel\DataCollector\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -46,6 +48,16 @@ class Api implements EntityInterface
      * @ORM\Column(type="text", nullable=true)
      */
     private $description;
+
+    /**
+     * @ORM\OneToMany(targetEntity="DWenzel\DataCollector\Entity\Endpoint", mappedBy="api", cascade={"persist", "remove"})
+     */
+    private $endpoints;
+
+    public function __construct()
+    {
+        $this->endpoints = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -108,6 +120,37 @@ class Api implements EntityInterface
     public function setDescription(?string $description): self
     {
         $this->description = $description;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Endpoint[]
+     */
+    public function getEndpoints(): Collection
+    {
+        return $this->endpoints;
+    }
+
+    public function addEndpoint(Endpoint $endpoint): self
+    {
+        if (!$this->endpoints->contains($endpoint)) {
+            $this->endpoints[] = $endpoint;
+            $endpoint->setApi($this);
+        }
+
+        return $this;
+    }
+
+    public function removeEndpoint(Endpoint $endpoint): self
+    {
+        if ($this->endpoints->contains($endpoint)) {
+            $this->endpoints->removeElement($endpoint);
+            // set the owning side to null (unless already changed)
+            if ($endpoint->getApi() === $this) {
+                $endpoint->setApi(null);
+            }
+        }
 
         return $this;
     }

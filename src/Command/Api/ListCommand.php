@@ -3,18 +3,8 @@
 namespace DWenzel\DataCollector\Command\Api;
 
 use DWenzel\DataCollector\Command\AbstractCommand;
-use DWenzel\DataCollector\Command\RegisterArgumentsTrait;
-use DWenzel\DataCollector\Command\RegisterOptionsTrait;
-use DWenzel\DataCollector\Configuration\Argument\NameArgument;
-use DWenzel\DataCollector\Configuration\Argument\Role;
-use DWenzel\DataCollector\Configuration\Option\IdentifierOption;
-use DWenzel\DataCollector\Exception\InvalidUuidException;
-use DWenzel\DataCollector\Factory\Dto\ApiDemandFactory;
 use DWenzel\DataCollector\Repository\ApiRepository;
-use DWenzel\DataCollector\Service\ApiManagerInterface;
 use Exception;
-use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Helper\DescriptorHelper;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -44,13 +34,11 @@ class ListCommand extends AbstractCommand
 
     const ARGUMENTS = [];
     const OPTIONS = [];
-
+    protected static $defaultName = self::DEFAULT_COMMAND_NAME;
     /**
      * @var ApiRepository
      */
     protected $apiRepository;
-
-    protected static $defaultName = self::DEFAULT_COMMAND_NAME;
 
     public function __construct(ApiRepository $ApiRepository)
     {
@@ -86,9 +74,8 @@ class ListCommand extends AbstractCommand
             $table->render();
         } catch (Exception $exception) {
             $messages[] = sprintf(static::ERROR_TEMPLATE, $exception->getMessage());
+            $output->writeln($messages);
         }
-
-        $output->writeln($messages);
     }
 
 }

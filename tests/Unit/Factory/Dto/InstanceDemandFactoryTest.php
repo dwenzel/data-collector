@@ -2,7 +2,7 @@
 
 namespace DWenzel\DataCollector\Tests\Unit\Factory\Dto;
 
-use DWenzel\DataCollector\Configuration\Argument\NameArgument;
+use DWenzel\DataCollector\Configuration\Argument\InstanceNameArgument;
 use DWenzel\DataCollector\Configuration\Argument\Role;
 use DWenzel\DataCollector\Configuration\Option\IdentifierOption;
 use DWenzel\DataCollector\Factory\Dto\InstanceDemandFactory;
@@ -39,7 +39,7 @@ class InstanceDemandFactoryTest extends TestCase
     {
         $value = 'bar';
         $settings = [
-            NameArgument::NAME => $value,
+            InstanceNameArgument::NAME => $value,
         ];
 
         $demand = InstanceDemandFactory::fromSettings($settings);
