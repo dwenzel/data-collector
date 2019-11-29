@@ -29,9 +29,11 @@ use Symfony\Component\Console\Output\OutputInterface;
  ***************************************************************/
 class ForgetCommand extends AbstractCommand
 {
-    const COMMAND_DESCRIPTION = 'Removes an api.';
-    const COMMAND_HELP = 'After removal of an api its data are not collected any longer.
-    Provide a UUID (universal unique identifier) and optionally force execution.';
+    const COMMAND_DESCRIPTION = 'Removes a registered API.';
+    const COMMAND_HELP = <<<CCC
+After removal of an API, data is not collected any longer from its endpoint. 
+Provide an identifier.'
+CCC;
     const DEFAULT_COMMAND_NAME = 'data-collector:api:forget';
 
     /**
@@ -51,10 +53,10 @@ class ForgetCommand extends AbstractCommand
 EOT;
 
     const API_REMOVED_MESSAGE = <<<IRM
-Api has been forgotten:
+API has been forgotten:
    <info>UUID</info>:   %s
 
-   <info>You may re-add it using its UUID</info>.    
+   <info>You may re-add it using its identifier</info>.    
 IRM;
 
 
