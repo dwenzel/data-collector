@@ -1,0 +1,16 @@
+site_name: Data Collector Documentation
+repo_url: https://github.com/dwenzel/data-collector
+repo_name: data-collector
+site_url: https://0.0.0.0:8000
+dev_addr: 0.0.0.0:8000
+
+pages:
+    - Home: index.md
+    - Components:
+        - Overview: components/index.md
+    - Development:
+        - Local Environment: development/environment.md
+        - Coding Guideline: development/codingGuide.md
+        - Credentials: development/credentials.md
+
+theme: readthedocs
