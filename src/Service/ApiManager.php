@@ -2,12 +2,15 @@
 
 namespace DWenzel\DataCollector\Service;
 
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use DWenzel\DataCollector\Entity\Api;
 use DWenzel\DataCollector\Entity\Dto\ApiDemand;
 use DWenzel\DataCollector\Entity\Dto\DemandInterface;
 use DWenzel\DataCollector\Entity\EntityInterface;
 use DWenzel\DataCollector\Exception\InvalidUuidException;
 use DWenzel\DataCollector\Repository\ApiRepository;
+use Exception;
 use InvalidArgumentException;
 use Ramsey\Uuid\Uuid;
 
@@ -29,7 +32,7 @@ use Ramsey\Uuid\Uuid;
  ***************************************************************/
 
 /**
- * Class InstanceManager
+ * Class ApiManager
  */
 class ApiManager implements ApiManagerInterface
 {
@@ -48,9 +51,9 @@ class ApiManager implements ApiManagerInterface
      * @param DemandInterface $demand
      * @return EntityInterface
      * @throws InvalidUuidException
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
-     * @throws \Exception
+     * @throws ORMException
+     * @throws OptimisticLockException
+     * @throws Exception
      */
     public function register(DemandInterface $demand): EntityInterface
     {
@@ -103,18 +106,14 @@ class ApiManager implements ApiManagerInterface
      * @inheritDoc
      * @param DemandInterface $demand
      * @throws InvalidUuidException
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
     public function forget(DemandInterface $demand): void
     {
-        if (!$demand instanceof ApiDemand) {
-            throw new InvalidArgumentException(
-                sprintf('Can not process demand object of type %s .', get_class($demand)),
-                1574174753
-            );
-        }
+        $this->validateDemand($demand);
 
+        /** @var ApiDemand $demand */
         $identifier = $demand->getIdentifier();
         if (!$this->has($identifier)) {
             throw new InvalidUuidException(
@@ -129,6 +128,48 @@ class ApiManager implements ApiManagerInterface
         if ($instance = $this->apiRepository->findOneBy($criteria)) {
             $this->apiRepository->remove($instance);
         }
+    }
+
+    /**
+     * @param DemandInterface $demand
+     */
+    protected function validateDemand(DemandInterface $demand): void
+    {
+        if (!$demand instanceof ApiDemand) {
+            throw new InvalidArgumentException(
+                sprintf('Can not process demand object of type %s .', get_class($demand)),
+                1574174753
+            );
+        }
+    }
+
+    /**
+     * @param DemandInterface $demand
+     * @return Api
+     * @throws InvalidUuidException
+     */
+    public function get(DemandInterface $demand): Api
+    {
+
+        $this->validateDemand($demand);
+        /** @var ApiDemand $demand */
+        $identifier = $demand->getIdentifier();
+
+        $api = $this->apiRepository->findOneBy(
+            ['identifier' => $identifier]
+        );
+
+        if (null === $api) {
+            throw new InvalidUuidException(
+                sprintf(
+                    'Cannot get API with identifier %s. There is no such API registered',
+                    $identifier),
+                1575296634
+            );
+
+        }
+
+        return $api;
     }
 
 }

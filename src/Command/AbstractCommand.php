@@ -74,7 +74,6 @@ EOT;
         $arguments = $input->getArguments() ? $input->getArguments() : [];
         $options = $input->getOptions() ? $input->getOptions() : [];
 
-        $settings = array_merge($arguments, $options);
-        return $settings;
+        return array_merge($arguments, $options);
     }
 }

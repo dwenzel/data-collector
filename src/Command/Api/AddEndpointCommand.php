@@ -30,21 +30,11 @@ use Symfony\Component\Console\Output\OutputInterface;
  * GNU General Public License for more details.
  * This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
-class AddEndpointCommand extends AbstractCommand
+class AddEndpointCommand extends AbstractApiCommand
 {
     const COMMAND_DESCRIPTION = 'Adds an endpoint to an API.';
     const COMMAND_HELP = 'Provide API identifier and name of the endpoint. The API must be registered beforehand.';
     const DEFAULT_COMMAND_NAME = 'data-collector:api:add-endpoint';
-
-    /**
-     * @var ApiManagerInterface
-     */
-    protected $apiManager;
-
-    /**
-     * @var ApiRepository
-     */
-    protected $apiRepository;
 
     /**
      * Command Arguments
@@ -66,16 +56,6 @@ IRM;
 
 
     protected static $defaultName = self::DEFAULT_COMMAND_NAME;
-
-    public function __construct(
-        ApiManagerInterface $apiManager,
-        ApiRepository $apiRepository
-    )
-    {
-        parent::__construct();
-        $this->apiManager = $apiManager;
-        $this->apiRepository = $apiRepository;
-    }
 
     /**
      * @param InputInterface $input
@@ -117,14 +97,4 @@ IRM;
         $output->writeln($messages);
     }
 
-    /**
-     * @param InputInterface $input
-     * @return ApiDemand
-     */
-    protected function createDemandFromInput(InputInterface $input): ApiDemand
-    {
-        $settings = $this->getSettingsFromInput($input);
-
-        return ApiDemandFactory::fromSettings($settings);
-    }
 }

@@ -193,4 +193,42 @@ class ApiManagerTest extends TestCase
         $this->expectExceptionCode(1574174753);
         $this->subject->forget($demand);
     }
+
+    /**
+     * @throws InvalidUuidException
+     */
+    public function testGetThrowsExceptionForInvalidDemandObject(): void
+    {
+        $demand = $this->getMockForAbstractClass(DemandInterface::class);
+
+        $this->expectExceptionCode(1574174753);
+        $this->subject->get($demand);
+
+    }
+
+    /**
+     * @throws InvalidUuidException
+     */
+    public function testGetThrowsExceptionForNonRegisteredApi(): void
+    {
+        $invalidIdentifier = 'foo';
+        $demand = $this->getMockBuilder(ApiDemand::class)
+            ->onlyMethods(['getIdentifier'])
+            ->getMock();
+
+        $demand->expects($this->atLeastOnce())
+        ->method('getIdentifier')
+        ->willReturn($invalidIdentifier);
+
+        $expectedCriteria = [
+            'identifier' => $invalidIdentifier
+        ];
+        $this->apiRepository->expects($this->once())
+            ->method('findOneBy')
+            ->with($expectedCriteria)
+            ->willReturn(null);
+        $this->expectExceptionCode(1575296634);
+
+        $this->subject->get($demand);
+    }
 }

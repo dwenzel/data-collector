@@ -3,9 +3,13 @@
 namespace DWenzel\DataCollector\Service;
 
 use Doctrine\DBAL\Types\GuidType;
+use Doctrine\ORM\Mapping\Entity;
+use DWenzel\DataCollector\Entity\Dto\DemandInterface;
 use DWenzel\DataCollector\Entity\Dto\InstanceDemand;
+use DWenzel\DataCollector\Entity\EntityInterface;
 use DWenzel\DataCollector\Entity\Instance;
 use DWenzel\DataCollector\Exception\InvalidUuidException;
+use InvalidArgumentException;
 
 /***************************************************************
  *  Copyright notice
@@ -29,4 +33,13 @@ use DWenzel\DataCollector\Exception\InvalidUuidException;
  */
 interface InstanceManagerInterface extends ManagerInterface
 {
+    /**
+     * Get an instance
+     *
+     * @param DemandInterface $demand
+     * @return Entity
+     * @throws InvalidArgumentException
+     * @throws InvalidUuidException
+     */
+    public function get(DemandInterface $demand): Instance;
 }

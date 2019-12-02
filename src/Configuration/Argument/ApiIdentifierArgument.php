@@ -1,13 +1,9 @@
 <?php
 
-namespace DWenzel\DataCollector\Service;
+namespace DWenzel\DataCollector\Configuration\Argument;
 
-use Doctrine\ORM\Mapping\Entity;
-use DWenzel\DataCollector\Entity\Api;
-use DWenzel\DataCollector\Entity\Dto\DemandInterface;
-use DWenzel\DataCollector\Entity\EntityInterface;
-use DWenzel\DataCollector\Exception\InvalidUuidException;
-use InvalidArgumentException;
+use DWenzel\DataCollector\Traits\Mode;
+use Symfony\Component\Console\Input\InputArgument;
 
 /***************************************************************
  *  Copyright notice
@@ -25,7 +21,16 @@ use InvalidArgumentException;
  * GNU General Public License for more details.
  * This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
-interface ApiManagerInterface extends ManagerInterface
+class ApiIdentifierArgument extends InputArgument implements ArgumentInterface
 {
-    public function get(DemandInterface $demand): Api;
+    use Mode;
+    const NAME = 'apiIdentifier';
+    const DESCRIPTION = 'Unique Identifier of the API';
+    const MODE = InputArgument::REQUIRED;
+
+    public function __construct(string $name = self::NAME, int $mode = self::MODE, string $description = self::DESCRIPTION, $default = null)
+    {
+        parent::__construct($name, $mode, $description, $default);
+    }
 }
+

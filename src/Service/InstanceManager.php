@@ -2,7 +2,6 @@
 
 namespace DWenzel\DataCollector\Service;
 
-use Doctrine\ORM\Mapping\Entity;
 use DWenzel\DataCollector\Entity\Dto\DemandInterface;
 use DWenzel\DataCollector\Entity\Dto\InstanceDemand;
 use DWenzel\DataCollector\Entity\EntityInterface;
@@ -114,12 +113,7 @@ class InstanceManager implements InstanceManagerInterface
      */
     public function forget(DemandInterface $demand): void
     {
-        if (!$demand instanceof InstanceDemand) {
-            throw new InvalidArgumentException(
-                sprintf('Can not process demand object of type %s .', get_class($demand)),
-                1574174753
-            );
-        }
+        $this->validateDemand($demand);
         $identifier = $demand->getIdentifier();
 
         if (!$this->has($identifier)) {
@@ -137,4 +131,44 @@ class InstanceManager implements InstanceManagerInterface
         }
     }
 
+    /**
+     * @param string $identifier
+     * @return Instance
+     * @throws InvalidUuidException
+     */
+    public function get(DemandInterface $demand): Instance
+    {
+        $this->validateDemand($demand);
+
+        /** @var InstanceDemand $demand */
+        $identifier = $demand->getIdentifier();
+
+        $instance = $this->instanceRepository->findOneBy(
+            ['uuid' => $identifier]
+        );
+
+        if (null === $instance) {
+            throw new InvalidUuidException(
+                sprintf(
+                    'Cannot get instance with UUID %s. There is no such instance registered',
+                    $identifier),
+                1575289588
+            );
+        }
+
+        return $instance;
+    }
+
+    /**
+     * @param DemandInterface $demand
+     */
+    protected function validateDemand(DemandInterface $demand): void
+    {
+        if (!$demand instanceof InstanceDemand) {
+            throw new InvalidArgumentException(
+                sprintf('Can not process demand object of type %s .', get_class($demand)),
+                1574174753
+            );
+        }
+    }
 }

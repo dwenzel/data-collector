@@ -65,7 +65,22 @@ php bin/console  data-collector:instance:forget -h
 ```
 
 ### Show
-not yet implemented
+
+* display detail view of instance by identifier:
+```bash
+php bin/console  data-collector:instance:show 54381ab6-b581-45cd-9813-82e0da5fe5e5
+```
+
+* display command reference
+```bash
+php bin/console  data-collector:instance:show -h
+```
+* Add API by identifier to instance :
+```bash
+php bin/console  data-collector:instance:add-api 54381ab6-b581-45cd-9813-82e0da5fe5e5
+```
+
+### Add API
 
 ### Update
 not yet implemented

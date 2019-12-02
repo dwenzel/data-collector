@@ -61,4 +61,12 @@ php bin/console  data-collector:api:forget -h
 ```
 
 ### Show
-not yet implemented
+
+* show API by identifier:
+```bash
+php bin/console  data-collector:api:show 54381ab6-b581-45cd-9813-82e0da5fe5e5
+```
+* display command reference:
+```bash
+php bin/console  data-collector:api:show -h
+```

@@ -8,6 +8,8 @@ use DWenzel\DataCollector\Entity\Dto\InstanceDemand;
 use DWenzel\DataCollector\Entity\EntityInterface;
 use DWenzel\DataCollector\Entity\Instance;
 use DWenzel\DataCollector\Exception\InvalidUuidException as InvalidUuidExceptionAlias;
+use DWenzel\DataCollector\Exception\InvalidUuidException;
+use InvalidArgumentException;
 
 /***************************************************************
  *  Copyright notice

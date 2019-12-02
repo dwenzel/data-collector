@@ -10,6 +10,7 @@ use DWenzel\DataCollector\Entity\Instance;
 use DWenzel\DataCollector\Exception\InvalidUuidException;
 use DWenzel\DataCollector\Repository\InstanceRepository;
 use DWenzel\DataCollector\Service\InstanceManager;
+use InvalidArgumentException;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Ramsey\Uuid\Uuid;
@@ -203,10 +204,27 @@ class InstanceManagerTest extends TestCase
         $this->subject->register($demand);
     }
 
+    /**
+     * @throws InvalidUuidException
+     * @throws ORMException
+     * @throws OptimisticLockException
+     */
     public function testForgetThrowsExceptionForInvalidDemandObject(): void
     {
         $demand = $this->getMockForAbstractClass(DemandInterface::class);
         $this->expectExceptionCode(1574174753);
         $this->subject->forget($demand);
     }
+
+    /**
+     * @throws InvalidArgumentException
+     * @throws InvalidUuidException
+     */
+    public function testGetThrowsExceptionForInvalidDemandObject(): void
+    {
+        $demand = $this->getMockForAbstractClass(DemandInterface::class);
+        $this->expectExceptionCode(1574174753);
+        $this->subject->get($demand);
+    }
 }
+
