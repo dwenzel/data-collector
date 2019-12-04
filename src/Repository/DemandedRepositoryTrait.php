@@ -60,6 +60,11 @@ trait DemandedRepositoryTrait
         $this->getEntityManager()->flush();
     }
 
+    /**
+     * @param EntityInterface $entity
+     * @throws ORMException
+     * @throws OptimisticLockException
+     */
     public function update(EntityInterface $entity)
     {
         $this->add($entity);

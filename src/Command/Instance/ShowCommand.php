@@ -42,13 +42,28 @@ class ShowCommand extends Instance\AbstractInstanceCommand
 EOT;
 
     const INSTANCE_SHOW_MESSAGE = <<<ISM
-   <info>identifier (uuid)</info>:  %s
-   <info>id (local)</info>:         %s
-   <info>name</info>:               %s
-   <info>role</info>:               %s    
+
+<info>identifier (uuid)</info>:  %s
+<info>id (local)</info>:         %s
+<info>name</info>:               %s
+<info>role</info>:               %s    
 ISM;
 
     protected static $defaultName = self::DEFAULT_COMMAND_NAME;
+
+    const API_HEADER = <<<AHT
+
+Registered APIs:
+AHT;
+
+    const API_SINGLE_FORMAT = <<<ASF
+    
+<info>vendor</info>     : %s
+<info>name</info>       : %s
+<info>version</info>    : %s
+<info>identifier</info> : %s
+ASF;
+
 
     public function __construct(
         InstanceManagerInterface $instanceManager
@@ -79,6 +94,19 @@ ISM;
                 $instance->getName(),
                 $instance->getRole()
             );
+            $apis = $instance->getApis();
+            if (!$apis->isEmpty()) {
+                $messages[] = static::API_HEADER;
+                foreach ($apis as $api) {
+                    $messages[] = sprintf(
+                        self::API_SINGLE_FORMAT,
+                        $api->getVendor(),
+                        $api->getName(),
+                        $api->getVersion(),
+                        $api->getIdentifier()
+                    );
+                }
+            }
         } catch (\Exception $exception) {
             $messages[] = sprintf(static::ERROR_TEMPLATE, $exception->getMessage());
         }

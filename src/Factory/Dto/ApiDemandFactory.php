@@ -2,12 +2,14 @@
 
 namespace DWenzel\DataCollector\Factory\Dto;
 
+use DWenzel\DataCollector\Configuration\Argument\ApiIdentifierArgument;
 use DWenzel\DataCollector\Configuration\Argument\ApiNameArgument;
-use DWenzel\DataCollector\Configuration\Argument\InstanceNameArgument;
 use DWenzel\DataCollector\Configuration\Argument\VendorArgument;
 use DWenzel\DataCollector\Configuration\Argument\VersionArgument;
 use DWenzel\DataCollector\Configuration\Option\IdentifierOption;
 use DWenzel\DataCollector\Entity\Dto\ApiDemand;
+use DWenzel\DataCollector\SettingsInterface as SI;
+use InvalidArgumentException;
 
 /***************************************************************
  *  Copyright notice
@@ -31,18 +33,38 @@ use DWenzel\DataCollector\Entity\Dto\ApiDemand;
  */
 class ApiDemandFactory
 {
+    public const EXCEPTION_MESSAGE_DUPLICATE_SETTING = 'Invalid settings. The keys "%s" and "%s" cannot be used together since they set the same value "%s"';
+
     /**
      * @param array $settings
      * @return ApiDemand
+     * @throws InvalidArgumentException
      */
     public static function fromSettings(array $settings): ApiDemand
     {
+        // we cannot not use those two keys together
+        if (!empty($settings[ApiIdentifierArgument::NAME])
+            && isset($settings[IdentifierOption::NAME])) {
+            throw new InvalidArgumentException(
+                sprintf(
+                    static::EXCEPTION_MESSAGE_DUPLICATE_SETTING,
+                    ApiIdentifierArgument::NAME,
+                    IdentifierOption::NAME,
+                    SI::IDENTIFIER_KEY
+                ),
+                1575364190
+            );
+        }
+
         $demand = new ApiDemand();
         if (!empty($settings[ApiNameArgument::NAME])) {
             $demand->setName($settings[ApiNameArgument::NAME]);
         }
         if (!empty($settings[IdentifierOption::NAME])) {
             $demand->setIdentifier($settings[IdentifierOption::NAME]);
+        }
+        if (!empty($settings[ApiIdentifierArgument::NAME])) {
+            $demand->setIdentifier($settings[ApiIdentifierArgument::NAME]);
         }
         if (!empty($settings[VersionArgument::NAME])) {
             $demand->setVersion($settings[VersionArgument::NAME]);

@@ -2,12 +2,15 @@
 
 namespace DWenzel\DataCollector\Service;
 
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use DWenzel\DataCollector\Entity\Dto\DemandInterface;
 use DWenzel\DataCollector\Entity\Dto\InstanceDemand;
 use DWenzel\DataCollector\Entity\EntityInterface;
 use DWenzel\DataCollector\Entity\Instance;
 use DWenzel\DataCollector\Exception\InvalidUuidException;
 use DWenzel\DataCollector\Repository\InstanceRepository;
+use Exception;
 use InvalidArgumentException;
 use Ramsey\Uuid\Uuid;
 
@@ -48,9 +51,9 @@ class InstanceManager implements InstanceManagerInterface
      * @param DemandInterface $demand
      * @return EntityInterface
      * @throws InvalidUuidException
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
-     * @throws \Exception
+     * @throws ORMException
+     * @throws OptimisticLockException
+     * @throws Exception
      */
     public function register(DemandInterface $demand): EntityInterface
     {
@@ -108,12 +111,13 @@ class InstanceManager implements InstanceManagerInterface
      * @inheritDoc
      * @param DemandInterface $demand
      * @throws InvalidUuidException
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
     public function forget(DemandInterface $demand): void
     {
         $this->validateDemand($demand);
+        /** @var InstanceDemand $demand */
         $identifier = $demand->getIdentifier();
 
         if (!$this->has($identifier)) {
@@ -160,6 +164,16 @@ class InstanceManager implements InstanceManagerInterface
     }
 
     /**
+     * @param Instance $instance
+     * @throws ORMException
+     * @throws OptimisticLockException
+     */
+    public function update(Instance $instance): void
+    {
+        $this->instanceRepository->update($instance);
+    }
+
+    /**
      * @param DemandInterface $demand
      */
     protected function validateDemand(DemandInterface $demand): void
@@ -171,4 +185,5 @@ class InstanceManager implements InstanceManagerInterface
             );
         }
     }
+
 }

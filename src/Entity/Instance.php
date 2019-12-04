@@ -2,6 +2,8 @@
 
 namespace DWenzel\DataCollector\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -9,7 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Instance implements EntityInterface
 {
-    const ROLE_UNKNOWN = 'unknown';
+    public const ROLE_UNKNOWN = 'unknown';
 
     /**
      * @ORM\Id()
@@ -32,6 +34,16 @@ class Instance implements EntityInterface
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $role = self::ROLE_UNKNOWN;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="DWenzel\DataCollector\Entity\Api", inversedBy="instances")
+     */
+    private $apis;
+
+    public function __construct()
+    {
+        $this->apis = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -70,6 +82,32 @@ class Instance implements EntityInterface
     public function setRole(string $role): self
     {
         $this->role = $role;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Api[]
+     */
+    public function getApis(): Collection
+    {
+        return $this->apis;
+    }
+
+    public function addApi(Api $api): self
+    {
+        if (!$this->apis->contains($api)) {
+            $this->apis[] = $api;
+        }
+
+        return $this;
+    }
+
+    public function removeApi(Api $api): self
+    {
+        if ($this->apis->contains($api)) {
+            $this->apis->removeElement($api);
+        }
 
         return $this;
     }

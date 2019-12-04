@@ -54,9 +54,15 @@ class Api implements EntityInterface
      */
     private $endpoints;
 
+    /**
+     * @ORM\ManyToMany(targetEntity="DWenzel\DataCollector\Entity\Instance", mappedBy="apis")
+     */
+    private $instances;
+
     public function __construct()
     {
         $this->endpoints = new ArrayCollection();
+        $this->instances = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -150,6 +156,34 @@ class Api implements EntityInterface
             if ($endpoint->getApi() === $this) {
                 $endpoint->setApi(null);
             }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Instance[]
+     */
+    public function getInstances(): Collection
+    {
+        return $this->instances;
+    }
+
+    public function addInstance(Instance $instance): self
+    {
+        if (!$this->instances->contains($instance)) {
+            $this->instances[] = $instance;
+            $instance->addApi($this);
+        }
+
+        return $this;
+    }
+
+    public function removeInstance(Instance $instance): self
+    {
+        if ($this->instances->contains($instance)) {
+            $this->instances->removeElement($instance);
+            $instance->removeApi($this);
         }
 
         return $this;

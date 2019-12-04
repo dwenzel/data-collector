@@ -44,7 +44,6 @@ class ShowCommand extends AbstractApiCommand
    <info>version</info>:            %s    
    <info>description</info>:        %s    
 ISM;
-
     protected static $defaultName = self::DEFAULT_COMMAND_NAME;
 
     /**

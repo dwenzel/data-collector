@@ -42,4 +42,13 @@ interface InstanceManagerInterface extends ManagerInterface
      * @throws InvalidUuidException
      */
     public function get(DemandInterface $demand): Instance;
+
+    /**
+     * Update an instance
+     *
+     * Saves any changes on instance.
+     *
+     * @param Instance $instance
+     */
+    public function update(Instance $instance): void;
 }

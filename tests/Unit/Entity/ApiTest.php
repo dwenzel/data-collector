@@ -2,8 +2,10 @@
 
 namespace DWenzel\DataCollector\Tests\Unit\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use DWenzel\DataCollector\Entity\Api;
 use DWenzel\DataCollector\Entity\Endpoint;
+use DWenzel\DataCollector\Entity\Instance;
 use PHPUnit\Framework\TestCase;
 
 class ApiTest extends TestCase
@@ -130,5 +132,34 @@ class ApiTest extends TestCase
         $this->assertEmpty($endpoint->getApi());
     }
 
+    public function testGetInstancesInitiallyReturnsEmptyCollection(): void
+    {
+        $this->assertInstanceOf(
+            ArrayCollection::class,
+            $this->subject->getInstances()
+        );
 
+        $this->assertEmpty($this->subject->getInstances());
+    }
+
+    public function testInstanceCanBeAdded(): void
+    {
+        $instance = $this->createMock(Instance::class);
+        $this->subject->addInstance($instance);
+        $this->assertContains(
+            $instance,
+            $this->subject->getInstances()
+        );
+    }
+
+    public function testInstanceCanBeRemoved(): void
+    {
+        $instance = $this->createMock(Instance::class);
+        $this->subject->addInstance($instance)
+            ->removeInstance($instance);
+        $this->assertNotContains(
+            $instance,
+            $this->subject->getInstances()
+        );
+    }
 }

@@ -3,7 +3,6 @@
 namespace DWenzel\DataCollector\Command;
 
 use DWenzel\DataCollector\Configuration\Argument\ArgumentInterface;
-use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Exception\InvalidArgumentException;
 
 /***************************************************************
@@ -25,6 +24,22 @@ use Symfony\Component\Console\Exception\InvalidArgumentException;
 trait RegisterArgumentsTrait
 {
 
+    protected function registerArguments(): self
+    {
+        foreach ($this->getArguments() as $class) {
+            /** @var ArgumentInterface $argument */
+            $argument = new $class();
+            $this->addArgument(
+                $argument->getName(),
+                $argument->getMode(),
+                $argument->getDescription(),
+                $argument->getDefault()
+            );
+        }
+
+        return $this;
+    }
+
     abstract protected function getArguments(): iterable;
 
     /**
@@ -39,21 +54,5 @@ trait RegisterArgumentsTrait
      * @throws InvalidArgumentException When argument mode is not valid
      */
     abstract public function addArgument($name, $mode = null, $description = '', $default = null);
-
-    protected function registerArguments(): self
-    {
-        foreach ($this->getArguments() as $class) {
-            /** @var ArgumentInterface $argument */
-            $argument =  new $class();
-            $this->addArgument(
-                $argument->getName(),
-                $argument->getMode(),
-                $argument->getDescription(),
-                $argument->getDefault()
-            );
-        }
-
-        return $this;
-    }
 
 }

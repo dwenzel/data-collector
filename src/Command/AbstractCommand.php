@@ -54,6 +54,7 @@ EOT;
         return static::OPTIONS;
     }
 
+    /** @noinspection ReturnTypeCanBeDeclaredInspection */
     /**
      * @inheritDoc
      */
@@ -71,8 +72,8 @@ EOT;
      */
     protected function getSettingsFromInput(InputInterface $input): array
     {
-        $arguments = $input->getArguments() ? $input->getArguments() : [];
-        $options = $input->getOptions() ? $input->getOptions() : [];
+        $arguments = $input->getArguments() ?: [];
+        $options = $input->getOptions() ?: [];
 
         return array_merge($arguments, $options);
     }

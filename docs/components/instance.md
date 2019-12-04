@@ -75,12 +75,16 @@ php bin/console  data-collector:instance:show 54381ab6-b581-45cd-9813-82e0da5fe5
 ```bash
 php bin/console  data-collector:instance:show -h
 ```
-* Add API by identifier to instance :
-```bash
-php bin/console  data-collector:instance:add-api 54381ab6-b581-45cd-9813-82e0da5fe5e5
-```
 
 ### Add API
+* Add API by identifier to instance :
+```bash
+php bin/console  data-collector:instance:add-api 54381ab6-b581-45cd-9813-82e0da5fe5e5 e671948a-512d-4c53-9df3-5e88ee2f6904
+```
+* display command reference
+```bash
+php bin/console  data-collector:instance:add-api -h
+```
 
 ### Update
 not yet implemented

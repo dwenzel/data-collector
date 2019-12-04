@@ -53,4 +53,5 @@ interface ManagerInterface
      * @return bool
      */
     public function has(string $identifier): bool;
+
 }

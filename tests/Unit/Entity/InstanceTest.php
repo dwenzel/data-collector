@@ -2,6 +2,8 @@
 
 namespace DWenzel\DataCollector\Tests\Unit\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use DWenzel\DataCollector\Entity\Api;
 use DWenzel\DataCollector\Entity\Instance;
 use PHPUnit\Framework\TestCase;
 
@@ -17,14 +19,14 @@ class InstanceTest extends TestCase
         $this->subject = new Instance();
     }
 
-    public function testGetIdInitiallyReturnsNull()
+    public function testGetIdInitiallyReturnsNull(): void
     {
         $this->assertNull(
             $this->subject->getId()
         );
     }
 
-    public function testNameCanBeSet()
+    public function testNameCanBeSet(): void
     {
         $name = 'foo';
         $this->subject->setName($name);
@@ -35,7 +37,7 @@ class InstanceTest extends TestCase
         );
     }
 
-    public function testUuidCanBeSet()
+    public function testUuidCanBeSet(): void
     {
         $uuid = 'bar';
         $this->subject->setUuid($uuid);
@@ -46,7 +48,7 @@ class InstanceTest extends TestCase
         );
     }
 
-    public function testGetRoleReturnsInitialValue()
+    public function testGetRoleReturnsInitialValue(): void
     {
         $this->assertSame(
             Instance::ROLE_UNKNOWN,
@@ -54,13 +56,53 @@ class InstanceTest extends TestCase
         );
     }
 
-    public function testRoleCanBeSet()
+    public function testRoleCanBeSet(): void
     {
         $role = 'production';
         $this->subject->setRole($role);
         $this->assertSame(
             $role,
             $this->subject->getRole()
+        );
+    }
+
+    public function testGetApiInitiallyReturnsEmptyCollection(): void
+    {
+        $this->assertInstanceOf(
+            ArrayCollection::class,
+            $this->subject->getApis()
+        );
+
+        $this->assertEmpty(
+            $this->subject->getApis()
+        );
+    }
+
+    public function testApiCanBeAdded(): void
+    {
+        $api = $this->createMock(Api::class);
+        $this->subject->addApi($api);
+
+        $this->assertContains(
+            $api,
+            $this->subject->getApis()
+        );
+    }
+
+    public function testApiCanBeRemoved(): void
+    {
+        $api = $this->createMock(Api::class);
+        $this->subject->addApi($api);
+
+        $this->assertContains(
+            $api,
+            $this->subject->getApis()
+        );
+
+        $this->subject->removeApi($api);
+        $this->assertNotContains(
+            $api,
+            $this->subject->getApis()
         );
     }
 }

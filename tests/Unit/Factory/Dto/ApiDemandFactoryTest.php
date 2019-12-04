@@ -2,11 +2,14 @@
 
 namespace DWenzel\DataCollector\Tests\Unit\Factory\Dto;
 
+use DWenzel\DataCollector\Configuration\Argument\ApiIdentifierArgument;
 use DWenzel\DataCollector\Configuration\Argument\ApiNameArgument;
 use DWenzel\DataCollector\Configuration\Argument\VendorArgument;
 use DWenzel\DataCollector\Configuration\Argument\VersionArgument;
 use DWenzel\DataCollector\Configuration\Option\IdentifierOption;
 use DWenzel\DataCollector\Factory\Dto\ApiDemandFactory;
+use DWenzel\DataCollector\SettingsInterface as SI;
+use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 
 /***************************************************************
@@ -32,7 +35,7 @@ use PHPUnit\Framework\TestCase;
 class ApiDemandFactoryTest extends TestCase
 {
 
-    public function testFromSettingsSetsName()
+    public function testFromSettingsSetsName(): void
     {
         $value = 'bar';
         $settings = [
@@ -47,7 +50,7 @@ class ApiDemandFactoryTest extends TestCase
         );
     }
 
-    public function testFromSettingsSetsIdentifier()
+    public function testFromSettingsSetsIdentifierFromIdentifierOption(): void
     {
         $value = 'bar';
         $settings = [
@@ -62,7 +65,44 @@ class ApiDemandFactoryTest extends TestCase
         );
     }
 
-    public function testFromSettingsSetsVersion()
+    public function testFromSettingsSetsIdentifierFromApiIdentifierArgument(): void
+    {
+        $value = 'baz';
+        $settings = [
+            ApiIdentifierArgument::NAME => $value,
+        ];
+
+        $demand = ApiDemandFactory::fromSettings($settings);
+
+        $this->assertSame(
+            $value,
+            $demand->getIdentifier()
+        );
+    }
+
+    public function testFromSettingsThrowsExceptionForDuplicateIdentifier(): void
+    {
+        $identifierOption = 'foo';
+        $identifierArgument = 'bar';
+
+        $settings = [
+            ApiIdentifierArgument::NAME => $identifierArgument,
+            IdentifierOption::NAME => $identifierOption
+        ];
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionCode(1575364190);
+        $expectedMessage = sprintf(ApiDemandFactory::EXCEPTION_MESSAGE_DUPLICATE_SETTING,
+            ApiIdentifierArgument::NAME,
+            IdentifierOption::NAME,
+            SI::IDENTIFIER_KEY
+        );
+        $this->expectErrorMessage($expectedMessage);
+
+        ApiDemandFactory::fromSettings($settings);
+    }
+
+    public function testFromSettingsSetsVersion(): void
     {
         $value = 'bar';
         $settings = [
@@ -76,7 +116,8 @@ class ApiDemandFactoryTest extends TestCase
             $demand->getVersion()
         );
     }
-    public function testFromSettingsSetsVendor()
+
+    public function testFromSettingsSetsVendor(): void
     {
         $value = 'bar';
         $settings = [

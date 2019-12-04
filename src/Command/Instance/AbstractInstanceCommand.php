@@ -4,12 +4,9 @@ namespace DWenzel\DataCollector\Command\Instance;
 
 
 use DWenzel\DataCollector\Command\AbstractCommand;
-use DWenzel\DataCollector\Command\Instance\ForgetCommand;
-use DWenzel\DataCollector\Command\RegisterArgumentsTrait;
-use DWenzel\DataCollector\Command\RegisterOptionsTrait;
+use DWenzel\DataCollector\Entity\Dto\InstanceDemand;
 use DWenzel\DataCollector\Factory\Dto\InstanceDemandFactory;
 use DWenzel\DataCollector\Service\InstanceManagerInterface;
-use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 
 /***************************************************************
@@ -41,9 +38,9 @@ abstract class AbstractInstanceCommand extends AbstractCommand
 
     /**
      * @param InputInterface $input
-     * @return \DWenzel\DataCollector\Entity\Dto\InstanceDemand
+     * @return InstanceDemand
      */
-    protected function createDemandFromInput(InputInterface $input): \DWenzel\DataCollector\Entity\Dto\InstanceDemand
+    protected function createDemandFromInput(InputInterface $input): InstanceDemand
     {
         $settings = $this->getSettingsFromInput($input);
 

@@ -5,6 +5,9 @@ namespace DWenzel\DataCollector\Command\Instance;
 use DWenzel\DataCollector\Command\Instance;
 use DWenzel\DataCollector\Configuration\Argument\ApiIdentifierArgument;
 use DWenzel\DataCollector\Configuration\Argument\IdentifierArgument;
+use DWenzel\DataCollector\Entity\Dto\ApiDemand;
+use DWenzel\DataCollector\Factory\Dto\ApiDemandFactory;
+use DWenzel\DataCollector\Service\ApiManagerInterface;
 use DWenzel\DataCollector\Service\InstanceManagerInterface;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -34,6 +37,11 @@ class AddApiCommand extends Instance\AbstractInstanceCommand
     const DEFAULT_COMMAND_NAME = 'data-collector:instance:add-api';
 
     /**
+     * @var ApiManagerInterface
+     */
+    protected $apiManager;
+
+    /**
      * Command Arguments
      */
     const ARGUMENTS = [
@@ -48,11 +56,13 @@ AAM;
     protected static $defaultName = self::DEFAULT_COMMAND_NAME;
 
     public function __construct(
-        InstanceManagerInterface $instanceManager
+        InstanceManagerInterface $instanceManager,
+        ApiManagerInterface $apiManager
     )
     {
         parent::__construct();
         $this->instanceManager = $instanceManager;
+        $this->apiManager = $apiManager;
     }
 
     /**
@@ -62,19 +72,39 @@ AAM;
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $demand = $this->createDemandFromInput($input);
-
         $messages = [];
         try {
+            $demand = $this->createDemandFromInput($input);
+            $apiDemand = $this->createApiDemand($input);
 
-            /** @var \DWenzel\DataCollector\Entity\Instance $instance */
             $instance = $this->instanceManager->get($demand);
-            // add api
+            $api = $this->apiManager->get($apiDemand);
+            $instance->addApi($api);
+            $this->instanceManager->update($instance);
+
+            $messages[] = sprintf(
+                self::API_ADDED_MESSAGE,
+                $api->getIdentifier(),
+                $instance->getUuid()
+            );
         } catch (\Exception $exception) {
             $messages[] = sprintf(static::ERROR_TEMPLATE, $exception->getMessage());
         }
 
         $output->writeln($messages);
+    }
+
+    /**
+     * @param InputInterface $input
+     * @return ApiDemand
+     */
+    protected function createApiDemand(InputInterface $input): ApiDemand
+    {
+        $apiIdentifier = $input->getArgument(ApiIdentifierArgument::NAME);
+        $apiDemand = ApiDemandFactory::fromSettings(
+            [ApiIdentifierArgument::NAME => $apiIdentifier]
+        );
+        return $apiDemand;
     }
 
 }
