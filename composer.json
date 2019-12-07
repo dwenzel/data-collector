@@ -33,6 +33,7 @@
     },
     "sort-packages": true
   },
+  "bin": ["bin/console"],
   "autoload": {
     "psr-4": {
       "DWenzel\\DataCollector\\": "src/"
