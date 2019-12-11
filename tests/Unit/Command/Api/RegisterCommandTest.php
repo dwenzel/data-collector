@@ -30,6 +30,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * Class RegisterApiCommandTest
+ * @coversDefaultClass \DWenzel\DataCollector\Command\Api\RegisterCommand
  */
 class RegisterCommandTest extends TestCase
 {
@@ -50,6 +51,9 @@ class RegisterCommandTest extends TestCase
         $this->subject = new RegisterCommand(null, $this->apiManager);
     }
 
+    /**
+     * @covers ::__construct
+     */
     public function testConstructorSetsDescription()
     {
         $this->assertSame(
@@ -58,6 +62,9 @@ class RegisterCommandTest extends TestCase
         );
     }
 
+    /**
+     * @covers ::__construct
+     */
     public function testConstructorSetsHelp()
     {
         $this->assertSame(
@@ -66,6 +73,9 @@ class RegisterCommandTest extends TestCase
         );
     }
 
+    /**
+     * @covers ::__construct
+     */
     public function testConstructorRegistersArguments()
     {
         $argumentClasses = RegisterCommand::ARGUMENTS;
@@ -81,6 +91,9 @@ class RegisterCommandTest extends TestCase
 
     }
 
+    /**
+     * @covers ::__construct
+     */
     public function testConstructorRegistersOptions()
     {
         $optionClasses = RegisterCommand::OPTIONS;
@@ -95,6 +108,9 @@ class RegisterCommandTest extends TestCase
         }
     }
 
+    /**
+     * @covers ::run
+     */
     public function testRunReturnsMessageOnSuccess()
     {
         $identifier = 'foo';
@@ -138,6 +154,9 @@ class RegisterCommandTest extends TestCase
         $this->subject->run($input, $output);
     }
 
+    /**
+     * @covers ::run
+     */
     public function testRunReturnsErrorMessageFromException()
     {
 

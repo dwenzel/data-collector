@@ -5,6 +5,7 @@ namespace DWenzel\DataCollector\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Yokai\EnumBundle\Validator\Constraints\Enum;
 
 /**
  * @ORM\Entity(repositoryClass="DWenzel\DataCollector\Repository\InstanceRepository")
@@ -12,6 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
 class Instance implements EntityInterface
 {
     public const ROLE_UNKNOWN = 'unknown';
+    public const DEFAULT_PROTOCOL = 'https';
 
     /**
      * @ORM\Id()
@@ -39,6 +41,13 @@ class Instance implements EntityInterface
      * @ORM\ManyToMany(targetEntity="DWenzel\DataCollector\Entity\Api", inversedBy="instances")
      */
     private $apis;
+
+    /**
+     * @var string
+     *
+     * @Enum("DWenzel\DataCollector\Enum\Protocol")
+     */
+    private $protocol = self::DEFAULT_PROTOCOL;
 
     /**
      * @ORM\Column(type="string", length=2048)
@@ -125,6 +134,18 @@ class Instance implements EntityInterface
     public function setBaseUrl(string $baseUrl): self
     {
         $this->baseUrl = $baseUrl;
+
+        return $this;
+    }
+
+    public function getProtocol(): string
+    {
+        return $this->protocol;
+    }
+
+    public function setProtocol(string $protocol): self
+    {
+        $this->protocol = $protocol;
 
         return $this;
     }

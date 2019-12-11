@@ -105,4 +105,42 @@ class InstanceTest extends TestCase
             $this->subject->getApis()
         );
     }
+
+    public function testGetBaseUrlInitiallyReturnsNull()
+    {
+        $this->assertNull(
+            $this->subject->getBaseUrl()
+        );
+    }
+
+    public function testBaseUrlCanBeSet()
+    {
+        $url = 'bar';
+        $this->subject->setBaseUrl($url);
+
+        $this->assertSame(
+            $url,
+            $this->subject->getBaseUrl()
+        );
+    }
+
+    public function testGetProtocolReturnsInitialValue()
+    {
+        $initialValue = 'https';
+        $this->assertSame(
+            $initialValue,
+            $this->subject->getProtocol()
+        );
+    }
+
+    public function testProtocolCanBeSet()
+    {
+        $protocol = 'foo';
+        $this->subject->setProtocol($protocol);
+
+        $this->assertSame(
+            $protocol,
+            $this->subject->getProtocol()
+        );
+    }
 }

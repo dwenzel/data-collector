@@ -3,7 +3,7 @@
 namespace DWenzel\DataCollector\Tests\Unit\Configuration\Argument;
 
 use DWenzel\DataCollector\Configuration\Argument\ArgumentInterface;
-use DWenzel\DataCollector\Configuration\Argument\InstanceNameArgument;
+use DWenzel\DataCollector\Configuration\Argument\VersionArgument;
 use PHPUnit\Framework\TestCase;
 
 /***************************************************************
@@ -22,16 +22,16 @@ use PHPUnit\Framework\TestCase;
  * GNU General Public License for more details.
  * This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
-class NameArgumentTest extends TestCase
+class VersionArgumentTest extends TestCase
 {
     /**
-     * @var InstanceNameArgument
+     * @var VersionArgument
      */
     protected $subject;
 
     public function setUp(): void
     {
-        $this->subject = new InstanceNameArgument();
+        $this->subject = new VersionArgument();
     }
 
     public function testSubjectImplementsArgumentInterface()
@@ -45,7 +45,7 @@ class NameArgumentTest extends TestCase
     public function testGetNameReturnsClassConstant()
     {
         $this->assertSame(
-            InstanceNameArgument::NAME,
+            VersionArgument::NAME,
             $this->subject->getName()
         );
     }
@@ -53,7 +53,7 @@ class NameArgumentTest extends TestCase
     public function testGetDescriptionReturnsClassConstant()
     {
         $this->assertSame(
-            InstanceNameArgument::DESCRIPTION,
+            VersionArgument::DESCRIPTION,
             $this->subject->getDescription()
         );
     }
@@ -61,7 +61,7 @@ class NameArgumentTest extends TestCase
     public function testGetModeReturnsClassConstant()
     {
         $this->assertSame(
-            InstanceNameArgument::MODE,
+            VersionArgument::MODE,
             $this->subject->getMode()
         );
     }
@@ -69,10 +69,10 @@ class NameArgumentTest extends TestCase
     public function testConstructorSetsDefault()
     {
         $default = 'foo';
-        $this->subject = new InstanceNameArgument(
-            InstanceNameArgument::NAME,
-            InstanceNameArgument::OPTIONAL,
-            InstanceNameArgument::DESCRIPTION,
+        $this->subject = new VersionArgument(
+            VersionArgument::NAME,
+            VersionArgument::OPTIONAL,
+            VersionArgument::DESCRIPTION,
             $default
         );
 

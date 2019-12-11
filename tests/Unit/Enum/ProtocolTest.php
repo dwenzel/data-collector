@@ -1,6 +1,9 @@
 <?php
 
-namespace DWenzel\DataCollector\Enum;
+namespace DWenzel\DataCollector\Tests\Unit\Enum;
+
+use DWenzel\DataCollector\Enum\Protocol;
+use PHPUnit\Framework\TestCase;
 
 /***************************************************************
  *  Copyright notice
@@ -19,24 +22,29 @@ namespace DWenzel\DataCollector\Enum;
  * This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-use Yokai\EnumBundle\Enum\EnumInterface;
-use Yokai\EnumBundle\Enum\EnumWithClassAsNameTrait;
-
 /**
- * Class Protocol
+ * Class ProtocolTest
  */
-class Protocol implements EnumInterface
+class ProtocolTest extends TestCase
 {
-    use EnumWithClassAsNameTrait;
+    /**
+     * @var Protocol
+     */
+    protected $subject;
 
-    public const CHOICES = [
-        'http' => 'http',
-        'https' => 'https'
-    ];
-
-    public function getChoices()
+    public function setUp(): void
     {
-        return self::CHOICES;
+        $this->subject = new Protocol();
+    }
+
+    public function testGetChoicesReturnsValueFromClassConstant()
+    {
+        $expected = Protocol::CHOICES;
+
+        $this->assertSame(
+            $expected,
+            $this->subject->getChoices()
+        );
     }
 
 }
