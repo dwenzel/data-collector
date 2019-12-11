@@ -93,7 +93,8 @@ class DataCollectorFixtures extends Fixture
             $instance = new Instance();
             $instance->setUuid($config['identifier'])
                 ->setRole($config['role'])
-                ->setName($config['name']);
+                ->setName($config['name'])
+                ->setBaseUrl($config['baseUrl']);
 
             $this->manager->persist($instance);
         }
