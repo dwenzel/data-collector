@@ -7,7 +7,7 @@ if (file_exists($composerAutoload = __DIR__ . '/../../../autoload.php')) {
     /** @noinspection PhpIncludeInspection */
     require_once $composerAutoload;
 } else {
-    require_once __DIR__ . '/vendor/autoload.php';
+    require_once __DIR__ . '/../vendor/autoload.php';
 }
 
 // Load cached env vars if the .env.local.php file exists

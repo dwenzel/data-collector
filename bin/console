@@ -17,7 +17,7 @@ if (file_exists($composerAutoload = __DIR__ . '/../../../autoload.php')) {
     /** @noinspection PhpIncludeInspection */
     require_once $composerAutoload;
 } else {
-    require_once __DIR__ . '/vendor/autoload.php';
+    require_once __DIR__ . '/../vendor/autoload.php';
 }
 if (!class_exists(Application::class)) {
     throw new RuntimeException('You need to add "symfony/framework-bundle" as a Composer dependency.');
