@@ -22,7 +22,7 @@ final class Version20191211105029 extends AbstractMigration
         // this up() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'sqlite', 'Migration can only be executed safely on \'sqlite\'.');
 
-        $this->addSql('ALTER TABLE instance ADD COLUMN base_url VARCHAR(2048) NOT NULL');
+        $this->addSql('ALTER TABLE instance ADD COLUMN base_url VARCHAR(2048) DEFAULT NULL');
         $this->addSql('DROP INDEX IDX_A5ED8D3754963938');
         $this->addSql('DROP INDEX IDX_A5ED8D373A51721D');
         $this->addSql('CREATE TEMPORARY TABLE __temp__instance_api AS SELECT instance_id, api_id FROM instance_api');
