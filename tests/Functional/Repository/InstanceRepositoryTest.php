@@ -75,10 +75,13 @@ class InstanceRepositoryTest extends KernelTestCase
         $uuid = Uuid::uuid4()->toString();
         $name = 'SomeUnexpectedName' . $uuid;
         $role = 'bar';
+        $url = 'baz';
+
         $instance = new Instance();
         $instance->setName($name)
             ->setUuid($uuid)
-            ->setRole($role);
+            ->setRole($role)
+            ->setBaseUrl($url);
         $this->instanceRepository->add($instance);
 
         $objectFromRepository = $this->instanceRepository->findOneBy(
