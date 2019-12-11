@@ -13,22 +13,26 @@ class DataCollectorFixtures extends Fixture
         [
             'identifier' => '111301a-59d9-4146-9810-a1f376327f44',
             'name' => 'foo',
-            'role' => 'production/staging'
+            'role' => 'production/staging',
+            'baseUrl' => 'foo.com'
         ],
         [
             'identifier' => '2225301a-59d9-4146-9810-a1f376327fae',
             'name' => 'foo',
-            'role' => 'testing'
+            'role' => 'testing',
+            'baseUrl' => 'bar.org'
         ],
         [
             'identifier' => '3335301a-59d9-4146-9810-a1f376327f44',
             'name' => 'bar',
-            'role' => ''
+            'role' => '',
+            'baseUrl' => 'foo.bar'
         ],
         [
             'identifier' => '4445301a-59d9-4146-9810-a1f376327f44',
             'name' => 'bar',
-            'role' => ''
+            'role' => '',
+            'baseUrl' => 'bar.foo'
         ],
     ];
     const APIS = [

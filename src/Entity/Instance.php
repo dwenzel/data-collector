@@ -40,6 +40,11 @@ class Instance implements EntityInterface
      */
     private $apis;
 
+    /**
+     * @ORM\Column(type="string", length=2048)
+     */
+    private $baseUrl;
+
     public function __construct()
     {
         $this->apis = new ArrayCollection();
@@ -108,6 +113,18 @@ class Instance implements EntityInterface
         if ($this->apis->contains($api)) {
             $this->apis->removeElement($api);
         }
+
+        return $this;
+    }
+
+    public function getBaseUrl(): ?string
+    {
+        return $this->baseUrl;
+    }
+
+    public function setBaseUrl(string $baseUrl): self
+    {
+        $this->baseUrl = $baseUrl;
 
         return $this;
     }
