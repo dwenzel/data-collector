@@ -1,8 +1,10 @@
 <?php
 
-namespace DWenzel\DataCollector\Service\Dto;
+namespace DWenzel\DataCollector\Tests\Unit\Message;
 
+use DWenzel\DataCollector\Message\Error;
 use DWenzel\DataCollector\Message\MessageInterface;
+use PHPUnit\Framework\TestCase;
 
 /***************************************************************
  *  Copyright notice
@@ -20,12 +22,23 @@ use DWenzel\DataCollector\Message\MessageInterface;
  * GNU General Public License for more details.
  * This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
-interface ResultInterface
+class ErrorTest extends TestCase
 {
     /**
-     * @return MessageInterface[]
+     * @var Error
      */
-    public function getMessages(): iterable;
+    protected $subject;
 
-    public function addMessage(MessageInterface $message): void;
+    public function setUp(): void
+    {
+        $this->subject = new Error();
+    }
+
+    public function testErrorImplementsMessageInterface()
+    {
+        $this->assertInstanceOf(
+            MessageInterface::class,
+            $this->subject
+        );
+    }
 }

@@ -9,7 +9,7 @@ use DWenzel\DataCollector\Entity\Dto\ApiDemand;
 use DWenzel\DataCollector\Entity\Dto\DemandInterface;
 use DWenzel\DataCollector\Exception\InvalidUuidException;
 use DWenzel\DataCollector\Repository\ApiRepository;
-use DWenzel\DataCollector\Service\ApiManager;
+use DWenzel\DataCollector\Service\Persistence\ApiManager;
 use Exception;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;

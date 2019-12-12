@@ -1,8 +1,8 @@
 <?php
 
-namespace DWenzel\DataCollector\Service\Dto;
+namespace DWenzel\DataCollector\Message;
 
-use DWenzel\DataCollector\Message\MessageInterface;
+use DWenzel\DataCollector\Traits\Text;
 
 /***************************************************************
  *  Copyright notice
@@ -20,12 +20,7 @@ use DWenzel\DataCollector\Message\MessageInterface;
  * GNU General Public License for more details.
  * This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
-interface ResultInterface
+class Error implements MessageInterface
 {
-    /**
-     * @return MessageInterface[]
-     */
-    public function getMessages(): iterable;
-
-    public function addMessage(MessageInterface $message): void;
+    use Text;
 }

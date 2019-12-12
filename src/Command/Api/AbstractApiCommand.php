@@ -6,7 +6,7 @@ use DWenzel\DataCollector\Command\AbstractCommand;
 use DWenzel\DataCollector\Entity\Dto\ApiDemand;
 use DWenzel\DataCollector\Factory\Dto\ApiDemandFactory;
 use DWenzel\DataCollector\Repository\ApiRepository;
-use DWenzel\DataCollector\Service\ApiManagerInterface;
+use DWenzel\DataCollector\Service\Persistence\ApiManagerInterface;
 use Symfony\Component\Console\Input\InputInterface;
 
 /***************************************************************

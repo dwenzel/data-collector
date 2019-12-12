@@ -3,14 +3,9 @@
 namespace DWenzel\DataCollector\Command\Api;
 
 use Doctrine\ORM\EntityNotFoundException;
-use DWenzel\DataCollector\Command\AbstractCommand;
 use DWenzel\DataCollector\Configuration\Argument\EndPointArgument;
 use DWenzel\DataCollector\Configuration\Argument\IdentifierArgument;
-use DWenzel\DataCollector\Entity\Dto\ApiDemand;
 use DWenzel\DataCollector\Entity\Endpoint;
-use DWenzel\DataCollector\Factory\Dto\ApiDemandFactory;
-use DWenzel\DataCollector\Repository\ApiRepository;
-use DWenzel\DataCollector\Service\ApiManagerInterface;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 

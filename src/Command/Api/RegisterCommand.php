@@ -3,19 +3,14 @@
 namespace DWenzel\DataCollector\Command\Api;
 
 use DWenzel\DataCollector\Command\AbstractCommand;
-use DWenzel\DataCollector\Command\RegisterArgumentsTrait;
-use DWenzel\DataCollector\Command\RegisterOptionsTrait;
 use DWenzel\DataCollector\Configuration\Argument\ApiNameArgument;
-use DWenzel\DataCollector\Configuration\Argument\InstanceNameArgument;
-use DWenzel\DataCollector\Configuration\Argument\Role;
 use DWenzel\DataCollector\Configuration\Argument\VendorArgument;
 use DWenzel\DataCollector\Configuration\Argument\VersionArgument;
 use DWenzel\DataCollector\Configuration\Option\IdentifierOption;
 use DWenzel\DataCollector\Entity\Api;
 use DWenzel\DataCollector\Exception\InvalidUuidException;
 use DWenzel\DataCollector\Factory\Dto\ApiDemandFactory;
-use DWenzel\DataCollector\Service\ApiManagerInterface;
-use Symfony\Component\Console\Command\Command;
+use DWenzel\DataCollector\Service\Persistence\ApiManagerInterface;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 

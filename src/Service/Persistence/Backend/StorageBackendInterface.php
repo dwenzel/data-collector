@@ -1,8 +1,11 @@
 <?php
 
-namespace DWenzel\DataCollector\Service\Dto;
+namespace DWenzel\DataCollector\Service\Persistence\Backend;
 
-use DWenzel\DataCollector\Message\MessageInterface;
+use DWenzel\DataCollector\Message\Error;
+use DWenzel\DataCollector\Service\Dto\DumpResult;
+use DWenzel\DataCollector\Service\Dto\ResultInterface;
+use InfluxDB\Exception;
 
 /***************************************************************
  *  Copyright notice
@@ -20,12 +23,25 @@ use DWenzel\DataCollector\Message\MessageInterface;
  * GNU General Public License for more details.
  * This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
-interface ResultInterface
+interface StorageBackendInterface
 {
-    /**
-     * @return MessageInterface[]
-     */
-    public function getMessages(): iterable;
 
-    public function addMessage(MessageInterface $message): void;
+    /**
+     * @param array $parameters
+     * @param string|array $payload
+     * @return ResultInterface
+     */
+    public function write(array $parameters, $payload): ResultInterface;
+
+    /**
+     * @param string $name
+     * @return object
+     */
+    public function selectDatabase(string $name): object;
+
+    /**
+     * @return iterable
+     * @throws Exception
+     */
+    public function listDatabases(): iterable;
 }

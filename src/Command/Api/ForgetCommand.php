@@ -3,11 +3,10 @@
 namespace DWenzel\DataCollector\Command\Api;
 
 use DWenzel\DataCollector\Command\AbstractCommand;
-use DWenzel\DataCollector\Command\Instance;
 use DWenzel\DataCollector\Configuration\Argument\IdentifierArgument;
 use DWenzel\DataCollector\Entity\Dto\ApiDemand;
 use DWenzel\DataCollector\Factory\Dto\ApiDemandFactory;
-use DWenzel\DataCollector\Service\ApiManagerInterface;
+use DWenzel\DataCollector\Service\Persistence\ApiManagerInterface;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 

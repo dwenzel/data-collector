@@ -1,8 +1,7 @@
 <?php
 
-namespace DWenzel\DataCollector\Entity\Dto;
+namespace DWenzel\DataCollector\Service\Dto;
 
-use DWenzel\DataCollector\Service\Dto\ServiceDemandInterface;
 
 /***************************************************************
  *  Copyright notice

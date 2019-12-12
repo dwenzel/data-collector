@@ -21,7 +21,7 @@ namespace DWenzel\DataCollector\Tests\Unit\Command\Instance;
 
 use DWenzel\DataCollector\Command\Instance\ListCommand;
 use DWenzel\DataCollector\Repository\InstanceRepository;
-use DWenzel\DataCollector\Service\InstanceManagerInterface;
+use DWenzel\DataCollector\Service\Persistence\InstanceManagerInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 

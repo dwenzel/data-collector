@@ -1,15 +1,12 @@
 <?php
 
-namespace DWenzel\DataCollector\Service;
+namespace DWenzel\DataCollector\Service\Persistence;
 
 use Doctrine\ORM\Mapping\Entity;
 use DWenzel\DataCollector\Entity\Dto\DemandInterface;
-use DWenzel\DataCollector\Entity\Dto\InstanceDemand;
 use DWenzel\DataCollector\Entity\EntityInterface;
-use DWenzel\DataCollector\Entity\Instance;
-use DWenzel\DataCollector\Exception\InvalidUuidException as InvalidUuidExceptionAlias;
 use DWenzel\DataCollector\Exception\InvalidUuidException;
-use InvalidArgumentException;
+use DWenzel\DataCollector\Exception\InvalidUuidException as InvalidUuidExceptionAlias;
 
 /***************************************************************
  *  Copyright notice

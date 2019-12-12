@@ -1,6 +1,6 @@
 <?php
 
-namespace DWenzel\DataCollector\Service;
+namespace DWenzel\DataCollector\Message;
 
 /***************************************************************
  *  Copyright notice
@@ -18,11 +18,12 @@ namespace DWenzel\DataCollector\Service;
  * GNU General Public License for more details.
  * This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
-
-use DWenzel\DataCollector\Entity\Dto\DumpDemand;
-use DWenzel\DataCollector\Service\Dto\ResultInterface;
-
-interface StorageServiceInterface
+interface MessageInterface
 {
-    public function dump(DumpDemand $dumpDemand): ResultInterface;
+    /**
+     * @return string
+     */
+    public function getText(): string;
+
 }
+

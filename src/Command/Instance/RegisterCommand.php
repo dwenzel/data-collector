@@ -9,7 +9,7 @@ use DWenzel\DataCollector\Configuration\Argument\Role;
 use DWenzel\DataCollector\Configuration\Option\IdentifierOption;
 use DWenzel\DataCollector\Exception\InvalidUuidException;
 use DWenzel\DataCollector\Factory\Dto\InstanceDemandFactory;
-use DWenzel\DataCollector\Service\InstanceManagerInterface;
+use DWenzel\DataCollector\Service\Persistence\InstanceManagerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;

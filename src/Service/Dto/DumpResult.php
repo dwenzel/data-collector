@@ -2,7 +2,7 @@
 
 namespace DWenzel\DataCollector\Service\Dto;
 
-use DWenzel\DataCollector\Message\MessageInterface;
+use DWenzel\DataCollector\Traits\Messages;
 
 /***************************************************************
  *  Copyright notice
@@ -20,12 +20,7 @@ use DWenzel\DataCollector\Message\MessageInterface;
  * GNU General Public License for more details.
  * This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
-interface ResultInterface
+class DumpResult implements ResultInterface
 {
-    /**
-     * @return MessageInterface[]
-     */
-    public function getMessages(): iterable;
-
-    public function addMessage(MessageInterface $message): void;
+    use Messages;
 }

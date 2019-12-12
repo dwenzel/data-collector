@@ -1,13 +1,10 @@
 <?php
 
-namespace DWenzel\DataCollector\Service;
+namespace DWenzel\DataCollector\Tests\Unit\Message;
 
-use Doctrine\ORM\Mapping\Entity;
-use DWenzel\DataCollector\Entity\Api;
-use DWenzel\DataCollector\Entity\Dto\DemandInterface;
-use DWenzel\DataCollector\Entity\EntityInterface;
-use DWenzel\DataCollector\Exception\InvalidUuidException;
-use InvalidArgumentException;
+use DWenzel\DataCollector\Message\Success;
+use DWenzel\DataCollector\Message\MessageInterface;
+use PHPUnit\Framework\TestCase;
 
 /***************************************************************
  *  Copyright notice
@@ -25,7 +22,23 @@ use InvalidArgumentException;
  * GNU General Public License for more details.
  * This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
-interface ApiManagerInterface extends ManagerInterface
+class SuccessTest extends TestCase
 {
-    public function get(DemandInterface $demand): Api;
+    /**
+     * @var Success
+     */
+    protected $subject;
+
+    public function setUp(): void
+    {
+        $this->subject = new Success();
+    }
+
+    public function testSuccessImplementsMessageInterface()
+    {
+        $this->assertInstanceOf(
+            MessageInterface::class,
+            $this->subject
+        );
+    }
 }

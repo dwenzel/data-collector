@@ -1,8 +1,6 @@
 <?php
 
-namespace DWenzel\DataCollector\Service\Dto;
-
-use DWenzel\DataCollector\Message\MessageInterface;
+namespace DWenzel\DataCollector\Service\Persistence;
 
 /***************************************************************
  *  Copyright notice
@@ -20,12 +18,11 @@ use DWenzel\DataCollector\Message\MessageInterface;
  * GNU General Public License for more details.
  * This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
-interface ResultInterface
-{
-    /**
-     * @return MessageInterface[]
-     */
-    public function getMessages(): iterable;
 
-    public function addMessage(MessageInterface $message): void;
+use DWenzel\DataCollector\Service\Dto\DumpDemand;
+use DWenzel\DataCollector\Service\Dto\ResultInterface;
+
+interface StorageServiceInterface
+{
+    public function dump(DumpDemand $dumpDemand): ResultInterface;
 }

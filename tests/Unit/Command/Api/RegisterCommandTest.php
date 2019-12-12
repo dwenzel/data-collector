@@ -22,7 +22,7 @@ namespace DWenzel\DataCollector\Tests\Unit\Command\Api;
 use DWenzel\DataCollector\Command\Api\RegisterCommand;
 use DWenzel\DataCollector\Entity\Api;
 use DWenzel\DataCollector\Exception\InvalidUuidException;
-use DWenzel\DataCollector\Service\ApiManagerInterface;
+use DWenzel\DataCollector\Service\Persistence\ApiManagerInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Input\InputInterface;

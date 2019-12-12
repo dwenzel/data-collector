@@ -1,18 +1,13 @@
 <?php
 
-namespace DWenzel\DataCollector\Command\Instance;
+namespace DWenzel\DataCollector\Service\Http;
 
-
-use DWenzel\DataCollector\Command\AbstractCommand;
-use DWenzel\DataCollector\Entity\Dto\InstanceDemand;
-use DWenzel\DataCollector\Factory\Dto\InstanceDemandFactory;
-use DWenzel\DataCollector\Service\Persistence\InstanceManagerInterface;
-use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2019 Dirk Wenzel
+ *  (c) 2019 Dirk Wenzel <wenzel@cps-it.de>
  *  All rights reserved
  *
  * The GNU General Public License can be found at
@@ -27,24 +22,23 @@ use Symfony\Component\Console\Input\InputInterface;
  ***************************************************************/
 
 /**
- * Class AbstractInstanceCommand
+ * Class ApiService
+ *
+ * Performs API calls
  */
-abstract class AbstractInstanceCommand extends AbstractCommand
+class ApiService implements ApiServiceInterface
 {
     /**
-     * @var InstanceManagerInterface
+     * @var HttpClientInterface
      */
-    protected $instanceManager;
+    private $httpClient;
 
     /**
-     * @param InputInterface $input
-     * @return InstanceDemand
+     * ApiService constructor.
+     * @param HttpClientInterface $httpClient
      */
-    protected function createDemandFromInput(InputInterface $input): InstanceDemand
+    public function __construct(HttpClientInterface $httpClient)
     {
-        $settings = $this->getSettingsFromInput($input);
-
-        return InstanceDemandFactory::fromSettings($settings);
+        $this->httpClient = $httpClient;
     }
-
 }

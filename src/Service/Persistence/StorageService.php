@@ -1,8 +1,10 @@
 <?php
 
-namespace DWenzel\DataCollector\Service\Dto;
+namespace DWenzel\DataCollector\Service\Persistence;
 
-use DWenzel\DataCollector\Message\MessageInterface;
+use DWenzel\DataCollector\Service\Dto\DumpDemand;
+use DWenzel\DataCollector\Service\Dto\ResultInterface;
+use DWenzel\DataCollector\Service\Persistence\Backend\StorageBackendInterface;
 
 /***************************************************************
  *  Copyright notice
@@ -20,12 +22,23 @@ use DWenzel\DataCollector\Message\MessageInterface;
  * GNU General Public License for more details.
  * This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
-interface ResultInterface
+class StorageService implements StorageServiceInterface
 {
     /**
-     * @return MessageInterface[]
+     * @var StorageBackendInterface
      */
-    public function getMessages(): iterable;
+    protected $backend;
 
-    public function addMessage(MessageInterface $message): void;
+    public function __construct(StorageBackendInterface $backend)
+    {
+        $this->backend = $backend;
+    }
+
+    public function dump(DumpDemand $dumpDemand): ResultInterface
+    {
+        // read parameter and payload from demand
+        $parameter = [];
+        $payload = [];
+        return $this->backend->write($parameter, $payload);
+    }
 }

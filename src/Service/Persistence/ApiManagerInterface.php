@@ -1,9 +1,9 @@
 <?php
 
-namespace DWenzel\DataCollector\Http;
+namespace DWenzel\DataCollector\Service\Persistence;
 
-use DWenzel\DataCollector\Service\ApiServiceInterface;
-use Symfony\Contracts\HttpClient\HttpClientInterface;
+use DWenzel\DataCollector\Entity\Api;
+use DWenzel\DataCollector\Entity\Dto\DemandInterface;
 
 /***************************************************************
  *  Copyright notice
@@ -21,25 +21,7 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
  * GNU General Public License for more details.
  * This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
-
-/**
- * Class ApiService
- *
- * Performs API calls
- */
-class ApiService implements ApiServiceInterface
+interface ApiManagerInterface extends ManagerInterface
 {
-    /**
-     * @var HttpClientInterface
-     */
-    private $httpClient;
-
-    /**
-     * ApiService constructor.
-     * @param HttpClientInterface $httpClient
-     */
-    public function __construct(HttpClientInterface $httpClient)
-    {
-        $this->httpClient = $httpClient;
-    }
+    public function get(DemandInterface $demand): Api;
 }

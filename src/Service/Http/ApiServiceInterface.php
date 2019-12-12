@@ -1,8 +1,6 @@
 <?php
 
-namespace DWenzel\DataCollector\Service\Dto;
-
-use DWenzel\DataCollector\Message\MessageInterface;
+namespace DWenzel\DataCollector\Service\Http;
 
 /***************************************************************
  *  Copyright notice
@@ -20,12 +18,7 @@ use DWenzel\DataCollector\Message\MessageInterface;
  * GNU General Public License for more details.
  * This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
-interface ResultInterface
+interface ApiServiceInterface
 {
-    /**
-     * @return MessageInterface[]
-     */
-    public function getMessages(): iterable;
 
-    public function addMessage(MessageInterface $message): void;
 }

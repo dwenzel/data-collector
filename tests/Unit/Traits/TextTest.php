@@ -1,6 +1,10 @@
 <?php
 
-namespace DWenzel\DataCollector\Service;
+namespace DWenzel\DataCollector\Tests\Unit\Traits;
+
+use DWenzel\DataCollector\Traits\Text;
+use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\TestCase;
 
 /***************************************************************
  *  Copyright notice
@@ -18,7 +22,25 @@ namespace DWenzel\DataCollector\Service;
  * GNU General Public License for more details.
  * This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
-interface ApiServiceInterface
+class TextTest extends TestCase
 {
+    /**
+     * @var Text|MockObject
+     */
+    protected $subject;
 
+
+    public function setUp(): void
+    {
+        $this->subject = $this->getMockBuilder(Text::class)
+            ->getMockForTrait();
+    }
+
+    public function testGetTextInitiallyReturnsEmptyString()
+    {
+        $this->assertSame(
+            '',
+            $this->subject->getText()
+        );
+    }
 }

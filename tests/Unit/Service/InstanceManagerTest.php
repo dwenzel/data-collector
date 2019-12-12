@@ -9,7 +9,7 @@ use DWenzel\DataCollector\Entity\Dto\InstanceDemand;
 use DWenzel\DataCollector\Entity\Instance;
 use DWenzel\DataCollector\Exception\InvalidUuidException;
 use DWenzel\DataCollector\Repository\InstanceRepository;
-use DWenzel\DataCollector\Service\InstanceManager;
+use DWenzel\DataCollector\Service\Persistence\InstanceManager;
 use InvalidArgumentException;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;

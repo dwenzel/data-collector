@@ -21,7 +21,7 @@ namespace DWenzel\DataCollector\Tests\Unit\Command\Api;
 
 use DWenzel\DataCollector\Command\Api\ListCommand;
 use DWenzel\DataCollector\Repository\ApiRepository;
-use DWenzel\DataCollector\Service\ApiManagerInterface;
+use DWenzel\DataCollector\Service\Persistence\ApiManagerInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Input\InputInterface;

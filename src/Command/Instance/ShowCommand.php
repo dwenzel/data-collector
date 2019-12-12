@@ -4,7 +4,7 @@ namespace DWenzel\DataCollector\Command\Instance;
 
 use DWenzel\DataCollector\Command\Instance;
 use DWenzel\DataCollector\Configuration\Argument\IdentifierArgument;
-use DWenzel\DataCollector\Service\InstanceManagerInterface;
+use DWenzel\DataCollector\Service\Persistence\InstanceManagerInterface;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 

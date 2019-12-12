@@ -2,8 +2,8 @@
 
 namespace DWenzel\DataCollector\Controller;
 
-use DWenzel\DataCollector\Service\ApiServiceInterface;
-use DWenzel\DataCollector\Service\StorageServiceInterface;
+use DWenzel\DataCollector\Service\Http\ApiServiceInterface;
+use DWenzel\DataCollector\Service\Persistence\StorageServiceInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 /***************************************************************
@@ -25,14 +25,14 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 /**
  * Class CollectorController
- * 
- * collects data using an ApiService and 
+ *
+ * collects data using an ApiService and
  * pushes them to a storage
  */
 class CollectorController extends AbstractController
 {
     /**
-     * @var ApiServiceInterface 
+     * @var ApiServiceInterface
      */
     private $apiService;
 
@@ -44,6 +44,9 @@ class CollectorController extends AbstractController
     public function __construct(ApiServiceInterface $apiService, StorageServiceInterface $storageService)
     {
         $this->apiService = $apiService;
+        $this->storageService = $storageService;
     }
+
+
 
 }

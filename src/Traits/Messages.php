@@ -1,8 +1,9 @@
 <?php
 
-namespace DWenzel\DataCollector\Service\Dto;
+namespace DWenzel\DataCollector\Traits;
 
 use DWenzel\DataCollector\Message\MessageInterface;
+use DWenzel\DataCollector\Service\Dto\DumpResult;
 
 /***************************************************************
  *  Copyright notice
@@ -20,12 +21,26 @@ use DWenzel\DataCollector\Message\MessageInterface;
  * GNU General Public License for more details.
  * This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
-interface ResultInterface
+trait Messages
 {
+    /**
+     * @var array
+     */
+    protected $messages = [];
+
     /**
      * @return MessageInterface[]
      */
-    public function getMessages(): iterable;
+    public function getMessages(): iterable
+    {
+        return $this->messages;
+    }
 
-    public function addMessage(MessageInterface $message): void;
+    /**
+     * @param MessageInterface $message
+     */
+    public function addMessage(MessageInterface $message): void
+    {
+        $this->messages[] = $message;
+    }
 }

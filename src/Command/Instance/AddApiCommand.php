@@ -7,8 +7,8 @@ use DWenzel\DataCollector\Configuration\Argument\ApiIdentifierArgument;
 use DWenzel\DataCollector\Configuration\Argument\IdentifierArgument;
 use DWenzel\DataCollector\Entity\Dto\ApiDemand;
 use DWenzel\DataCollector\Factory\Dto\ApiDemandFactory;
-use DWenzel\DataCollector\Service\ApiManagerInterface;
-use DWenzel\DataCollector\Service\InstanceManagerInterface;
+use DWenzel\DataCollector\Service\Persistence\ApiManagerInterface;
+use DWenzel\DataCollector\Service\Persistence\InstanceManagerInterface;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
