@@ -135,7 +135,7 @@ class InfluxDBBackendTest extends TestCase
                 ['data-collector.storage.influxdb.port'],
                 ['data-collector.storage.influxdb.user'],
                 ['data-collector.storage.influxdb.password'],
-                ['data-collector.storage.influxdb.use-ssl'],
+                ['data-collector.storage.influxdb.use-ssl']
             );
 
         $this->subject = new InfluxDBBackend($this->containerBag);
