@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace DWenzel\DataCollector\Controller;
 
@@ -46,7 +47,6 @@ class CollectorController extends AbstractController
         $this->apiService = $apiService;
         $this->storageService = $storageService;
     }
-
 
 
 }

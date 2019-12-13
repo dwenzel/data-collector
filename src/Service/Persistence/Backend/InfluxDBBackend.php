@@ -1,13 +1,15 @@
 <?php
+declare(strict_types=1);
 
 namespace DWenzel\DataCollector\Service\Persistence\Backend;
 
 use DWenzel\DataCollector\Message\Error;
+use DWenzel\DataCollector\Message\Success;
 use DWenzel\DataCollector\Service\Dto\DumpResult;
 use DWenzel\DataCollector\Service\Dto\ResultInterface;
 use InfluxDB\Client;
-use InfluxDB\Database;
 use InfluxDB\Exception;
+use Symfony\Component\DependencyInjection\ParameterBag\ContainerBagInterface;
 
 /***************************************************************
  *  Copyright notice
@@ -27,15 +29,26 @@ use InfluxDB\Exception;
  ***************************************************************/
 class InfluxDBBackend implements StorageBackendInterface
 {
+    public const ERROR_WRITE_FAILED = 'Could not write to database.';
+    public const MESSAGE_WRITE_SUCCESS = 'Succeed writing to database.';
     /**
      * @var Client
      */
     protected $client;
 
-    public function __construct(Client $client = null)
+    public function __construct(ContainerBagInterface $containerBag, Client $client = null)
     {
         if (null !== $client) {
             $this->client = $client;
+        }
+        if (null === $client) {
+            $this->client = new Client(
+                $containerBag->get('data-collector.storage.influxdb.host'),
+                $containerBag->get('data-collector.storage.influxdb.port'),
+                $containerBag->get('data-collector.storage.influxdb.user'),
+                $containerBag->get('data-collector.storage.influxdb.password'),
+                $containerBag->get('data-collector.storage.influxdb.use-ssl')
+            );
         }
     }
 
@@ -47,11 +60,15 @@ class InfluxDBBackend implements StorageBackendInterface
     public function write(array $parameters, $payload): ResultInterface
     {
         $result = new DumpResult();
+        $message = new Error(1576223848, static::ERROR_WRITE_FAILED);
 
-        $success = $this->client->write($parameters, $payload);
-        if (!$success) {
-            $message = new Error();
+        if ($success = $this->client->write($parameters, $payload)) {
+            $message = new Success(1576224361, static::MESSAGE_WRITE_SUCCESS);
         }
+
+        $result->addMessage($message);
+
+        return $result;
     }
 
     /**

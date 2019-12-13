@@ -136,7 +136,7 @@ class InstanceManager implements InstanceManagerInterface
     }
 
     /**
-     * @param string $identifier
+     * @param DemandInterface $demand
      * @return Instance
      * @throws InvalidUuidException
      */

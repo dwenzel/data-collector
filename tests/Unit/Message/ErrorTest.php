@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace DWenzel\DataCollector\Tests\Unit\Message;
 
@@ -24,6 +25,8 @@ use PHPUnit\Framework\TestCase;
  ***************************************************************/
 class ErrorTest extends TestCase
 {
+    private const TEXT = 'foo';
+    private const ID = 1234;
     /**
      * @var Error
      */
@@ -31,7 +34,7 @@ class ErrorTest extends TestCase
 
     public function setUp(): void
     {
-        $this->subject = new Error();
+        $this->subject = new Error(self::ID, self::TEXT);
     }
 
     public function testErrorImplementsMessageInterface()
@@ -39,6 +42,22 @@ class ErrorTest extends TestCase
         $this->assertInstanceOf(
             MessageInterface::class,
             $this->subject
+        );
+    }
+
+    public function testConstructorSetsText()
+    {
+        $this->assertSame(
+            self::TEXT,
+            $this->subject->getText()
+        );
+    }
+
+    public function testConstructorSetsIdentifier()
+    {
+        $this->assertSame(
+            self::ID,
+            $this->subject->getIdentifier()
         );
     }
 }

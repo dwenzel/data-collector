@@ -1,16 +1,14 @@
 <?php
-declare(strict_types=1);
 
-namespace DWenzel\DataCollector\Tests\Unit\Message;
+namespace DWenzel\DataCollector\Tests\Unit\Configuration\Argument;
 
-use DWenzel\DataCollector\Message\MessageInterface;
-use DWenzel\DataCollector\Message\Success;
 use PHPUnit\Framework\TestCase;
+use DWenzel\DataCollector\Configuration\Option\IdentifierOption;
 
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2019 Dirk Wenzel <wenzel@cps-it.de>
+ *  (c) 2019 Dirk Wenzel
  *  All rights reserved
  *
  * The GNU General Public License can be found at
@@ -23,41 +21,51 @@ use PHPUnit\Framework\TestCase;
  * GNU General Public License for more details.
  * This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
-class SuccessTest extends TestCase
+
+/**
+ * Class IdentifierOptionTest
+ */
+class IdentifierOptionTest extends TestCase
 {
-    private const TEXT = 'bar';
-    private const ID = 543;
     /**
-     * @var Success
+     * @var IdentifierOption
      */
     protected $subject;
 
     public function setUp(): void
     {
-        $this->subject = new Success(self::ID, self::TEXT);
+        $this->subject = new IdentifierOption();
     }
 
-    public function testSuccessImplementsMessageInterface()
-    {
-        $this->assertInstanceOf(
-            MessageInterface::class,
-            $this->subject
-        );
-    }
-
-    public function testConstructorSetsText()
+    public function testConstructorSetsName()
     {
         $this->assertSame(
-            self::TEXT,
-            $this->subject->getText()
+            IdentifierOption::NAME,
+            $this->subject->getName()
         );
     }
 
-    public function testConstructorSetsIdentifier()
+    public function testConstructorSetsMode()
     {
         $this->assertSame(
-            self::ID,
-            $this->subject->getIdentifier()
+            IdentifierOption::MODE,
+            $this->subject->getMode()
         );
     }
+
+    public function testConstructorSetsDescription()
+    {
+        $this->assertSame(
+            IdentifierOption::DESCRIPTION,
+            $this->subject->getDescription()
+        );
+    }
+
+    public function testDefaultIsInitiallyNull()
+    {
+        $this->assertNull(
+            $this->subject->getDefault()
+        );
+    }
+
 }

@@ -2,7 +2,9 @@
 
 namespace DWenzel\DataCollector\Service\Http;
 
+use DWenzel\DataCollector\Service\Dto\ApiCallDemand;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
+use Throwable;
 
 /***************************************************************
  *  Copyright notice
@@ -40,5 +42,31 @@ class ApiService implements ApiServiceInterface
     public function __construct(HttpClientInterface $httpClient)
     {
         $this->httpClient = $httpClient;
+    }
+
+    /**
+     * @param ApiCallDemand $demand
+     * @return array
+     */
+    public function call(ApiCallDemand $demand): array
+    {
+        try {
+            $response = $this->httpClient->request(
+                $demand->getMethod(),
+                $demand->getUrl(),
+                $demand->getOptions()
+            );
+            $result = $response->toArray();
+        } catch (Throwable $exception) {
+            $result = [
+                'exception' => [
+                    'class' => get_class($exception),
+                    'code' => $exception->getCode(),
+                    'message' => $exception->getMessage()
+                ]
+            ];
+        }
+
+        return $result;
     }
 }

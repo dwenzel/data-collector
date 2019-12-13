@@ -2,6 +2,7 @@
 
 namespace DWenzel\DataCollector\Message;
 
+use DWenzel\DataCollector\Traits\Identifier;
 use DWenzel\DataCollector\Traits\Text;
 
 /***************************************************************
@@ -22,5 +23,5 @@ use DWenzel\DataCollector\Traits\Text;
  ***************************************************************/
 class Success implements MessageInterface
 {
-    use Text;
+    use MessageBuilder;
 }

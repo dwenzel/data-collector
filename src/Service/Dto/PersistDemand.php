@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace DWenzel\DataCollector\Service\Dto;
 
@@ -22,9 +23,39 @@ namespace DWenzel\DataCollector\Service\Dto;
 /**
  * Demand for dumping data into a sink
  *
- * Class DumpDemand
+ * Class PersistDemand
  */
-class DumpDemand implements ServiceDemandInterface
+class PersistDemand implements ServiceDemandInterface
 {
+    /**
+     * @var array
+     */
+    protected $parameter = [];
 
+    /**
+     * @var array
+     */
+    protected $payload = [];
+
+    public function __construct(array $payload, array $parameter = [])
+    {
+        $this->parameter = $parameter;
+        $this->payload = $payload;
+    }
+
+    /**
+     * @return array
+     */
+    public function getParameter(): array
+    {
+        return $this->parameter;
+    }
+
+    /**
+     * @return array
+     */
+    public function getPayload(): array
+    {
+        return $this->payload;
+    }
 }

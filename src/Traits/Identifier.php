@@ -1,11 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace DWenzel\DataCollector\Service\Persistence;
-
-use DWenzel\DataCollector\Service\Dto\PersistDemand;
-use DWenzel\DataCollector\Service\Dto\ResultInterface;
-use DWenzel\DataCollector\Service\Persistence\Backend\StorageBackendInterface;
+namespace DWenzel\DataCollector\Traits;
 
 /***************************************************************
  *  Copyright notice
@@ -15,7 +11,7 @@ use DWenzel\DataCollector\Service\Persistence\Backend\StorageBackendInterface;
  *
  * The GNU General Public License can be found at
  * http://www.gnu.org/copyleft/gpl.html.
- * A copy is found in the text file GPL.txt and important notices to the license
+ * A copy is found in the identifier file GPL.txt and important notices to the license
  * from the author is found in LICENSE.txt distributed with these scripts.
  * This script is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -23,23 +19,18 @@ use DWenzel\DataCollector\Service\Persistence\Backend\StorageBackendInterface;
  * GNU General Public License for more details.
  * This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
-class StorageService implements StorageServiceInterface
+trait Identifier
 {
     /**
-     * @var StorageBackendInterface
+     * @var integer
      */
-    protected $backend;
+    protected $identifier = 0;
 
-    public function __construct(StorageBackendInterface $backend)
+    /**
+     * @return integer
+     */
+    public function getIdentifier(): int
     {
-        $this->backend = $backend;
-    }
-
-    public function persist(PersistDemand $demand): ResultInterface
-    {
-        return $this->backend->write(
-            $demand->getParameter(),
-            $demand->getPayload()
-        );
+        return $this->identifier;
     }
 }

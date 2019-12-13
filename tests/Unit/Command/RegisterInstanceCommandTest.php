@@ -29,7 +29,8 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Class RegisterInstanceCommandTest
+ * Class RegisterCommandTest
+ * @coversDefaultClass \DWenzel\DataCollector\Command\Instance\RegisterCommand
  */
 class RegisterInstanceCommandTest extends TestCase
 {
@@ -50,6 +51,9 @@ class RegisterInstanceCommandTest extends TestCase
         $this->subject = new RegisterCommand(null, $this->instanceManager);
     }
 
+    /**
+     * @covers ::__construct
+     */
     public function testConstructorSetsDescription()
     {
         $this->assertSame(
@@ -58,6 +62,9 @@ class RegisterInstanceCommandTest extends TestCase
         );
     }
 
+    /**
+     * @covers ::__construct
+     */
     public function testConstructorSetsHelp()
     {
         $this->assertSame(
@@ -66,6 +73,9 @@ class RegisterInstanceCommandTest extends TestCase
         );
     }
 
+    /**
+     * @covers ::__construct
+     */
     public function testConstructorRegistersArguments()
     {
         $argumentClasses = RegisterCommand::ARGUMENTS;
@@ -81,6 +91,9 @@ class RegisterInstanceCommandTest extends TestCase
 
     }
 
+    /**
+     * @covers ::__construct
+     */
     public function testConstructorRegistersOptions()
     {
         $optionClasses = RegisterCommand::OPTIONS;
@@ -95,6 +108,9 @@ class RegisterInstanceCommandTest extends TestCase
         }
     }
 
+    /**
+     * @covers ::run
+     */
     public function testRunReturnsMessageOnSuccess()
     {
         $uuid = 'foo';
@@ -135,6 +151,9 @@ class RegisterInstanceCommandTest extends TestCase
         $this->subject->run($input, $output);
     }
 
+    /**
+     * @covers ::run
+     */
     public function testRunReturnsErrorMessageFromException()
     {
 

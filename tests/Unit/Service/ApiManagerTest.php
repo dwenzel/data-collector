@@ -231,4 +231,19 @@ class ApiManagerTest extends TestCase
 
         $this->subject->get($demand);
     }
+
+    public function testGetReturnsApiFromRepository()
+    {
+        $api = $this->createMock(Api::class);
+        $demand = $this->createMock(ApiDemand::class);
+
+        $this->apiRepository->expects($this->once())
+            ->method('findOneBy')
+            ->willReturn($api);
+
+        $this->assertSame(
+            $api,
+            $this->subject->get($demand)
+        );
+    }
 }

@@ -1,7 +1,9 @@
 <?php
+declare(strict_types=1);
 
 namespace DWenzel\DataCollector\Message;
 
+use DWenzel\DataCollector\Traits\Identifier;
 use DWenzel\DataCollector\Traits\Text;
 
 /***************************************************************
@@ -22,5 +24,5 @@ use DWenzel\DataCollector\Traits\Text;
  ***************************************************************/
 class Error implements MessageInterface
 {
-    use Text;
+    use MessageBuilder;
 }

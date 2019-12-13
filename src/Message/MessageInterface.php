@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace DWenzel\DataCollector\Message;
 
@@ -25,5 +26,9 @@ interface MessageInterface
      */
     public function getText(): string;
 
+    /**
+     * @return int Unique identifier of the message
+     */
+    public function getIdentifier(): int;
 }
 

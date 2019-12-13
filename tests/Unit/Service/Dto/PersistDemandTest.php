@@ -1,16 +1,15 @@
 <?php
-declare(strict_types=1);
 
-namespace DWenzel\DataCollector\Tests\Unit\Message;
+namespace DWenzel\DataCollector\Tests\Unit\Service\Dto;
 
-use DWenzel\DataCollector\Message\MessageInterface;
-use DWenzel\DataCollector\Message\Success;
+use DWenzel\DataCollector\Service\Dto\PersistDemand;
+use DWenzel\DataCollector\Service\Dto\ServiceDemandInterface;
 use PHPUnit\Framework\TestCase;
 
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2019 Dirk Wenzel <wenzel@cps-it.de>
+ *  (c) 2019 Dirk Wenzel
  *  All rights reserved
  *
  * The GNU General Public License can be found at
@@ -23,41 +22,50 @@ use PHPUnit\Framework\TestCase;
  * GNU General Public License for more details.
  * This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
-class SuccessTest extends TestCase
+
+/**
+ * Class PersistDemandTest
+ */
+class PersistDemandTest extends TestCase
 {
-    private const TEXT = 'bar';
-    private const ID = 543;
     /**
-     * @var Success
+     * @var PersistDemand
      */
     protected $subject;
 
+    private const PARAMETER = [
+        'foo' => 'bar'
+    ];
+    private const PAYLOAD = [
+        'baz' => 'boom'
+    ];
+
     public function setUp(): void
     {
-        $this->subject = new Success(self::ID, self::TEXT);
+        $this->subject = new PersistDemand(self::PAYLOAD, self::PARAMETER);
     }
 
-    public function testSuccessImplementsMessageInterface()
+    public function testClassImplementsServiceDemandInterface()
     {
         $this->assertInstanceOf(
-            MessageInterface::class,
+            ServiceDemandInterface::class,
             $this->subject
         );
     }
 
-    public function testConstructorSetsText()
+    public function testConstructorSetsPayload()
     {
         $this->assertSame(
-            self::TEXT,
-            $this->subject->getText()
+            self::PAYLOAD,
+            $this->subject->getPayload()
         );
     }
 
-    public function testConstructorSetsIdentifier()
+    public function testConstructorSetsParameter()
     {
         $this->assertSame(
-            self::ID,
-            $this->subject->getIdentifier()
+            self::PARAMETER,
+            $this->subject->getParameter()
         );
     }
 }

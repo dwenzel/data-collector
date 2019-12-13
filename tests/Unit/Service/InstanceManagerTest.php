@@ -51,7 +51,7 @@ class InstanceManagerTest extends TestCase
     {
         $this->instanceRepository = $this->getMockBuilder(InstanceRepository::class)
             ->disableOriginalConstructor()
-            ->onlyMethods(['count', 'add', 'remove', 'findOneBy'])
+            ->onlyMethods(['count', 'add', 'remove', 'findOneBy', 'update'])
             ->getMock();
         $this->subject = new InstanceManager($this->instanceRepository);
     }
@@ -226,5 +226,43 @@ class InstanceManagerTest extends TestCase
         $this->expectExceptionCode(1574174753);
         $this->subject->get($demand);
     }
+
+    public function testGetThrowsExceptionForMissingInstance()
+    {
+        $demand = $this->createMock(InstanceDemand::class);
+        $this->instanceRepository->expects($this->once())
+            ->method('findOneBy')
+            ->willReturn(null);
+
+        $this->expectExceptionCode(1575289588);
+        $this->subject->get($demand);
+    }
+
+    public function testGetReturnsInstanceFromRepository()
+    {
+        $instance = $this->getMockBuilder(Instance::class)
+            ->getMock();
+
+        $demand = $this->getMockBuilder(InstanceDemand::class)->getMock();
+        $this->instanceRepository->expects($this->once())
+            ->method('findOneBy')
+            ->willReturn($instance);
+
+        $this->assertSame(
+            $instance,
+            $this->subject->get($demand)
+        );
+    }
+
+    public function testUpdateWrapsRepositoryMethod()
+    {
+        $instance = $this->createMock(Instance::class);
+        $this->instanceRepository->expects($this->once())
+            ->method('update')
+            ->with($instance);
+
+        $this->subject->update($instance);
+    }
+
 }
 

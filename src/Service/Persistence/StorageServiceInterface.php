@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace DWenzel\DataCollector\Service\Persistence;
 
@@ -19,10 +20,10 @@ namespace DWenzel\DataCollector\Service\Persistence;
  * This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-use DWenzel\DataCollector\Service\Dto\DumpDemand;
+use DWenzel\DataCollector\Service\Dto\PersistDemand;
 use DWenzel\DataCollector\Service\Dto\ResultInterface;
 
 interface StorageServiceInterface
 {
-    public function dump(DumpDemand $dumpDemand): ResultInterface;
+    public function persist(PersistDemand $demand): ResultInterface;
 }
