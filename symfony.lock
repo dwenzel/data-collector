@@ -53,6 +53,9 @@
             "src/Repository/.gitignore"
         ]
     },
+    "doctrine/doctrine-cache-bundle": {
+        "version": "1.4.0"
+    },
     "doctrine/doctrine-fixtures-bundle": {
         "version": "3.0",
         "recipe": {
@@ -102,6 +105,9 @@
     "doctrine/reflection": {
         "version": "v1.0.0"
     },
+    "dwenzel/command-scheduler-bundle": {
+        "version": "dev-develop"
+    },
     "guzzlehttp/guzzle": {
         "version": "6.4.1"
     },
@@ -116,6 +122,22 @@
     },
     "jdorn/sql-formatter": {
         "version": "v1.2.17"
+    },
+    "jmose/command-scheduler-bundle": {
+        "version": "2.0",
+        "recipe": {
+            "repo": "github.com/symfony/recipes-contrib",
+            "branch": "master",
+            "version": "2.0",
+            "ref": "a72826cab4a4f55bc1471729d21c93ad6a50ab40"
+        },
+        "files": [
+            "config/packages/scheduler.yaml",
+            "config/routes/scheduler.yaml"
+        ]
+    },
+    "mtdowling/cron-expression": {
+        "version": "v1.2.1"
     },
     "myclabs/deep-copy": {
         "version": "1.9.3"
@@ -233,6 +255,9 @@
     },
     "sebastian/version": {
         "version": "2.0.1"
+    },
+    "symfony/asset": {
+        "version": "v4.3.9"
     },
     "symfony/cache": {
         "version": "v4.3.6"
@@ -388,8 +413,42 @@
     "symfony/stopwatch": {
         "version": "v4.3.8"
     },
+    "symfony/templating": {
+        "version": "v4.3.9"
+    },
+    "symfony/translation": {
+        "version": "3.3",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "master",
+            "version": "3.3",
+            "ref": "2ad9d2545bce8ca1a863e50e92141f0b9d87ffcd"
+        },
+        "files": [
+            "config/packages/translation.yaml",
+            "translations/.gitignore"
+        ]
+    },
     "symfony/translation-contracts": {
         "version": "v1.1.7"
+    },
+    "symfony/twig-bridge": {
+        "version": "v4.3.9"
+    },
+    "symfony/twig-bundle": {
+        "version": "3.3",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "master",
+            "version": "3.3",
+            "ref": "1da1987340b5ba64b16383906d678b989e3d096e"
+        },
+        "files": [
+            "config/packages/test/twig.yaml",
+            "config/packages/twig.yaml",
+            "config/routes/dev/twig.yaml",
+            "templates/base.html.twig"
+        ]
     },
     "symfony/validator": {
         "version": "4.3",

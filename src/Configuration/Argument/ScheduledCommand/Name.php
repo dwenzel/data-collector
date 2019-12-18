@@ -1,11 +1,11 @@
 <?php
-declare(strict_types=1);
 
-namespace DWenzel\DataCollector\Controller;
+namespace DWenzel\DataCollector\Configuration\Argument\ScheduledCommand;
 
-use DWenzel\DataCollector\Service\Http\ApiServiceInterface;
-use DWenzel\DataCollector\Service\Persistence\StorageServiceInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+
+use DWenzel\DataCollector\Configuration\Argument\ArgumentInterface;
+use DWenzel\DataCollector\Traits\Mode;
+use Symfony\Component\Console\Input\InputArgument;
 
 /***************************************************************
  *  Copyright notice
@@ -23,30 +23,15 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
  * GNU General Public License for more details.
  * This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
-
-/**
- * Class CollectorController
- *
- * collects data using an ApiService and
- * pushes them to a storage
- */
-class CollectorController extends AbstractController
+class Name extends InputArgument implements ArgumentInterface
 {
-    /**
-     * @var ApiServiceInterface
-     */
-    private $apiService;
+    use Mode;
+    const NAME = 'name';
+    const DESCRIPTION = 'Name of the command';
+    const MODE = InputArgument::REQUIRED;
 
-    /**
-     * @var StorageServiceInterface
-     */
-    private $storageService;
-
-    public function __construct(ApiServiceInterface $apiService, StorageServiceInterface $storageService)
+    public function __construct(string $name = self::NAME, int $mode = self::MODE, string $description = self::DESCRIPTION, $default = null)
     {
-        $this->apiService = $apiService;
-        $this->storageService = $storageService;
+        parent::__construct($name, $mode, $description, $default);
     }
-
-
 }

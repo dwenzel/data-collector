@@ -43,11 +43,11 @@ class InfluxDBBackend implements StorageBackendInterface
         }
         if (null === $client) {
             $this->client = new Client(
-                $containerBag->get('data-collector.storage.influxdb.host'),
-                $containerBag->get('data-collector.storage.influxdb.port'),
-                $containerBag->get('data-collector.storage.influxdb.user'),
-                $containerBag->get('data-collector.storage.influxdb.password'),
-                $containerBag->get('data-collector.storage.influxdb.use-ssl')
+                $containerBag->get('parameters.data-collector.storage.influxdb.host'),
+                $containerBag->get('parameters.data-collector.storage.influxdb.port'),
+                $containerBag->get('parameters.data-collector.storage.influxdb.user'),
+                $containerBag->get('parameters.data-collector.storage.influxdb.password'),
+                $containerBag->get('parameters.data-collector.storage.influxdb.use-ssl')
             );
         }
     }

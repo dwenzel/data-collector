@@ -9,6 +9,7 @@
     "php": "^7.2 | ^7.3 | ^7.4",
     "ext-ctype": "*",
     "ext-iconv": "*",
+    "doctrine/doctrine-bundle": "^1.6",
     "influxdb/influxdb-php": "^1.15",
     "ramsey/uuid": "^3.8",
     "symfony/console": "4.3.*",
@@ -20,9 +21,16 @@
     "symfony/yaml": "4.3.*",
     "yokai/enum-bundle": "^2.2"
   },
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "git@github.com:dwenzel/command-scheduler-bundle.git"
+    }
+  ],
   "require-dev": {
     "dama/doctrine-test-bundle": "^6.2",
     "doctrine/doctrine-fixtures-bundle": "^3.3",
+    "dwenzel/command-scheduler-bundle": "dev-develop",
     "phpunit/phpunit": "^8.4",
     "symfony/maker-bundle": "^1.14"
   },
@@ -71,7 +79,7 @@
   },
   "extra": {
     "symfony": {
-      "allow-contrib": false,
+      "allow-contrib": "true",
       "require": "4.3.*"
     }
   }
