@@ -4,15 +4,13 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
-  data-collector:
-    storage:
-      influxdb:
-        host: '%env(DATACOLLECTOR_STORAGE_INFLUX_DB_HOST)%'
-        port: '%env(DATACOLLECTOR_STORAGE_INFLUX_DB_PORT)%'
-        user: '%env(DATACOLLECTOR_STORAGE_INFLUX_DB_USER)%'
-        password: '%env(DATACOLLECTOR_STORAGE_INFLUX_DB_PASSWORD)%'
-        use-ssl: '%env(DATACOLLECTOR_STORAGE_INFLUX_DB_USESSL)%'
-    doctrine_manager: default
+  data-collector.storage:
+    host: '%env(DATACOLLECTOR_STORAGE_HOST)%'
+    port: '%env(DATACOLLECTOR_STORAGE_PORT)%'
+    user: '%env(DATACOLLECTOR_STORAGE_USER)%'
+    password: '%env(DATACOLLECTOR_STORAGE_PASSWORD)%'
+    ssl: '%env(DATACOLLECTOR_STORAGE_SSL)%'
+  doctrine_manager: default
 
 services:
   # default configuration for services in *this* file
@@ -40,5 +38,6 @@ services:
       #- '%data-collector.doctrine_manager%'
       #- '%data-collector.log_path%'
     tags: [console.command]
-  # add more service definitions when explicit configuration is needed
-  # please note that last definitions always *replace* previous ones
+  DWenzel\DataCollector\Service\Persistence\Backend\InfluxDBBackend:
+    arguments:
+      $parameters: '%data-collector.storage%'

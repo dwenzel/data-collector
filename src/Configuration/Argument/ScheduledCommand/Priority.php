@@ -1,14 +1,16 @@
 <?php
 
-namespace DWenzel\DataCollector\Configuration\Option;
+namespace DWenzel\DataCollector\Configuration\Argument\ScheduledCommand;
 
+
+use DWenzel\DataCollector\Configuration\Argument\ArgumentInterface;
 use DWenzel\DataCollector\Traits\Mode;
-use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Input\InputArgument;
 
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2019 Dirk Wenzel
+ *  (c) 2019 Dirk Wenzel <wenzel@cps-it.de>
  *  All rights reserved
  *
  * The GNU General Public License can be found at
@@ -21,28 +23,16 @@ use Symfony\Component\Console\Input\InputOption;
  * GNU General Public License for more details.
  * This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
-
-/**
- * Class DisabledOption
- */
-class DisabledOption extends InputOption implements OptionInterface
+class Priority extends InputArgument implements ArgumentInterface
 {
     use Mode;
+    const NAME = 'priority';
+    const DESCRIPTION = 'Priority';
+    const MODE = InputArgument::OPTIONAL;
+    const DEFAULT = 0;
 
-    const NAME = 'disabled';
-    const SHORTCUT = 'd';
-    const DESCRIPTION = 'Sets the disabled flag';
-    const MODE = self::VALUE_OPTIONAL;
-    const DEFAULT = false;
-
-    public function __construct(
-        string $name = self::NAME,
-        string $shortcut = self::SHORTCUT,
-        int $mode = self::MODE,
-        string $description = self::DESCRIPTION,
-        $default = self::DEFAULT
-    )
+    public function __construct(string $name = self::NAME, int $mode = self::MODE, string $description = self::DESCRIPTION, $default = self::DEFAULT)
     {
-        parent::__construct($name, $shortcut, $mode, $description, $default);
+        parent::__construct($name, $mode, $description, $default);
     }
 }

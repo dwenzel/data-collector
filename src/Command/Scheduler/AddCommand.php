@@ -2,10 +2,15 @@
 
 namespace DWenzel\DataCollector\Command\Scheduler;
 
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use DWenzel\DataCollector\Command\AbstractCommand;
 use DWenzel\DataCollector\Configuration\Argument\ScheduledCommand\Command;
 use DWenzel\DataCollector\Configuration\Argument\ScheduledCommand\CronExpression;
+use DWenzel\DataCollector\Configuration\Argument\ScheduledCommand\Disabled;
+use DWenzel\DataCollector\Configuration\Argument\ScheduledCommand\ExecuteImmediately;
 use DWenzel\DataCollector\Configuration\Argument\ScheduledCommand\Name;
+use DWenzel\DataCollector\Configuration\Argument\ScheduledCommand\Priority;
 use DWenzel\DataCollector\Configuration\Option\ArgumentsOption;
 use DWenzel\DataCollector\Configuration\Option\DisabledOption;
 use DWenzel\DataCollector\Configuration\Option\NoOutputOption;
@@ -25,13 +30,16 @@ class AddCommand extends AbstractCommand
     const ARGUMENTS = [
         Name::class,
         CronExpression::class,
-        Command::class
+        Command::class,
+        Priority::class,
+        ExecuteImmediately::class
     ];
     const OPTIONS = [
         ArgumentsOption::class,
         DisabledOption::class,
         NoOutputOption::class
     ];
+
     protected static $defaultName = self::DEFAULT_COMMAND_NAME;
     /**
      * @var \Doctrine\ORM\EntityManager
@@ -87,10 +95,28 @@ class AddCommand extends AbstractCommand
      * @param InputInterface $input
      * @param OutputInterface $output
      * @return int|null|void
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $arguments = $input->getArguments();
+        $settings = $this->getSettingsFromInput($input);
         $command = new ScheduledCommand();
+
+        if (!empty($settings[Name::NAME])) {
+            $command->setName($settings[Name::NAME]);
+        }
+        if (!empty($settings[Command::NAME])) {
+            $command->setCommand($settings[Command::NAME]);
+        }
+        if (!empty($settings[CronExpression::NAME])) {
+            $command->setCronExpression($settings[CronExpression::NAME]);
+        }
+        $command->setPriority($settings[Priority::NAME])
+            ->setExecuteImmediately($settings[ExecuteImmediately::NAME])
+            ->setDisabled($settings[DisabledOption::NAME]);
+
+        $this->entityManager->persist($command);
+        $this->entityManager->flush();
     }
 }

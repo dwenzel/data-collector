@@ -36,19 +36,18 @@ class InfluxDBBackend implements StorageBackendInterface
      */
     protected $client;
 
-    public function __construct(ContainerBagInterface $containerBag, Client $client = null)
+    public function __construct( array $parameters = [], Client $client = null)
     {
-        if (null !== $client) {
-            $this->client = $client;
-        }
         if (null === $client) {
             $this->client = new Client(
-                $containerBag->get('parameters.data-collector.storage.influxdb.host'),
-                $containerBag->get('parameters.data-collector.storage.influxdb.port'),
-                $containerBag->get('parameters.data-collector.storage.influxdb.user'),
-                $containerBag->get('parameters.data-collector.storage.influxdb.password'),
-                $containerBag->get('parameters.data-collector.storage.influxdb.use-ssl')
+                $parameters['host'],
+                $parameters['port'],
+                $parameters['user'],
+                $parameters['password'],
+                $parameters['ssl']
             );
+        } else {
+            $this->client = $client;
         }
     }
 
