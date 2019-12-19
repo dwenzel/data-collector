@@ -27,7 +27,7 @@ cache:
 before_script:
   - composer i
   - bin/console doctrine:database:create
-  - bin/console doctrine:schema:update
+  - bin/console doctrine:schema:update -f -n
   - bin/console doctrine:fixtures:load -n
 
 script:

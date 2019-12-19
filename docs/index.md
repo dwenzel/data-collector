@@ -17,3 +17,4 @@ Another component such as _Grafana_ can fetch and display the data.
 * [API](./components/api.md)
 * [Instance](./components/instance.md)
 * [Endpoint](components/endpoint.md)
+* [Scheduler](components/scheduler.md)
