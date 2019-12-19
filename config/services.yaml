@@ -44,3 +44,5 @@ services:
   DWenzel\DataCollector\Service\Persistence\Backend\InfluxDBBackend:
     arguments:
       $parameters: '%data-collector.storage%'
+  DWenzel\DataCollector\ViewHelper\TableViewHelper:
+    autowire: false

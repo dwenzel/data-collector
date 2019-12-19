@@ -5,11 +5,11 @@ namespace DWenzel\DataCollector\Command\Scheduler;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Persistence\ObjectManager;
 use DWenzel\DataCollector\Command\AbstractCommand;
-use DWenzel\DataCollector\Repository\InstanceRepository;
+use DWenzel\DataCollector\SettingsInterface as SI;
+use DWenzel\DataCollector\Traits\TableViewHelperTrait;
 use Exception;
 use JMose\CommandSchedulerBundle\Entity\Repository\ScheduledCommandRepository;
 use JMose\CommandSchedulerBundle\Entity\ScheduledCommand;
-use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -31,23 +31,21 @@ use Symfony\Component\Console\Output\OutputInterface;
  ***************************************************************/
 class ListCommand extends AbstractCommand
 {
+    use TableViewHelperTrait;
+
     const COMMAND_DESCRIPTION = 'List scheduled commands';
     const COMMAND_HELP = 'List all scheduled commands.';
     const DEFAULT_COMMAND_NAME = 'data-collector:scheduler:list';
     const LIST_HEADERS = ['id', 'Name', 'Command', 'Cron Expression', 'disabled'];
-
+    protected static $defaultName = self::DEFAULT_COMMAND_NAME;
     /**
      * @var ObjectManager
      */
     protected $entityManager;
-
     /**
      * @var ScheduledCommandRepository
      */
     protected $commandRepository;
-
-
-    protected static $defaultName = self::DEFAULT_COMMAND_NAME;
 
     public function __construct(ManagerRegistry $managerRegistry, $managerName)
     {
@@ -67,22 +65,24 @@ class ListCommand extends AbstractCommand
         try {
             /** @var ScheduledCommand[] $commands */
             $commands = $this->commandRepository->findAll();
-            $table = new Table($output);
-            $table->setHeaders(
-                static::LIST_HEADERS
-            );
+            $rows = [];
+
             foreach ($commands as $scheduledCommand) {
-                $table->addRow(
-                    [
-                        $scheduledCommand->getId(),
-                        $scheduledCommand->getName(),
-                        $scheduledCommand->getCommand(),
-                        $scheduledCommand->getCronExpression(),
-                        $scheduledCommand->getDisabled()
-                    ]
-                );
+                $rows [] = [
+                    $scheduledCommand->getId(),
+                    $scheduledCommand->getName(),
+                    $scheduledCommand->getCommand(),
+                    $scheduledCommand->getCronExpression(),
+                    $scheduledCommand->getDisabled()
+                ];
             }
-            $table->render();
+            $variables = [
+                SI::HEADERS_KEY => static::LIST_HEADERS,
+                SI::ROWS_KEY => $rows
+            ];
+
+            $this->viewHelper->assign($variables);
+            $this->viewHelper->render();
         } catch (Exception $exception) {
             $messages[] = sprintf(static::ERROR_TEMPLATE, $exception->getMessage());
         }

@@ -4,8 +4,9 @@ namespace DWenzel\DataCollector\Command\Api;
 
 use DWenzel\DataCollector\Command\AbstractCommand;
 use DWenzel\DataCollector\Repository\ApiRepository;
+use DWenzel\DataCollector\SettingsInterface as SI;
+use DWenzel\DataCollector\Traits\TableViewHelperTrait;
 use Exception;
-use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -27,6 +28,8 @@ use Symfony\Component\Console\Output\OutputInterface;
  ***************************************************************/
 class ListCommand extends AbstractCommand
 {
+    use TableViewHelperTrait;
+
     const COMMAND_DESCRIPTION = 'List APIs';
     const COMMAND_HELP = 'List all registered APIs.';
     const DEFAULT_COMMAND_NAME = 'data-collector:api:list';
@@ -40,10 +43,10 @@ class ListCommand extends AbstractCommand
      */
     protected $apiRepository;
 
-    public function __construct(ApiRepository $ApiRepository)
+    public function __construct(ApiRepository $apiRepository)
     {
         parent::__construct();
-        $this->apiRepository = $ApiRepository;
+        $this->apiRepository = $apiRepository;
     }
 
     /**
@@ -56,22 +59,26 @@ class ListCommand extends AbstractCommand
         $messages = [];
         try {
             $apis = $this->apiRepository->findAll();
-            $table = new Table($output);
-            $table->setHeaders(
-                static::LIST_HEADERS
-            );
+
+            $rows = [];
             foreach ($apis as $api) {
-                $table->addRow(
-                    [
-                        $api->getId(),
-                        $api->getVendor(),
-                        $api->getName(),
-                        $api->getVersion(),
-                        $api->getIdentifier()
-                    ]
-                );
+                $rows[] = [
+                    $api->getId(),
+                    $api->getVendor(),
+                    $api->getName(),
+                    $api->getVersion(),
+                    $api->getIdentifier()
+                ];
             }
-            $table->render();
+
+            $variables = [
+                SI::HEADERS_KEY => static::LIST_HEADERS,
+                SI::ROWS_KEY => $rows
+            ];
+
+            $this->viewHelper->assign($variables);
+            $this->viewHelper->render();
+
         } catch (Exception $exception) {
             $messages[] = sprintf(static::ERROR_TEMPLATE, $exception->getMessage());
             $output->writeln($messages);

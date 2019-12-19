@@ -1,8 +1,9 @@
 <?php
 
-namespace DWenzel\DataCollector\ViewHelper;
+namespace DWenzel\DataCollector\Traits;
 
-use DWenzel\DataCollector\Renderable;
+use DWenzel\DataCollector\ViewHelper\TableViewHelper;
+use DWenzel\DataCollector\ViewHelper\ViewHelperInterface;
 
 /***************************************************************
  *  Copyright notice
@@ -20,12 +21,20 @@ use DWenzel\DataCollector\Renderable;
  * GNU General Public License for more details.
  * This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
-interface ViewHelperInterface extends Renderable
+trait ViewHelperTrait
 {
     /**
-     * Assign variables
-     *
-     * @param array $variables
+     * @var ViewHelperInterface
      */
-    public function assign(array $variables): void;
+    protected $viewHelper;
+
+    /**
+     * Sets the view helper
+     *
+     * @param ViewHelperInterface $viewHelper
+     */
+    public function setViewHelper(ViewHelperInterface $viewHelper): void
+    {
+        $this->viewHelper = $viewHelper;
+    }
 }

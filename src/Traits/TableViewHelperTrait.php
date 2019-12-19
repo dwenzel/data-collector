@@ -1,10 +1,10 @@
 <?php
 
-namespace DWenzel\DataCollector\ViewHelper;
+namespace DWenzel\DataCollector\Traits;
 
-use DWenzel\DataCollector\Renderable;
-use Symfony\Component\Console\Helper\Table;
-use DWenzel\DataCollector\SettingsInterface as SI;
+use DWenzel\DataCollector\Command\Api\ListCommand;
+use DWenzel\DataCollector\ViewHelper\TableViewHelper;
+use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /***************************************************************
@@ -23,38 +23,19 @@ use Symfony\Component\Console\Output\OutputInterface;
  * GNU General Public License for more details.
  * This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
-
-/**
- * Class TableViewHelper
- */
-class TableViewHelper implements ViewHelperInterface
+trait TableViewHelperTrait
 {
+    use ViewHelperTrait;
+
     /**
-     * @var Table
+     * @param InputInterface $input
+     * @param OutputInterface $output
      */
-    protected $table;
-
-    public function __construct(OutputInterface $output, Table $table = null)
+    public function initialize(InputInterface $input, OutputInterface $output)
     {
-        if (null === $table) {
-            $table = new Table($output);
-        }
-        $this->table = $table;
-    }
-
-    public function render()
-    {
-        $this->table->render();
-    }
-
-    public function assign(array $variables): void
-    {
-        if (!empty($variables[SI::HEADERS_KEY])) {
-            $this->table->setHeaders($variables[SI::HEADERS_KEY]);
-        }
-        if (!empty($variables[SI::ROWS_KEY]))
-        {
-            $this->table->setRows($variables[SI::ROWS_KEY]);
+        if (null === $this->viewHelper) {
+            $viewHelper = new TableViewHelper($output);
+            $this->setViewHelper($viewHelper);
         }
     }
 }

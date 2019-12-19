@@ -1,6 +1,6 @@
 <?php
-declare(strict_types=1);
-namespace DWenzel\DataCollector\Tests\Unit\Command\Api;
+
+namespace DWenzel\DataCollector\Tests\Unit\Command\Instance;
 
 /***************************************************************
  *  Copyright notice
@@ -19,16 +19,14 @@ namespace DWenzel\DataCollector\Tests\Unit\Command\Api;
  * This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-use DWenzel\DataCollector\Command\Api\ListCommand;
-use DWenzel\DataCollector\Repository\ApiRepository;
-use DWenzel\DataCollector\Service\Persistence\ApiManagerInterface;
+use DWenzel\DataCollector\Command\Instance\ListCommand;
+use DWenzel\DataCollector\Repository\InstanceRepository;
+use DWenzel\DataCollector\Service\Persistence\InstanceManagerInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Class ForgetApiCommandTest
+ * Class ForgetInstanceCommandTest
  */
 class ListCommandTest extends TestCase
 {
@@ -38,27 +36,27 @@ class ListCommandTest extends TestCase
     protected $subject;
 
     /**
-     * @var ApiManagerInterface|MockObject
+     * @var InstanceManagerInterface|MockObject
      */
-    protected $apiManager;
+    protected $instanceManager;
 
     /**
-     * @var ApiRepository|MockObject
+     * @var InstanceRepository
      */
-    protected $apiRepository;
+    protected $instanceRepository;
 
 
     public function setUp(): void
     {
-        $this->apiManager = $this->getMockBuilder(ApiManagerInterface::class)
+        $this->instanceManager = $this->getMockBuilder(InstanceManagerInterface::class)
             ->getMockForAbstractClass();
-        $this->apiRepository = $this->getMockBuilder(ApiRepository::class)
+        $this->instanceRepository = $this->getMockBuilder(InstanceRepository::class)
             ->disableOriginalConstructor()
             ->getMock();
-        $this->subject = new ListCommand($this->apiRepository);
+        $this->subject = new ListCommand($this->instanceRepository);
     }
 
-    public function testConstructorSetsDescription(): void
+    public function testConstructorSetsDescription()
     {
         $this->assertSame(
             ListCommand::COMMAND_DESCRIPTION,
@@ -66,7 +64,7 @@ class ListCommandTest extends TestCase
         );
     }
 
-    public function testConstructorSetsHelp(): void
+    public function testConstructorSetsHelp()
     {
         $this->assertSame(
             ListCommand::COMMAND_HELP,
@@ -74,7 +72,7 @@ class ListCommandTest extends TestCase
         );
     }
 
-    public function testConstructorRegistersArguments(): void
+    public function testConstructorRegistersArguments()
     {
         $argumentClasses = ListCommand::ARGUMENTS;
 
@@ -96,7 +94,7 @@ class ListCommandTest extends TestCase
 
     }
 
-    public function testConstructorRegistersOptions(): void
+    public function testConstructorRegistersOptions()
     {
         $optionClasses = ListCommand::OPTIONS;
 
@@ -114,33 +112,5 @@ class ListCommandTest extends TestCase
                 );
             }
         }
-    }
-
-    /**
-     * @throws \Exception
-     */
-    public function testRunWritesMessageFromException():void
-    {
-        $output = $this->getMockBuilder(OutputInterface::class)
-            ->onlyMethods(['writeln'])
-            ->getMockForAbstractClass();
-        $input = $this->getMockBuilder(InputInterface::class)
-            ->getMockForAbstractClass();
-
-        $messageFromException = 'oops';
-        $exception = new \Exception($messageFromException);
-        $expectedMessages = [
-            sprintf(ListCommand::ERROR_TEMPLATE, $messageFromException)
-        ];
-
-        $this->apiRepository->expects($this->any())
-            ->method($this->anything())
-            ->willThrowException($exception);
-
-        $output->expects($this->once())
-            ->method('writeln')
-            ->with($expectedMessages);
-
-        $this->subject->run($input, $output);
     }
 }

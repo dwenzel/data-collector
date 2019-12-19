@@ -7,6 +7,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Helper\Table;
 use DWenzel\DataCollector\SettingsInterface as SI;
+use Symfony\Component\Console\Output\OutputInterface;
 
 /***************************************************************
  *  Copyright notice
@@ -36,11 +37,20 @@ class TableViewHelperTest extends TestCase
      */
     protected $table;
 
+    /**
+     * @var OutputInterface|MockObject
+     */
+    protected $output;
+
+
     public function setUp(): void
     {
-        $this->table = $this->createMock(Table::class);
+        $this->output = $this->getMockForAbstractClass(OutputInterface::class);
+        $this->table = $this->getMockBuilder(Table::class)
+            ->setConstructorArgs([$this->output])
+            ->getMock();
 
-        $this->subject =  new TableViewHelper($this->table);
+        $this->subject =  new TableViewHelper($this->output, $this->table);
     }
 
     public function testAssignSetsHeaders(): void
