@@ -11,6 +11,7 @@
     "ext-iconv": "*",
     "doctrine/doctrine-bundle": "^1.6",
     "influxdb/influxdb-php": "^1.15",
+    "jmose/command-scheduler-bundle": "^2.1",
     "ramsey/uuid": "^3.8",
     "symfony/console": "4.3.*",
     "symfony/dotenv": "4.3.*",
@@ -30,7 +31,6 @@
   "require-dev": {
     "dama/doctrine-test-bundle": "^6.2",
     "doctrine/doctrine-fixtures-bundle": "^3.3",
-    "dwenzel/command-scheduler-bundle": "dev-develop",
     "phpunit/phpunit": "^8.4",
     "symfony/maker-bundle": "^1.14"
   },
