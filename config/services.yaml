@@ -35,8 +35,11 @@ services:
       - '@doctrine'
       - default
       - '%kernel.logs_dir%'
-      #- '%data-collector.doctrine_manager%'
-      #- '%data-collector.log_path%'
+    tags: [console.command]
+  DWenzel\DataCollector\Command\Scheduler\ListCommand:
+    arguments:
+      - '@doctrine'
+      - default
     tags: [console.command]
   DWenzel\DataCollector\Service\Persistence\Backend\InfluxDBBackend:
     arguments:

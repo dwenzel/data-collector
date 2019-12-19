@@ -11,6 +11,7 @@ use InfluxDB\Database;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ParameterBag\ContainerBagInterface;
+use DWenzel\DataCollector\SettingsInterface as SI;
 
 /***************************************************************
  *  Copyright notice
@@ -49,6 +50,8 @@ class InfluxDBBackendTest extends TestCase
      */
     protected $containerBag;
 
+    const DEFAULT_CONSTRUCTOR_PARAMETERS = [];
+
     public function setUp(): void
     {
         $this->client = $this->getMockBuilder(Client::class)
@@ -57,10 +60,10 @@ class InfluxDBBackendTest extends TestCase
         $this->containerBag = $this->getMockBuilder(ContainerBagInterface::class)
             ->getMockForAbstractClass();
 
-        $this->subject = new InfluxDBBackend($this->containerBag, $this->client);
+        $this->subject = new InfluxDBBackend(self::DEFAULT_CONSTRUCTOR_PARAMETERS, $this->client);
     }
 
-    public function testWriteReturnsResult()
+    public function testWriteReturnsResult(): void
     {
         $parameters = [];
         $payload = [];
@@ -71,7 +74,7 @@ class InfluxDBBackendTest extends TestCase
         );
     }
 
-    public function testWriteAddsMessageOnFailure()
+    public function testWriteAddsMessageOnFailure(): void
     {
         $parameters = [];
         $payload = [];
@@ -98,7 +101,7 @@ class InfluxDBBackendTest extends TestCase
         );
     }
 
-    public function testWriteAddsMessageOnSuccess()
+    public function testWriteAddsMessageOnSuccess(): void
     {
         $parameters = [];
         $payload = [];
@@ -126,22 +129,68 @@ class InfluxDBBackendTest extends TestCase
 
     }
 
-    public function testConstructorBuildsClientWithParamsFromContainerBag()
+    public function testConstructorInstantiatesClient(): void
     {
-        $this->containerBag->expects($this->atLeast(5))
-            ->method('get')
-            ->withConsecutive(
-                ['data-collector.storage.influxdb.host'],
-                ['data-collector.storage.influxdb.port'],
-                ['data-collector.storage.influxdb.user'],
-                ['data-collector.storage.influxdb.password'],
-                ['data-collector.storage.influxdb.use-ssl']
-            );
+        $host = 'foo.com';
+        $port = 12345;
+        $user = 'boom';
+        $password = 't3e';
+        $useSSL = false;
 
-        $this->subject = new InfluxDBBackend($this->containerBag);
+        $parameters = [
+            SI::HOST_KEY => $host,
+            SI::PORT_KEY => $port,
+            SI::USER_KEY => $user,
+            SI::PASSWORD_KEY => $password,
+            SI::SSL_KEY => $useSSL
+        ];
+        $this->subject = new InfluxDBBackend($parameters);
+
+        $this->assertInstanceOf(
+            Client::class,
+            $this->subject->getClient()
+        );
     }
 
-    public function testListDatabasesReturnsDatabasesFromClient()
+    public function testConstructorBuildsClientWithInjectedParameters(): void
+    {
+        $host = 'foo.com';
+        $port = 12345;
+        $user = 'boom';
+        $password = 't3e';
+        $useSSL = false;
+
+        $parameters = [
+            SI::HOST_KEY => $host,
+            SI::PORT_KEY => $port,
+            SI::USER_KEY => $user,
+            SI::PASSWORD_KEY => $password,
+            SI::SSL_KEY => $useSSL
+        ];
+        $this->subject = new InfluxDBBackend($parameters);
+
+        $expectedSchema = 'http';
+        $expectedBaseUri = sprintf(
+            '%s://%s:%d',
+            $expectedSchema,
+            $host,
+            $port);
+        $client = $this->subject->getClient();
+        $this->assertSame(
+            $expectedBaseUri,
+            $client->getBaseURI()
+        );
+
+        $this->assertSame(
+            $host,
+            $client->getHost()
+        );
+    }
+
+    /**
+     * @throws \InfluxDB\Exception
+     */
+    public function testListDatabasesReturnsDatabasesFromClient(): void
     {
         $result = ['foo'];
 
@@ -155,7 +204,7 @@ class InfluxDBBackendTest extends TestCase
         );
     }
 
-    public function testSelectDatabaseReturnsClientsSelction()
+    public function testSelectDatabaseReturnsClientsSelction(): void
     {
         $name = 'bar';
 

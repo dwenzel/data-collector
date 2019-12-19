@@ -23,4 +23,9 @@ interface SettingsInterface
     public const IDENTIFIER_KEY = 'identifier';
     public const HEADERS_KEY = 'headers';
     public const ROWS_KEY = 'rows';
+    public const HOST_KEY = 'host';
+    public const PORT_KEY = 'port';
+    public const USER_KEY = 'user';
+    public const PASSWORD_KEY = 'password';
+    public const SSL_KEY = 'ssl';
 }

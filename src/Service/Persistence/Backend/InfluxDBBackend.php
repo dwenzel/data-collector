@@ -87,4 +87,12 @@ class InfluxDBBackend implements StorageBackendInterface
     {
         return $this->client->selectDB($name);
     }
+
+    /**
+     * @return Client|null
+     */
+    public function getClient(): ?Client
+    {
+        return $this->client;
+    }
 }
