@@ -22,12 +22,6 @@
     "symfony/yaml": "4.3.*",
     "yokai/enum-bundle": "^2.2"
   },
-  "repositories": [
-    {
-      "type": "vcs",
-      "url": "git@github.com:dwenzel/command-scheduler-bundle.git"
-    }
-  ],
   "require-dev": {
     "dama/doctrine-test-bundle": "^6.2",
     "doctrine/doctrine-fixtures-bundle": "^3.3",
