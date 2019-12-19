@@ -1,6 +1,6 @@
 /vendor/*
 /var/*
-
+/public/bundles/*
 .phpunit.result.cache
 composer.lock
 
