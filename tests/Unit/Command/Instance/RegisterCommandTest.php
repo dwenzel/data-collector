@@ -1,6 +1,6 @@
 <?php
 
-namespace DWenzel\DataCollector\Tests\Unit\Command;
+namespace DWenzel\DataCollector\Tests\Unit\Command\Instance;
 
 /***************************************************************
  *  Copyright notice
@@ -32,7 +32,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  * Class RegisterCommandTest
  * @coversDefaultClass \DWenzel\DataCollector\Command\Instance\RegisterCommand
  */
-class RegisterInstanceCommandTest extends TestCase
+class RegisterCommandTest extends TestCase
 {
     /**
      * @var RegisterCommand
@@ -108,9 +108,6 @@ class RegisterInstanceCommandTest extends TestCase
         }
     }
 
-    /**
-     * @covers ::run
-     */
     public function testRunReturnsMessageOnSuccess()
     {
         $uuid = 'foo';
@@ -151,9 +148,6 @@ class RegisterInstanceCommandTest extends TestCase
         $this->subject->run($input, $output);
     }
 
-    /**
-     * @covers ::run
-     */
     public function testRunReturnsErrorMessageFromException()
     {
 

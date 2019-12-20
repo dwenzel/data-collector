@@ -19,26 +19,27 @@ namespace DWenzel\DataCollector\Tests\Unit\Command\Scheduler;
  * This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\Persistence\ManagerRegistry;
-use DWenzel\DataCollector\Command\Scheduler\ListCommand;
-use DWenzel\DataCollector\Entity\Api;
+use DWenzel\DataCollector\Configuration\Argument\ScheduledCommand\Command;
+use DWenzel\DataCollector\Configuration\Argument\ScheduledCommand\CronExpression;
+use DWenzel\DataCollector\Configuration\Argument\ScheduledCommand\ExecuteImmediately;
+use DWenzel\DataCollector\Configuration\Argument\ScheduledCommand\Name;
+use DWenzel\DataCollector\Configuration\Argument\ScheduledCommand\Priority;
+use DWenzel\DataCollector\Configuration\Option\DisabledOption;
+use DWenzel\DataCollector\Configuration\Option\NoOutputOption;
+use Symfony\Bridge\Doctrine\ManagerRegistry;
+use DWenzel\DataCollector\Command\Scheduler\AddCommand;
 use DWenzel\DataCollector\Repository\ApiRepository;
-use DWenzel\DataCollector\SettingsInterface as SI;
-use DWenzel\DataCollector\ViewHelper\ViewHelperInterface;
-use Exception;
 use JMose\CommandSchedulerBundle\Entity\Repository\ScheduledCommandRepository;
-use JMose\CommandSchedulerBundle\Entity\ScheduledCommand;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class ListCommandTest extends TestCase
+class AddCommandTest extends TestCase
 {
     /**
-     * @var ListCommand
+     * @var AddCommand
      */
     protected $subject;
 
@@ -57,17 +58,9 @@ class ListCommandTest extends TestCase
      */
     protected $commandRepository;
 
-    /**
-     * @var OutputInterface|MockObject
-     */
-    protected $output;
-
-    /**
-     * @var InputInterface|MockObject
-     */
-    protected $input;
-
     const MANAGER_NAME = 'default';
+
+    const LOG_PATH = 'booFar';
 
     public function setUp(): void
     {
@@ -86,16 +79,17 @@ class ListCommandTest extends TestCase
         $this->entityManager->method('getRepository')
             ->willReturn($this->commandRepository);
 
-        $this->output = $this->getMockBuilder(OutputInterface::class)
-            ->getMockForAbstractClass();
-        $this->input = $this->getMockForAbstractClass(InputInterface::class);
-        $this->subject = new ListCommand($this->managerRegistry, self::MANAGER_NAME);
+        $this->subject = new AddCommand(
+            $this->managerRegistry,
+            self::MANAGER_NAME,
+            self::LOG_PATH
+        );
     }
 
     public function testConstructorSetsDescription(): void
     {
         $this->assertSame(
-            ListCommand::COMMAND_DESCRIPTION,
+            AddCommand::COMMAND_DESCRIPTION,
             $this->subject->getDescription()
         );
     }
@@ -103,14 +97,14 @@ class ListCommandTest extends TestCase
     public function testConstructorSetsHelp(): void
     {
         $this->assertSame(
-            ListCommand::COMMAND_HELP,
+            AddCommand::COMMAND_HELP,
             $this->subject->getHelp()
         );
     }
 
     public function testConstructorRegistersArguments(): void
     {
-        $argumentClasses = ListCommand::ARGUMENTS;
+        $argumentClasses = AddCommand::ARGUMENTS;
 
         if (empty($argumentClasses)) {
             $this->assertEmpty(
@@ -132,7 +126,7 @@ class ListCommandTest extends TestCase
 
     public function testConstructorRegistersOptions(): void
     {
-        $optionClasses = ListCommand::OPTIONS;
+        $optionClasses = AddCommand::OPTIONS;
 
         if (empty($optionClasses)) {
             $this->assertEmpty(
@@ -151,58 +145,89 @@ class ListCommandTest extends TestCase
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function testRunWritesMessageFromException():void
     {
-        $messageFromException = 'oops';
-        $exception = new Exception($messageFromException);
-        $expectedMessages = [
-            sprintf(ListCommand::ERROR_TEMPLATE, $messageFromException)
+        $arguments = [
+            Name::NAME => 'fooName',
+            CronExpression::NAME => '@daily',
+            Command::NAME => 'lalala:command',
+            Priority::NAME => Priority::DEFAULT,
+            ExecuteImmediately::NAME => ExecuteImmediately::DEFAULT
         ];
 
-        $this->commandRepository->expects($this->any())
+        $options = [
+            DisabledOption::NAME => DisabledOption::DEFAULT
+        ];
+
+
+        /** @var OutputInterface|MockObject $output */
+        $output = $this->getMockBuilder(OutputInterface::class)
+            ->onlyMethods(['writeln'])
+            ->getMockForAbstractClass();
+        /** @var InputInterface|MockObject $input */
+        $input = $this->getMockBuilder(InputInterface::class)
+            ->getMockForAbstractClass();
+
+        $input->expects($this->once())
+            ->method('getArguments')
+            ->willReturn($arguments);
+        $input->expects($this->once())
+            ->method('getOptions')
+            ->willReturn($options);
+
+        $messageFromException = 'oops';
+        $exception = new \Exception($messageFromException);
+        $expectedMessages = [
+            sprintf(AddCommand::ERROR_TEMPLATE, $messageFromException)
+        ];
+
+        $this->entityManager->expects($this->any())
             ->method($this->anything())
             ->willThrowException($exception);
 
-        $this->output->expects($this->once())
+        $output->expects($this->once())
             ->method('writeln')
             ->with($expectedMessages);
 
-        $this->subject->run($this->input, $this->output);
+        $this->subject->run($input, $output);
     }
 
-    /**
-     * @throws Exception
-     */
-    public function testRunAssignsVariablesToViewHelperAndRenders(): void
+    public function testRunSetsVerbosityToQuietWhenOptionNoOutputIsTrue()
     {
-        $command = new ScheduledCommand();
-        $commandArray = [
-            [null, null, null, null, null]
+        $arguments = [
+            Name::NAME => 'fooName',
+            CronExpression::NAME => '@daily',
+            Command::NAME => 'lalala:command',
+            Priority::NAME => Priority::DEFAULT,
+            ExecuteImmediately::NAME => ExecuteImmediately::DEFAULT
         ];
 
-        $result = [$command];
-        $viewHelper = $this->getMockForAbstractClass(ViewHelperInterface::class);
-        $this->subject->setViewHelper($viewHelper);
-
-        $this->commandRepository->expects($this->once())
-            ->method('findAll')
-            ->willReturn($result);
-
-        $expectedVariables = [
-            SI::HEADERS_KEY => ListCommand::LIST_HEADERS,
-            SI::ROWS_KEY => $commandArray
+        $options = [
+            DisabledOption::NAME => DisabledOption::DEFAULT,
+            NoOutputOption::NAME => true
         ];
 
-        $viewHelper->expects($this->once())
-            ->method('assign')
-            ->with($expectedVariables);
 
-        $viewHelper->expects($this->once())
-            ->method('render');
+        /** @var OutputInterface|MockObject $output */
+        $output = $this->getMockBuilder(OutputInterface::class)
+            ->getMockForAbstractClass();
+        /** @var InputInterface|MockObject $input */
+        $input = $this->getMockBuilder(InputInterface::class)
+            ->getMockForAbstractClass();
 
-        $this->subject->run($this->input, $this->output);
+        $input->expects($this->once())
+            ->method('getArguments')
+            ->willReturn($arguments);
+        $input->expects($this->once())
+            ->method('getOptions')
+            ->willReturn($options);
+
+        $output->expects($this->once())
+            ->method('setVerbosity')
+            ->with(OutputInterface::VERBOSITY_QUIET);
+
+        $this->subject->run($input, $output);
     }
-
 }

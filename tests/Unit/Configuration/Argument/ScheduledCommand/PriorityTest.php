@@ -2,8 +2,8 @@
 
 namespace DWenzel\DataCollector\Tests\Unit\Configuration\Argument;
 
+use DWenzel\DataCollector\Configuration\Argument\ScheduledCommand\Priority;
 use PHPUnit\Framework\TestCase;
-use DWenzel\DataCollector\Configuration\Option\DescriptionOption;
 
 /***************************************************************
  *  Copyright notice
@@ -23,24 +23,24 @@ use DWenzel\DataCollector\Configuration\Option\DescriptionOption;
  ***************************************************************/
 
 /**
- * Class DescriptionOptionTest
+ * Class PriorityTest
  */
-class DescriptionOptionTest extends TestCase
+class PriorityTest extends TestCase
 {
     /**
-     * @var DescriptionOption
+     * @var Priority
      */
     protected $subject;
 
     public function setUp(): void
     {
-        $this->subject = new DescriptionOption();
+        $this->subject = new Priority();
     }
 
     public function testConstructorSetsName()
     {
         $this->assertSame(
-            DescriptionOption::NAME,
+            Priority::NAME,
             $this->subject->getName()
         );
     }
@@ -48,7 +48,7 @@ class DescriptionOptionTest extends TestCase
     public function testConstructorSetsMode()
     {
         $this->assertSame(
-            DescriptionOption::MODE,
+            Priority::MODE,
             $this->subject->getMode()
         );
     }
@@ -56,14 +56,15 @@ class DescriptionOptionTest extends TestCase
     public function testConstructorSetsDescription()
     {
         $this->assertSame(
-            DescriptionOption::DESCRIPTION,
+            Priority::DESCRIPTION,
             $this->subject->getDescription()
         );
     }
 
-    public function testDefaultIsInitiallyZero()
+    public function testDefaultIsInitiallyZerok()
     {
-        $this->assertNull(
+        $this->assertSame(
+            0,
             $this->subject->getDefault()
         );
     }

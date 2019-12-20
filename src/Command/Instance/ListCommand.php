@@ -3,8 +3,9 @@
 namespace DWenzel\DataCollector\Command\Instance;
 
 use DWenzel\DataCollector\Repository\InstanceRepository;
+use DWenzel\DataCollector\SettingsInterface as SI;
+use DWenzel\DataCollector\Traits\TableViewHelperTrait;
 use Exception;
-use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -26,17 +27,17 @@ use Symfony\Component\Console\Output\OutputInterface;
  ***************************************************************/
 class ListCommand extends AbstractInstanceCommand
 {
+    use TableViewHelperTrait;
+
     const COMMAND_DESCRIPTION = 'List instances';
     const COMMAND_HELP = 'List all registered instances.';
     const DEFAULT_COMMAND_NAME = 'data-collector:instance:list';
     const LIST_HEADERS = ['id', 'UUID', 'Name', 'Role', 'Status'];
-
+    protected static $defaultName = self::DEFAULT_COMMAND_NAME;
     /**
      * @var InstanceRepository
      */
     protected $instanceRepository;
-
-    protected static $defaultName = self::DEFAULT_COMMAND_NAME;
 
     public function __construct(InstanceRepository $instanceRepository)
     {
@@ -54,21 +55,22 @@ class ListCommand extends AbstractInstanceCommand
         $messages = [];
         try {
             $instances = $this->instanceRepository->findAll();
-            $table = new Table($output);
-            $table->setHeaders(
-                static::LIST_HEADERS
-            );
+            $rows = [];
             foreach ($instances as $instance) {
-                $table->addRow(
-                    [
-                        $instance->getId(),
-                        $instance->getUuid(),
-                        $instance->getName(),
-                        $instance->getRole()
-                    ]
-                );
+                $rows[] = [
+                    $instance->getId(),
+                    $instance->getUuid(),
+                    $instance->getName(),
+                    $instance->getRole()
+                ];
             }
-            $table->render();
+            $variables = [
+                SI::HEADERS_KEY => static::LIST_HEADERS,
+                SI::ROWS_KEY => $rows
+            ];
+
+            $this->viewHelper->assign($variables);
+            $this->viewHelper->render();
         } catch (Exception $exception) {
             $messages[] = sprintf(static::ERROR_TEMPLATE, $exception->getMessage());
         }

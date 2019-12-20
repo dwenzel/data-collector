@@ -2,13 +2,13 @@
 
 namespace DWenzel\DataCollector\Command\Instance;
 
-use DWenzel\DataCollector\Command\Instance;
 use DWenzel\DataCollector\Configuration\Argument\ApiIdentifierArgument;
 use DWenzel\DataCollector\Configuration\Argument\IdentifierArgument;
 use DWenzel\DataCollector\Entity\Dto\ApiDemand;
 use DWenzel\DataCollector\Factory\Dto\ApiDemandFactory;
 use DWenzel\DataCollector\Service\Persistence\ApiManagerInterface;
 use DWenzel\DataCollector\Service\Persistence\InstanceManagerInterface;
+use Exception;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -28,19 +28,13 @@ use Symfony\Component\Console\Output\OutputInterface;
  * GNU General Public License for more details.
  * This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
-class AddApiCommand extends Instance\AbstractInstanceCommand
+class AddApiCommand extends AbstractInstanceCommand
 {
     const COMMAND_DESCRIPTION = 'Adds an API to an instance.';
     const COMMAND_HELP = 'If an API is added to an instance the instance is
      expected to implement this API and the Data Collector gathers data using the API endpoints.
      Instance and API must exist beforehand.';
     const DEFAULT_COMMAND_NAME = 'data-collector:instance:add-api';
-
-    /**
-     * @var ApiManagerInterface
-     */
-    protected $apiManager;
-
     /**
      * Command Arguments
      */
@@ -48,12 +42,14 @@ class AddApiCommand extends Instance\AbstractInstanceCommand
         IdentifierArgument::class,
         ApiIdentifierArgument::class
     ];
-
     const API_ADDED_MESSAGE = <<<AAM
    <info>Added API %s to instance %s.</info>
 AAM;
-
     protected static $defaultName = self::DEFAULT_COMMAND_NAME;
+    /**
+     * @var ApiManagerInterface
+     */
+    protected $apiManager;
 
     public function __construct(
         InstanceManagerInterface $instanceManager,
@@ -87,7 +83,7 @@ AAM;
                 $api->getIdentifier(),
                 $instance->getUuid()
             );
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             $messages[] = sprintf(static::ERROR_TEMPLATE, $exception->getMessage());
         }
 

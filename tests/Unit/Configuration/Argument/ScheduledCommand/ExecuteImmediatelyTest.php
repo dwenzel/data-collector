@@ -2,8 +2,8 @@
 
 namespace DWenzel\DataCollector\Tests\Unit\Configuration\Argument;
 
+use DWenzel\DataCollector\Configuration\Argument\ScheduledCommand\ExecuteImmediately;
 use PHPUnit\Framework\TestCase;
-use DWenzel\DataCollector\Configuration\Option\DescriptionOption;
 
 /***************************************************************
  *  Copyright notice
@@ -23,24 +23,24 @@ use DWenzel\DataCollector\Configuration\Option\DescriptionOption;
  ***************************************************************/
 
 /**
- * Class DescriptionOptionTest
+ * Class ExecuteImmediatelyTest
  */
-class DescriptionOptionTest extends TestCase
+class ExecuteImmediatelyTest extends TestCase
 {
     /**
-     * @var DescriptionOption
+     * @var ExecuteImmediately
      */
     protected $subject;
 
     public function setUp(): void
     {
-        $this->subject = new DescriptionOption();
+        $this->subject = new ExecuteImmediately();
     }
 
     public function testConstructorSetsName()
     {
         $this->assertSame(
-            DescriptionOption::NAME,
+            ExecuteImmediately::NAME,
             $this->subject->getName()
         );
     }
@@ -48,7 +48,7 @@ class DescriptionOptionTest extends TestCase
     public function testConstructorSetsMode()
     {
         $this->assertSame(
-            DescriptionOption::MODE,
+            ExecuteImmediately::MODE,
             $this->subject->getMode()
         );
     }
@@ -56,14 +56,14 @@ class DescriptionOptionTest extends TestCase
     public function testConstructorSetsDescription()
     {
         $this->assertSame(
-            DescriptionOption::DESCRIPTION,
+            ExecuteImmediately::DESCRIPTION,
             $this->subject->getDescription()
         );
     }
 
-    public function testDefaultIsInitiallyZero()
+    public function testDefaultIsInitiallyZerok()
     {
-        $this->assertNull(
+        $this->assertFalse(
             $this->subject->getDefault()
         );
     }

@@ -2,9 +2,9 @@
 
 namespace DWenzel\DataCollector\Configuration\Argument\ScheduledCommand;
 
+use DWenzel\DataCollector\Configuration\Argument\ArgumentInterface;
 use DWenzel\DataCollector\Traits\Mode;
 use Symfony\Component\Console\Input\InputArgument;
-use DWenzel\DataCollector\Configuration\Argument\ArgumentInterface;
 
 /***************************************************************
  *  Copyright notice

@@ -25,6 +25,10 @@ use Symfony\Component\Console\Output\OutputInterface;
  * GNU General Public License for more details.
  * This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
+
+/**
+ * Class AddEndpointCommand
+ */
 class AddEndpointCommand extends AbstractApiCommand
 {
     const COMMAND_DESCRIPTION = 'Adds an endpoint to an API.';
@@ -39,16 +43,13 @@ class AddEndpointCommand extends AbstractApiCommand
         IdentifierArgument::class
     ];
 
-    const ERROR_TEMPLATE = <<<EOT
- <error>%s</error>
-EOT;
+    const API_NOT_FOUND_ERROR = 'Could not find API by identifier %s!';
 
     const ENDPOINT_ADDED_MESSAGE = <<<IRM
 
 <info>Endpoint %s has been added to API %s.</info>.
 
 IRM;
-
 
     protected static $defaultName = self::DEFAULT_COMMAND_NAME;
 
@@ -64,23 +65,22 @@ IRM;
             $identifier = $input->getArgument(IdentifierArgument::NAME);
             $endpointName = $input->getArgument(EndPointArgument::NAME);
 
-            // get API from repository
             $api = $this->apiRepository->findOneBy(
                 ['identifier' => $identifier]
             );
             if ($api === null) {
                 throw new EntityNotFoundException(
-                    sprintf('Could not find API by identifier %s!', $identifier)
+                    sprintf(static::API_NOT_FOUND_ERROR, $identifier),
+                    1576826642
                 );
             }
-            // add endpoint
+
             $endpoint = new Endpoint();
             $endpoint->setName($endpointName);
             $api->addEndpoint($endpoint);
 
             $this->apiRepository->update($api);
 
-            // update API in repository
             $messages[] = sprintf(
                 static::ENDPOINT_ADDED_MESSAGE,
                 $endpointName, $identifier
@@ -91,5 +91,4 @@ IRM;
 
         $output->writeln($messages);
     }
-
 }

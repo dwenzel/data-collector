@@ -30,7 +30,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  * GNU General Public License for more details.
  * This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
-class RegisterCommand extends AbstractCommand
+class RegisterCommand extends AbstractApiCommand
 {
     const COMMAND_DESCRIPTION = 'Registers an application api from which data should be collected';
     const COMMAND_HELP = 'An api must be registered before data can be collected.
@@ -49,9 +49,6 @@ class RegisterCommand extends AbstractCommand
     const OPTIONS = [
         IdentifierOption::class,
     ];
-    const ERROR_TEMPLATE = <<<EOT
- <error>%s</error>
-EOT;
 
     const API_REGISTERED_MESSAGE = <<<ARM
 Api has been registered successfully:
@@ -65,16 +62,6 @@ ARM;
 
 
     protected static $defaultName = self::DEFAULT_COMMAND_NAME;
-    /**
-     * @var ApiManagerInterface
-     */
-    protected $apiManager;
-
-    public function __construct(string $name = null, ApiManagerInterface $apiManager)
-    {
-        parent::__construct($name);
-        $this->apiManager = $apiManager;
-    }
 
     /**
      * @param InputInterface $input
@@ -83,11 +70,9 @@ ARM;
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $arguments = $input->getArguments()? $input->getArguments(): [];
-        $options = $input->getOptions()? $input->getOptions(): [];
-
-        $settings = array_merge($arguments, $options);
+        $settings = $this->getSettingsFromInput($input);
         $demand = ApiDemandFactory::fromSettings($settings);
+
         // validate Arguments
 
         $messages = [];

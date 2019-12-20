@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace DWenzel\DataCollector\Tests\Unit\Command\Instance;
 
@@ -19,26 +20,28 @@ namespace DWenzel\DataCollector\Tests\Unit\Command\Instance;
  * This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-use DWenzel\DataCollector\Command\Instance\ListCommand;
+use DWenzel\DataCollector\Command\Instance\AddApiCommand;
+use DWenzel\DataCollector\Command\Scheduler\AddCommand;
+use DWenzel\DataCollector\Configuration\Argument\ScheduledCommand\Command;
+use DWenzel\DataCollector\Configuration\Argument\ScheduledCommand\CronExpression;
+use DWenzel\DataCollector\Configuration\Argument\ScheduledCommand\ExecuteImmediately;
+use DWenzel\DataCollector\Configuration\Argument\ScheduledCommand\Name;
+use DWenzel\DataCollector\Configuration\Argument\ScheduledCommand\Priority;
+use DWenzel\DataCollector\Configuration\Option\DisabledOption;
+use DWenzel\DataCollector\Entity\Api;
 use DWenzel\DataCollector\Entity\Instance;
-use DWenzel\DataCollector\Repository\InstanceRepository;
+use DWenzel\DataCollector\Service\Persistence\ApiManagerInterface;
 use DWenzel\DataCollector\Service\Persistence\InstanceManagerInterface;
-use DWenzel\DataCollector\SettingsInterface as SI;
-use DWenzel\DataCollector\ViewHelper\ViewHelperInterface;
 use Exception;
-use JMose\CommandSchedulerBundle\Entity\ScheduledCommand;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-/**
- * Class ForgetInstanceCommandTest
- */
-class ListCommandTest extends TestCase
+class AddApiCommandTest extends TestCase
 {
     /**
-     * @var ListCommand
+     * @var AddApiCommand
      */
     protected $subject;
 
@@ -48,9 +51,14 @@ class ListCommandTest extends TestCase
     protected $instanceManager;
 
     /**
-     * @var InstanceRepository
+     * @var ApiManagerInterface|MockObject
      */
-    protected $instanceRepository;
+    protected $apiManager;
+
+    /**
+     * @var InputInterface|MockObject
+     */
+    protected $input;
 
     /**
      * @var OutputInterface|MockObject
@@ -58,42 +66,40 @@ class ListCommandTest extends TestCase
     protected $output;
 
     /**
-     * @var InputInterface|MockObject
+     * set up subject
      */
-    protected $input;
-
-
     public function setUp(): void
     {
-        $this->instanceManager = $this->getMockBuilder(InstanceManagerInterface::class)
-            ->getMockForAbstractClass();
-        $this->instanceRepository = $this->getMockBuilder(InstanceRepository::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-        $this->subject = new ListCommand($this->instanceRepository);
-        $this->output = $this->getMockForAbstractClass(OutputInterface::class);
+        $this->instanceManager = $this->getMockForAbstractClass(InstanceManagerInterface::class);
+        $this->apiManager = $this->getMockForAbstractClass(ApiManagerInterface::class);
         $this->input = $this->getMockForAbstractClass(InputInterface::class);
+        $this->output = $this->getMockForAbstractClass(OutputInterface::class);
+
+        $this->subject = new AddApiCommand(
+            $this->instanceManager,
+            $this->apiManager
+        );
     }
 
-    public function testConstructorSetsDescription()
+    public function testConstructorSetsDescription(): void
     {
         $this->assertSame(
-            ListCommand::COMMAND_DESCRIPTION,
+            AddApiCommand::COMMAND_DESCRIPTION,
             $this->subject->getDescription()
         );
     }
 
-    public function testConstructorSetsHelp()
+    public function testConstructorSetsHelp(): void
     {
         $this->assertSame(
-            ListCommand::COMMAND_HELP,
+            AddApiCommand::COMMAND_HELP,
             $this->subject->getHelp()
         );
     }
 
-    public function testConstructorRegistersArguments()
+    public function testConstructorRegistersArguments(): void
     {
-        $argumentClasses = ListCommand::ARGUMENTS;
+        $argumentClasses = AddApiCommand::ARGUMENTS;
 
         if (empty($argumentClasses)) {
             $this->assertEmpty(
@@ -109,11 +115,13 @@ class ListCommandTest extends TestCase
                 );
             }
         }
+
+
     }
 
-    public function testConstructorRegistersOptions()
+    public function testConstructorRegistersOptions(): void
     {
-        $optionClasses = ListCommand::OPTIONS;
+        $optionClasses = AddApiCommand::OPTIONS;
 
         if (empty($optionClasses)) {
             $this->assertEmpty(
@@ -134,15 +142,35 @@ class ListCommandTest extends TestCase
     /**
      * @throws Exception
      */
-    public function testRunWritesMessageFromException():void
+    public function testRunWritesMessageFromException(): void
     {
+        $arguments = [
+            Name::NAME => 'fooName',
+            CronExpression::NAME => '@daily',
+            Command::NAME => 'lalala:command',
+            Priority::NAME => Priority::DEFAULT,
+            ExecuteImmediately::NAME => ExecuteImmediately::DEFAULT
+        ];
+
+        $options = [
+            DisabledOption::NAME => DisabledOption::DEFAULT
+        ];
+
+
+        $this->input->expects($this->once())
+            ->method('getArguments')
+            ->willReturn($arguments);
+        $this->input->expects($this->once())
+            ->method('getOptions')
+            ->willReturn($options);
+
         $messageFromException = 'oops';
         $exception = new Exception($messageFromException);
         $expectedMessages = [
-            sprintf(\DWenzel\DataCollector\Command\Scheduler\ListCommand::ERROR_TEMPLATE, $messageFromException)
+            sprintf(AddCommand::ERROR_TEMPLATE, $messageFromException)
         ];
 
-        $this->instanceRepository->expects($this->any())
+        $this->instanceManager->expects($this->any())
             ->method($this->anything())
             ->willThrowException($exception);
 
@@ -153,38 +181,23 @@ class ListCommandTest extends TestCase
         $this->subject->run($this->input, $this->output);
     }
 
-    /**
-     * @throws Exception
-     */
-    public function testRunAssignsVariablesToViewHelperAndRenders(): void
+    public function testRunUpdatesInstance()
     {
-        $instance = new Instance();
-        $instancesArray = [
-            [null, null, null, Instance::ROLE_UNKNOWN]
-        ];
-
-        $result = [$instance];
-        $viewHelper = $this->getMockForAbstractClass(ViewHelperInterface::class);
-        $this->subject->setViewHelper($viewHelper);
-
-        $this->instanceRepository->expects($this->once())
-            ->method('findAll')
-            ->willReturn($result);
-
-        $expectedVariables = [
-            SI::HEADERS_KEY => ListCommand::LIST_HEADERS,
-            SI::ROWS_KEY => $instancesArray
-        ];
-
-        $viewHelper->expects($this->once())
-            ->method('assign')
-            ->with($expectedVariables);
-
-        $viewHelper->expects($this->once())
-            ->method('render');
+        $instance = $this->createMock(Instance::class);
+        $api = $this->createMock(Api::class);
+        $this->instanceManager->expects($this->once())
+            ->method('get')
+            ->willReturn($instance);
+        $this->apiManager->expects($this->once())
+            ->method('get')
+            ->willReturn($api);
+        $instance->expects($this->once())
+            ->method('addApi')
+            ->with($api);
+        $this->instanceManager->expects($this->once())
+            ->method('update')
+            ->with($instance);
 
         $this->subject->run($this->input, $this->output);
     }
-
-
 }

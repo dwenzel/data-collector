@@ -22,6 +22,7 @@ namespace DWenzel\DataCollector\Tests\Unit\Command\Api;
 use DWenzel\DataCollector\Command\Api\RegisterCommand;
 use DWenzel\DataCollector\Entity\Api;
 use DWenzel\DataCollector\Exception\InvalidUuidException;
+use DWenzel\DataCollector\Repository\ApiRepository;
 use DWenzel\DataCollector\Service\Persistence\ApiManagerInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -44,11 +45,19 @@ class RegisterCommandTest extends TestCase
      */
     protected $apiManager;
 
+    /**
+     * @var ApiRepository|MockObject
+     */
+    protected $apiRepository;
+
     public function setUp(): void
     {
         $this->apiManager = $this->getMockBuilder(ApiManagerInterface::class)
             ->getMockForAbstractClass();
-        $this->subject = new RegisterCommand(null, $this->apiManager);
+        $this->apiRepository = $this->getMockBuilder(ApiRepository::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $this->subject = new RegisterCommand($this->apiManager, $this->apiRepository);
     }
 
     /**
@@ -108,9 +117,6 @@ class RegisterCommandTest extends TestCase
         }
     }
 
-    /**
-     * @covers ::run
-     */
     public function testRunReturnsMessageOnSuccess()
     {
         $identifier = 'foo';
@@ -154,9 +160,6 @@ class RegisterCommandTest extends TestCase
         $this->subject->run($input, $output);
     }
 
-    /**
-     * @covers ::run
-     */
     public function testRunReturnsErrorMessageFromException()
     {
 

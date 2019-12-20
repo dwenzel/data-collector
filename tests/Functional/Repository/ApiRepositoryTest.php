@@ -114,6 +114,29 @@ class ApiRepositoryTest extends KernelTestCase
         );
     }
 
+    public function testApiCanBeUpdated()
+    {
+        $randomString = Uuid::uuid4()->toString();
+        $identifier = DataCollectorFixtures::APIS[0]['identifier'];
+        $criteria = ['identifier' => $identifier];
+
+        $api = $this->apiRepository->findOneBy($criteria);
+        $this->assertSame(
+            DataCollectorFixtures::APIS[0]['name'],
+            $api->getName()
+        );
+
+        $api->setName($randomString);
+        $this->apiRepository->update($api);
+
+        $api = $this->apiRepository->findOneBy($criteria);
+        $this->assertSame(
+            $randomString,
+            $api->getName()
+        );
+
+    }
+
     protected function tearDown(): void
     {
         parent::tearDown();

@@ -2,8 +2,8 @@
 
 namespace DWenzel\DataCollector\Tests\Unit\Configuration\Argument;
 
+use DWenzel\DataCollector\Configuration\Argument\ScheduledCommand\Command;
 use PHPUnit\Framework\TestCase;
-use DWenzel\DataCollector\Configuration\Option\DescriptionOption;
 
 /***************************************************************
  *  Copyright notice
@@ -23,24 +23,24 @@ use DWenzel\DataCollector\Configuration\Option\DescriptionOption;
  ***************************************************************/
 
 /**
- * Class DescriptionOptionTest
+ * Class CommandTest
  */
-class DescriptionOptionTest extends TestCase
+class CommandTest extends TestCase
 {
     /**
-     * @var DescriptionOption
+     * @var Command
      */
     protected $subject;
 
     public function setUp(): void
     {
-        $this->subject = new DescriptionOption();
+        $this->subject = new Command();
     }
 
     public function testConstructorSetsName()
     {
         $this->assertSame(
-            DescriptionOption::NAME,
+            Command::NAME,
             $this->subject->getName()
         );
     }
@@ -48,7 +48,7 @@ class DescriptionOptionTest extends TestCase
     public function testConstructorSetsMode()
     {
         $this->assertSame(
-            DescriptionOption::MODE,
+            Command::MODE,
             $this->subject->getMode()
         );
     }
@@ -56,12 +56,12 @@ class DescriptionOptionTest extends TestCase
     public function testConstructorSetsDescription()
     {
         $this->assertSame(
-            DescriptionOption::DESCRIPTION,
+            Command::DESCRIPTION,
             $this->subject->getDescription()
         );
     }
 
-    public function testDefaultIsInitiallyZero()
+    public function testDefaultIsInitiallyNull()
     {
         $this->assertNull(
             $this->subject->getDefault()

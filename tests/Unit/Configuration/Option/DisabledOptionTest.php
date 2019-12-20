@@ -3,7 +3,7 @@
 namespace DWenzel\DataCollector\Tests\Unit\Configuration\Argument;
 
 use PHPUnit\Framework\TestCase;
-use DWenzel\DataCollector\Configuration\Option\DescriptionOption;
+use DWenzel\DataCollector\Configuration\Option\DisabledOption;
 
 /***************************************************************
  *  Copyright notice
@@ -23,24 +23,24 @@ use DWenzel\DataCollector\Configuration\Option\DescriptionOption;
  ***************************************************************/
 
 /**
- * Class DescriptionOptionTest
+ * Class DisabledOptionTest
  */
-class DescriptionOptionTest extends TestCase
+class DisabledOptionTest extends TestCase
 {
     /**
-     * @var DescriptionOption
+     * @var DisabledOption
      */
     protected $subject;
 
     public function setUp(): void
     {
-        $this->subject = new DescriptionOption();
+        $this->subject = new DisabledOption();
     }
 
     public function testConstructorSetsName()
     {
         $this->assertSame(
-            DescriptionOption::NAME,
+            DisabledOption::NAME,
             $this->subject->getName()
         );
     }
@@ -48,7 +48,7 @@ class DescriptionOptionTest extends TestCase
     public function testConstructorSetsMode()
     {
         $this->assertSame(
-            DescriptionOption::MODE,
+            DisabledOption::MODE,
             $this->subject->getMode()
         );
     }
@@ -56,14 +56,14 @@ class DescriptionOptionTest extends TestCase
     public function testConstructorSetsDescription()
     {
         $this->assertSame(
-            DescriptionOption::DESCRIPTION,
+            DisabledOption::DESCRIPTION,
             $this->subject->getDescription()
         );
     }
 
-    public function testDefaultIsInitiallyZero()
+    public function testDefaultIsInitiallyFalse()
     {
-        $this->assertNull(
+        $this->assertFalse(
             $this->subject->getDefault()
         );
     }

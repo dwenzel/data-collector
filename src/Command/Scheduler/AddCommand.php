@@ -2,6 +2,7 @@
 
 namespace DWenzel\DataCollector\Command\Scheduler;
 
+use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use DWenzel\DataCollector\Command\AbstractCommand;
@@ -14,6 +15,8 @@ use DWenzel\DataCollector\Configuration\Argument\ScheduledCommand\Priority;
 use DWenzel\DataCollector\Configuration\Option\ArgumentsOption;
 use DWenzel\DataCollector\Configuration\Option\DisabledOption;
 use DWenzel\DataCollector\Configuration\Option\NoOutputOption;
+use DWenzel\DataCollector\SettingsInterface as SI;
+use Exception;
 use JMose\CommandSchedulerBundle\Entity\ScheduledCommand;
 use Symfony\Bridge\Doctrine\ManagerRegistry;
 use Symfony\Component\Console\Input\InputInterface;
@@ -41,8 +44,9 @@ class AddCommand extends AbstractCommand
     ];
 
     protected static $defaultName = self::DEFAULT_COMMAND_NAME;
+
     /**
-     * @var \Doctrine\ORM\EntityManager
+     * @var EntityManager
      */
     private $entityManager;
 
@@ -55,6 +59,11 @@ class AddCommand extends AbstractCommand
      * @var integer
      */
     private $commandsVerbosity;
+
+    /**
+     * @var array
+     */
+    private $settings = [];
 
     /**
      * AddCommand constructor.
@@ -86,7 +95,10 @@ class AddCommand extends AbstractCommand
         // Store the original verbosity before apply the quiet parameter
         $this->commandsVerbosity = $output->getVerbosity();
 
-        if (true === $input->getOption('no-output')) {
+        $this->settings = $this->getSettingsFromInput($input);
+
+        if (isset($this->settings[NoOutputOption::NAME])
+            && (true === $this->settings[NoOutputOption::NAME])) {
             $output->setVerbosity(OutputInterface::VERBOSITY_QUIET);
         }
     }
@@ -95,28 +107,33 @@ class AddCommand extends AbstractCommand
      * @param InputInterface $input
      * @param OutputInterface $output
      * @return int|null|void
-     * @throws ORMException
-     * @throws OptimisticLockException
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $settings = $this->getSettingsFromInput($input);
-        $command = new ScheduledCommand();
+        $messages = [];
+        try {
+            $command = new ScheduledCommand();
 
-        if (!empty($settings[Name::NAME])) {
-            $command->setName($settings[Name::NAME]);
-        }
-        if (!empty($settings[Command::NAME])) {
-            $command->setCommand($settings[Command::NAME]);
-        }
-        if (!empty($settings[CronExpression::NAME])) {
-            $command->setCronExpression($settings[CronExpression::NAME]);
-        }
-        $command->setPriority($settings[Priority::NAME])
-            ->setExecuteImmediately($settings[ExecuteImmediately::NAME])
-            ->setDisabled($settings[DisabledOption::NAME]);
+            if (!empty($this->settings[Name::NAME])) {
+                $command->setName($this->settings[Name::NAME]);
+            }
+            if (!empty($this->settings[Command::NAME])) {
+                $command->setCommand($this->settings[Command::NAME]);
+            }
+            if (!empty($this->settings[CronExpression::NAME])) {
+                $command->setCronExpression($this->settings[CronExpression::NAME]);
+            }
+            $command->setPriority($this->settings[Priority::NAME])
+                ->setExecuteImmediately($this->settings[ExecuteImmediately::NAME])
+                ->setDisabled($this->settings[DisabledOption::NAME]);
 
-        $this->entityManager->persist($command);
-        $this->entityManager->flush();
+            $this->entityManager->persist($command);
+            $this->entityManager->flush();
+
+        } catch (Exception $exception) {
+            $messages[] = sprintf(static::ERROR_TEMPLATE, $exception->getMessage());
+        }
+
+        $output->writeln($messages);
     }
 }

@@ -22,6 +22,7 @@ namespace DWenzel\DataCollector\Tests\Unit\Command\Instance;
 use DWenzel\DataCollector\Command\Instance\ForgetCommand;
 use DWenzel\DataCollector\Entity\Instance;
 use DWenzel\DataCollector\Service\Persistence\InstanceManagerInterface;
+use Exception;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Input\InputInterface;
@@ -133,7 +134,7 @@ class ForgetCommandTest extends TestCase
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     public function testRunReturnsErrorMessageFromException()
     {
@@ -153,7 +154,7 @@ class ForgetCommandTest extends TestCase
         $output = $this->createMock(OutputInterface::class);
 
         $exceptionMessage = 'bar';
-        $exception = new \Exception($exceptionMessage);
+        $exception = new Exception($exceptionMessage);
         $this->instanceManager->expects($this->once())
             ->method('forget')
             ->willThrowException($exception);

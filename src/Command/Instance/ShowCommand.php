@@ -5,6 +5,8 @@ namespace DWenzel\DataCollector\Command\Instance;
 use DWenzel\DataCollector\Command\Instance;
 use DWenzel\DataCollector\Configuration\Argument\IdentifierArgument;
 use DWenzel\DataCollector\Service\Persistence\InstanceManagerInterface;
+use DWenzel\DataCollector\ViewHelper\Console\Instance\ShowViewHelper;
+use DWenzel\DataCollector\ViewHelper\ViewHelperInterface;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -51,6 +53,11 @@ ISM;
 
     protected static $defaultName = self::DEFAULT_COMMAND_NAME;
 
+    /**
+     * @var ViewHelperInterface|ShowViewHelper
+     */
+    protected $viewHelper;
+
     const API_HEADER = <<<AHT
 
 Registered APIs:
@@ -73,6 +80,11 @@ ASF;
         $this->instanceManager = $instanceManager;
     }
 
+    protected function initialize(InputInterface $input, OutputInterface $output)
+    {
+        $this->viewHelper = new ShowViewHelper($output);
+    }
+
     /**
      * @param InputInterface $input
      * @param OutputInterface $output
@@ -87,31 +99,16 @@ ASF;
 
             /** @var \DWenzel\DataCollector\Entity\Instance $instance */
             $instance = $this->instanceManager->get($demand);
-            $messages[] = sprintf(
-                static::INSTANCE_SHOW_MESSAGE,
-                $instance->getUuid(),
-                $instance->getId(),
-                $instance->getName(),
-                $instance->getRole()
-            );
-            $apis = $instance->getApis();
-            if (!$apis->isEmpty()) {
-                $messages[] = static::API_HEADER;
-                foreach ($apis as $api) {
-                    $messages[] = sprintf(
-                        self::API_SINGLE_FORMAT,
-                        $api->getVendor(),
-                        $api->getName(),
-                        $api->getVersion(),
-                        $api->getIdentifier()
-                    );
-                }
+            if ($this->viewHelper instanceof ShowViewHelper)
+            {
+                $this->viewHelper->setInstance($instance);
             }
+            $this->viewHelper->render();
         } catch (\Exception $exception) {
             $messages[] = sprintf(static::ERROR_TEMPLATE, $exception->getMessage());
+            $output->writeln($messages);
         }
 
-        $output->writeln($messages);
     }
 
 }

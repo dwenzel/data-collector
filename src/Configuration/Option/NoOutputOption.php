@@ -33,13 +33,14 @@ class NoOutputOption extends InputOption implements OptionInterface
     const SHORTCUT = null;
     const DESCRIPTION = 'Disable output message from command';
     const MODE = self::VALUE_OPTIONAL;
+    const DEFAULT = false;
 
     public function __construct(
         string $name = self::NAME,
         string $shortcut = self::SHORTCUT,
         int $mode = self::MODE,
         string $description = self::DESCRIPTION,
-        $default = null
+        $default = self::DEFAULT
     )
     {
         parent::__construct($name, $shortcut, $mode, $description, $default);
