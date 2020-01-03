@@ -5,6 +5,7 @@ namespace DWenzel\DataCollector\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use GuzzleHttp\Psr7\Uri;
 use Yokai\EnumBundle\Validator\Constraints\Enum;
 
 /**
@@ -43,6 +44,12 @@ class Instance implements EntityInterface
     private $apis;
 
     /**
+     * @var ArrayCollection
+     */
+    private $urls;
+
+
+    /**
      * @var string
      *
      * @Enum("DWenzel\DataCollector\Enum\Protocol")
@@ -57,6 +64,7 @@ class Instance implements EntityInterface
     public function __construct()
     {
         $this->apis = new ArrayCollection();
+        $this->urls = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -148,5 +156,34 @@ class Instance implements EntityInterface
         $this->protocol = $protocol;
 
         return $this;
+    }
+
+    /**
+     * Get all URLs to collect data from
+     *
+     * Returns a Collection of URLs build from all endpoints
+     * of all APIs of this Instance
+     *
+     * @return Collection|string[]
+     */
+    public function getUrls(): Collection
+    {
+        if ($this->urls->isEmpty()) {
+
+            foreach ($this->getApis() as $api) {
+                foreach ($api->getEndpoints() as $endpoint) {
+                    $parts = [
+                        'scheme' => $this->protocol,
+                        'host' => $this->baseUrl,
+                        'path' => $endpoint->getName()
+                    ];
+                    $uri = Uri::fromParts($parts);
+                    $this->urls->add($uri->__toString());
+                }
+            }
+
+        }
+
+        return $this->urls;
     }
 }

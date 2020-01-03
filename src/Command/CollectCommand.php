@@ -3,6 +3,7 @@
 namespace DWenzel\DataCollector\Command;
 
 use DWenzel\DataCollector\Controller\CollectController;
+use Exception;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -54,7 +55,7 @@ CCC;
         $messages = [];
         try {
             $this->controller->runAction();
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             $messages[] = sprintf(static::ERROR_TEMPLATE, $exception->getMessage());
         }
 

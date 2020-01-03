@@ -49,3 +49,14 @@ For reference see [components](./docs/index.md)
 
 Please open pull requests on github for features and fixes.
 
+
+## Credits
+
+[`symfony-bundles/queue-bundles`](https://github.com/symfony-bundles/queue-bundle) could not be required due to missing dependencies. 
+
+Instead we took the implementation of the following classes from this package:  
+* `QueueInterface`
+* `RedisStorage`
+* `StorageInterface`
+
+

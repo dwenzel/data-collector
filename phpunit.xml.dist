@@ -22,6 +22,10 @@
         <!-- IMPORTANT: You MUST also configure your db driver and server_version in config/packages/doctrine.yaml -->
         <env name="DATABASE_URL" value="sqlite:///%kernel.project_dir%/var/app.db"/>
         <!-- ###- doctrine/doctrine-bundle ### -->
+
+        <!-- ###+ symfony-bundles/redis-bundle ### -->
+        <env name="REDIS_URL" value="tcp://127.0.0.1:6379?database=0"/>
+        <!-- ###- symfony-bundles/redis-bundle ### -->
     </php>
 
     <extensions>

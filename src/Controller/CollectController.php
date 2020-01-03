@@ -3,8 +3,11 @@ declare(strict_types=1);
 
 namespace DWenzel\DataCollector\Controller;
 
+use DWenzel\DataCollector\Service\Dto\ApiCallDemand;
+use DWenzel\DataCollector\Service\Http\ApiService;
 use DWenzel\DataCollector\Service\Http\ApiServiceInterface;
 use DWenzel\DataCollector\Service\Persistence\StorageServiceInterface;
+use DWenzel\DataCollector\Service\Queue\QueueInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 /***************************************************************
@@ -33,7 +36,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class CollectController extends AbstractController
 {
     /**
-     * @var ApiServiceInterface
+     * @var ApiServiceInterface|ApiService
      */
     private $apiService;
 
@@ -42,8 +45,14 @@ class CollectController extends AbstractController
      */
     private $storageService;
 
-    public function __construct(ApiServiceInterface $apiService, StorageServiceInterface $storageService)
+    /**
+     * @var QueueInterface
+     */
+    private $queue;
+
+    public function __construct(QueueInterface $queue, ApiServiceInterface $apiService, StorageServiceInterface $storageService)
     {
+        $this->queue = $queue;
         $this->apiService = $apiService;
         $this->storageService = $storageService;
     }
@@ -51,8 +60,12 @@ class CollectController extends AbstractController
     public function runAction(): void
     {
         // build queue
-        // call api
-        // transform result
-        // push to database
+        while ($item = $this->queue->pop()) {
+            if ($item instanceof ApiCallDemand) {
+                $response = $this->apiService->call($item);
+                // transform result to PersistDemand
+                // push to database
+            }
+        }
     }
 }

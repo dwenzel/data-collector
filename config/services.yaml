@@ -11,7 +11,6 @@ parameters:
     password: '%env(DATACOLLECTOR_STORAGE_PASSWORD)%'
     ssl: '%env(DATACOLLECTOR_STORAGE_SSL)%'
   doctrine_manager: default
-
 services:
   # default configuration for services in *this* file
   _defaults:
@@ -46,3 +45,11 @@ services:
       $parameters: '%data-collector.storage%'
   DWenzel\DataCollector\ViewHelper\TableViewHelper:
     autowire: false
+  queue-storage:
+    class: 'DWenzel\DataCollector\Service\Queue\Storage\RedisStorage'
+    arguments:
+      $client: 'sb_redis.client.default' # storage client service id
+  DWenzel\DataCollector\Service\Queue\CollectorQueue:
+    factory: ['@DWenzel\DataCollector\Factory\CollectorQueueFactory', create]
+    arguments:
+      $managerName: 'default'

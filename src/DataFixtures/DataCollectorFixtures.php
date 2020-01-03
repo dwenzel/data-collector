@@ -9,31 +9,32 @@ use DWenzel\DataCollector\Entity\Instance;
 
 class DataCollectorFixtures extends Fixture
 {
+    const ENDPOINTS = [
+        [
+            'name' => 'boo',
+            'description' => 'endpoint with name boo'
+        ],
+        [
+
+        ]
+    ];
     const INSTANCES = [
         [
             'identifier' => '111301a-59d9-4146-9810-a1f376327f44',
             'name' => 'foo',
             'role' => 'production/staging',
-            'baseUrl' => 'foo.com'
+            'baseUrl' => 'foo.com',
+            'apis' => [
+                0, 1
+            ]
         ],
         [
             'identifier' => '2225301a-59d9-4146-9810-a1f376327fae',
             'name' => 'foo',
             'role' => 'testing',
-            'baseUrl' => 'bar.org'
-        ],
-        [
-            'identifier' => '3335301a-59d9-4146-9810-a1f376327f44',
-            'name' => 'bar',
-            'role' => '',
-            'baseUrl' => 'foo.bar'
-        ],
-        [
-            'identifier' => '4445301a-59d9-4146-9810-a1f376327f44',
-            'name' => 'bar',
-            'role' => '',
-            'baseUrl' => 'bar.foo'
-        ],
+            'baseUrl' => 'bar.org',
+            'apis' => []
+        ]
     ];
     const APIS = [
         [
@@ -79,8 +80,8 @@ class DataCollectorFixtures extends Fixture
     public function load(ObjectManager $manager)
     {
         $this->manager = $manager;
-        $this->createInstances();
         $this->createApis();
+        $this->createInstances();
         $manager->flush();
     }
 

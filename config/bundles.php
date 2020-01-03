@@ -11,4 +11,5 @@ return [
     Doctrine\Bundle\DoctrineCacheBundle\DoctrineCacheBundle::class => ['all' => true],
     Symfony\Bundle\TwigBundle\TwigBundle::class => ['all' => true],
     JMose\CommandSchedulerBundle\JMoseCommandSchedulerBundle::class => ['all' => true],
+    SymfonyBundles\RedisBundle\SymfonyBundlesRedisBundle::class => ['all' => true],
 ];

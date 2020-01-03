@@ -3,8 +3,11 @@
 namespace DWenzel\DataCollector\Tests\Unit\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use DWenzel\DataCollector\Entity\Api;
+use DWenzel\DataCollector\Entity\Endpoint;
 use DWenzel\DataCollector\Entity\Instance;
+use GuzzleHttp\Psr7\Uri;
 use PHPUnit\Framework\TestCase;
 
 class InstanceTest extends TestCase
@@ -142,5 +145,48 @@ class InstanceTest extends TestCase
             $protocol,
             $this->subject->getProtocol()
         );
+    }
+
+    public function testGetUrlsReturnsCollection()
+    {
+        $this->assertInstanceOf(
+            Collection::class,
+            $this->subject->getUrls()
+        );
+    }
+
+    public function testGetUrlsBuildUrlFromApiAndEndpoint()
+    {
+        $protocol = 'https';
+        $host = 'foo.bar';
+        $path = 'you/dot.there';
+
+        $endpoint = $this->createMock(Endpoint::class);
+        $endpoint->method('getName')
+            ->willReturn($path);
+        $endpoints = new ArrayCollection([$endpoint]);
+        $api = $this->createMock(Api::class);
+        $api->method('getEndpoints')
+            ->willReturn($endpoints);
+
+        $this->subject
+            ->setBaseUrl($host)
+            ->setProtocol($protocol)
+            ->addApi($api);
+
+        $uri = Uri::fromParts(
+            [
+                'scheme' => $protocol,
+                'host' => $host,
+                'path' => $path
+            ]
+        );
+        $expectedUrl = $uri->__toString();
+
+        $this->assertSame(
+            $expectedUrl,
+            $this->subject->getUrls()->first()
+        );
+
     }
 }

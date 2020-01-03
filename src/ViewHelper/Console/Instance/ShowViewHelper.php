@@ -104,7 +104,7 @@ ASF;
 
     /**
      * @param array $variables
-     * @codeCoverageIgnore 
+     * @codeCoverageIgnore
      */
     public function assign(array $variables): void
     {}
