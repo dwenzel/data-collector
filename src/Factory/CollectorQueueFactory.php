@@ -6,6 +6,7 @@ use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Persistence\ObjectManager;
 use DWenzel\DataCollector\Entity\Instance;
 use DWenzel\DataCollector\Repository\ApiRepository;
+use DWenzel\DataCollector\Repository\InstanceRepository;
 use DWenzel\DataCollector\Service\Dto\ApiCallDemand;
 use DWenzel\DataCollector\Service\Queue\CollectorQueue;
 use DWenzel\DataCollector\Service\Queue\QueueInterface;
@@ -35,12 +36,9 @@ class CollectorQueueFactory
 {
     const CRITERIA = [];
 
-    public static function create(ManagerRegistry $managerRegistry, string $managerName, StorageInterface $storage): QueueInterface
+    public static function create(InstanceRepository $instanceRepository, StorageInterface $storage): QueueInterface
     {
-        /** @var ObjectManager $entityManager */
-        $entityManager = $managerRegistry->getManager($managerName);
-        /** @var ApiRepository $apiRepository */
-        $instanceRepository = $entityManager->getRepository(Instance::class);
+        /** @var InstanceRepository $instanceRepository */
         $instances = $instanceRepository->findBy(static::CRITERIA);
         $queue = new CollectorQueue($storage);
         /** @var Instance $instance */

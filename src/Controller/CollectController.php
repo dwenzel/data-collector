@@ -3,11 +3,15 @@ declare(strict_types=1);
 
 namespace DWenzel\DataCollector\Controller;
 
+use DWenzel\DataCollector\Entity\Instance;
+use DWenzel\DataCollector\Factory\CollectorQueueFactory;
+use DWenzel\DataCollector\Repository\InstanceRepository;
 use DWenzel\DataCollector\Service\Dto\ApiCallDemand;
 use DWenzel\DataCollector\Service\Http\ApiService;
 use DWenzel\DataCollector\Service\Http\ApiServiceInterface;
 use DWenzel\DataCollector\Service\Persistence\StorageServiceInterface;
 use DWenzel\DataCollector\Service\Queue\QueueInterface;
+use DWenzel\DataCollector\Service\Queue\Storage\StorageInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 /***************************************************************
@@ -50,16 +54,24 @@ class CollectController extends AbstractController
      */
     private $queue;
 
-    public function __construct(QueueInterface $queue, ApiServiceInterface $apiService, StorageServiceInterface $storageService)
+    /**
+     * @var StorageInterface
+     */
+    private $storage;
+
+    public function __construct(ApiServiceInterface $apiService, StorageServiceInterface $storageService, StorageInterface $storage)
     {
-        $this->queue = $queue;
         $this->apiService = $apiService;
         $this->storageService = $storageService;
+        $this->storage = $storage;
     }
 
     public function runAction(): void
     {
-        // build queue
+        /** @var InstanceRepository $instanceRepository */
+        $instanceRepository = $this->getDoctrine()->getRepository(Instance::class);
+        $this->queue = CollectorQueueFactory::create($instanceRepository, $this->storage);
+
         while ($item = $this->queue->pop()) {
             if ($item instanceof ApiCallDemand) {
                 $response = $this->apiService->call($item);

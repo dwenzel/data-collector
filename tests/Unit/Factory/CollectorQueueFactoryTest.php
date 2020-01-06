@@ -3,13 +3,12 @@
 namespace DWenzel\DataCollector\Tests\Unit\Factory;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Persistence\ObjectManager;
 use DWenzel\DataCollector\Entity\Instance;
 use DWenzel\DataCollector\Factory\CollectorQueueFactory;
 use DWenzel\DataCollector\Repository\InstanceRepository;
-use DWenzel\DataCollector\Service\Queue\QueueInterface;
+use DWenzel\DataCollector\Service\Queue\CollectorQueue;
 use DWenzel\DataCollector\Service\Queue\Storage\StorageInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -69,31 +68,23 @@ class CollectorQueueFactoryTest extends TestCase
     public function setUp(): void
     {
         $this->storage = $this->getMockForAbstractClass(StorageInterface::class);
-        $this->managerRegistry = $this->getMockForAbstractClass(ManagerRegistry::class);
-        $this->entityManager = $this->getMockForAbstractClass(ObjectManager::class);
-        $this->managerRegistry->method('getManager')
-            ->willReturn($this->entityManager);
         $this->instanceRepository = $this->getMockBuilder(InstanceRepository::class)
             ->disableOriginalConstructor()
             ->getMock();
         $this->instance = $this->createMock(Instance::class);
-        $collection = $this->getMockForAbstractClass(ArrayCollection::class);
         $this->instance->method('getUrls')
-            ->willReturn($collection);
+            ->willReturn(new ArrayCollection());
 
-        $this->entityManager->method('getRepository')
-            ->willReturn($this->instanceRepository);
         $this->instanceRepository->method('findBy')
             ->willReturn([$this->instance]);
     }
 
-    public function testCreateReturnsInstanceOfQueueInterface()
+    public function testCreateReturnsInstanceOfQueueInterface(): void
     {
         $this->assertInstanceOf(
-            QueueInterface::class,
+            CollectorQueue::class,
             CollectorQueueFactory::create(
-                $this->managerRegistry,
-                $this->managerName,
+                $this->instanceRepository,
                 $this->storage
             )
         );

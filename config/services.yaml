@@ -49,7 +49,3 @@ services:
     class: 'DWenzel\DataCollector\Service\Queue\Storage\RedisStorage'
     arguments:
       $client: 'sb_redis.client.default' # storage client service id
-  DWenzel\DataCollector\Service\Queue\CollectorQueue:
-    factory: ['@DWenzel\DataCollector\Factory\CollectorQueueFactory', create]
-    arguments:
-      $managerName: 'default'

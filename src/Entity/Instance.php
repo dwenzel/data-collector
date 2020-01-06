@@ -5,11 +5,14 @@ namespace DWenzel\DataCollector\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\HasLifecycleCallbacks;
+use Doctrine\ORM\Mapping\PostLoad;
 use GuzzleHttp\Psr7\Uri;
 use Yokai\EnumBundle\Validator\Constraints\Enum;
 
 /**
  * @ORM\Entity(repositoryClass="DWenzel\DataCollector\Repository\InstanceRepository")
+ * @HasLifecycleCallbacks
  */
 class Instance implements EntityInterface
 {
@@ -67,6 +70,12 @@ class Instance implements EntityInterface
         $this->urls = new ArrayCollection();
     }
 
+    /** @PostLoad */
+    public function initObject(){
+        if (null == $this->urls) {
+            $this->urls = new ArrayCollection();
+        }
+    }
     public function getId(): ?int
     {
         return $this->id;
@@ -164,9 +173,9 @@ class Instance implements EntityInterface
      * Returns a Collection of URLs build from all endpoints
      * of all APIs of this Instance
      *
-     * @return Collection|string[]
+     * @return ArrayCollection|string[]
      */
-    public function getUrls(): Collection
+    public function getUrls(): ArrayCollection
     {
         if ($this->urls->isEmpty()) {
 
